@@ -1,5 +1,9 @@
 package com.epam.finaltask.repository;
 
+import com.epam.finaltask.model.Voucher;
+import com.epam.finaltask.travelTypes.HotelType;
+import com.epam.finaltask.travelTypes.TourType;
+import com.epam.finaltask.travelTypes.TransferType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
