@@ -1,24 +1,28 @@
 package com.epam.finaltask.model;
 
-import com.epam.finaltask.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import java.util.UUID;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Collection;
+import java.util.UUID;
 import java.util.List;
 
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "UUID")
     private UUID id;
     private String username;
     private String password;

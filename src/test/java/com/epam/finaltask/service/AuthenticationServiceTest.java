@@ -3,11 +3,11 @@ package com.epam.finaltask.service;
 import com.epam.finaltask.auth.AuthenticationRequest;
 import com.epam.finaltask.auth.AuthenticationResponse;
 import com.epam.finaltask.auth.AuthenticationService;
-import com.epam.finaltask.jwt.JwtService;
-import com.epam.finaltask.enums.Role;
+import com.epam.finaltask.config.JwtService;
+import com.epam.finaltask.exception.EntityNotFoundException;
+import com.epam.finaltask.model.Role;
 import com.epam.finaltask.model.User;
 import com.epam.finaltask.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
 
 @ExtendWith(MockitoExtension.class)
 @TestPropertySource

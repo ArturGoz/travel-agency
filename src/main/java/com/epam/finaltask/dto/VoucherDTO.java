@@ -1,16 +1,9 @@
 package com.epam.finaltask.dto;
 
-import com.epam.finaltask.dto.group.OnChange;
-import com.epam.finaltask.dto.group.OnCreate;
-import com.epam.finaltask.dto.group.OnUpdate;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -19,5 +12,28 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VoucherDTO {
-    //TODO: write realizaiton here
+    private UUID userId;
+    private String title;
+    private String description;
+    private double price;
+    private String tourType;
+    private String transferType;
+    private String hotelType;
+    private String status;
+    private LocalDate arrivalDate;
+    private LocalDate evictionDate;
+    private boolean isHot;
+
+    public void setIsHot(String hot) {
+        isHot = Boolean.parseBoolean(hot);
+    }
+
+    public String getIsHot() {
+        return Boolean.toString(isHot);
+    }
+
+    public void setId(String id) {
+        this.userId = UUID.fromString(id);
+    }
+
 }

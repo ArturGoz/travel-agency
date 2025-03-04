@@ -1,13 +1,11 @@
 package com.epam.finaltask.model;
 
-import com.epam.finaltask.enums.VoucherStatus;
-import com.epam.finaltask.travelTypes.HotelType;
-import com.epam.finaltask.travelTypes.TourType;
-import com.epam.finaltask.travelTypes.TransferType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -15,11 +13,17 @@ import java.util.UUID;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Voucher {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "UUID")
     private UUID id;
     private String title;
     private String description;

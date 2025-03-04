@@ -20,6 +20,44 @@ import org.springframework.web.cors.CorsConfiguration;
 import java.util.Arrays;
 import java.util.List;
 
+@RequiredArgsConstructor
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfiguration {
-    //TODO: write realization here
+    private final AuthenticationProvider authenticationProvider;
+   // private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Value("${cors.origins}")
+    private String corsOrigins;
+
+    @Value("${cors.methods}")
+    private String corsMethods;
+
+    @Value("${cors.headers}")
+    private String corsHeaders;
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration configuration = new CorsConfiguration();
+                    configuration.setAllowedOrigins(Arrays.asList(corsOrigins.split(",")));
+                    configuration.setAllowedMethods(Arrays.asList(corsMethods.split(",")));
+                    configuration.setAllowedHeaders(Arrays.asList(corsHeaders.split(",")));
+                    return configuration;
+                }))
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authenticationProvider(authenticationProvider);
+               // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
 }
