@@ -31,10 +31,10 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
-/*    @Bean
+    @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(){
         return new JwtAuthenticationFilter();
-    }*/
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

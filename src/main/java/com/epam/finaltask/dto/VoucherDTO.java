@@ -12,28 +12,16 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VoucherDTO {
+    private String id;
     private UUID userId;
     private String title;
     private String description;
-    private double price;
+    private Double price;
     private String tourType;
     private String transferType;
     private String hotelType;
     private String status;
     private LocalDate arrivalDate;
     private LocalDate evictionDate;
-    private boolean isHot;
-
-    public void setIsHot(String hot) {
-        isHot = Boolean.parseBoolean(hot);
-    }
-
-    public String getIsHot() {
-        return Boolean.toString(isHot);
-    }
-
-    public void setId(String id) {
-        this.userId = UUID.fromString(id);
-    }
-
+    private String isHot;
 }

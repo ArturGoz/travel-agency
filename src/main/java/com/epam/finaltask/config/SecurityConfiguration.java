@@ -26,8 +26,7 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
-   // private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     @Value("${cors.origins}")
     private String corsOrigins;
 
@@ -55,8 +54,8 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .authenticationProvider(authenticationProvider);
-               // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

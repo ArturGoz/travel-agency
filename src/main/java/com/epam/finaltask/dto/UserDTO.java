@@ -1,8 +1,11 @@
 package com.epam.finaltask.dto;
 
+import com.epam.finaltask.model.Voucher;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,4 +18,5 @@ public class UserDTO {
     private String phoneNumber;
     private Double balance;
     private boolean accountStatus;
+    private List<Voucher> vouchers;
 }

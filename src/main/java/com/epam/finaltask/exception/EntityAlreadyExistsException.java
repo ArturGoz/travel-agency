@@ -6,7 +6,7 @@ public class EntityAlreadyExistsException extends RuntimeException {
   }
 
   public EntityAlreadyExistsException(String statusCode, String message) {
-    super(String.format("[%s] %s", statusCode, message));
+    super(message);
   }
 
   public String getErrorCode() {

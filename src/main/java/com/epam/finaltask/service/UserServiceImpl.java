@@ -21,13 +21,13 @@ public class UserServiceImpl implements UserService{
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    private void checkIfUserExists(String username) {
+    public void checkIfUserExists(String username) {
         if (userRepository.existsByUsername(username)) {
-            throw new EntityAlreadyExistsException(StatusCodes.DUPLICATE_USERNAME.name(), "Entity already exists");
+            throw new EntityAlreadyExistsException(StatusCodes.DUPLICATE_USERNAME.name(), "This username is already exist");
         }
     }
 
-    private User findUserByUsername(String username) {
+    public User findUserByUsername(String username) {
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Entity not found"));
     }
@@ -64,8 +64,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDTO changeAccountStatus(UserDTO userDTO) {
-        User user = findUserByUsername(userDTO.getUsername());
-        user.setAccountStatus(userDTO.isAccountStatus());
+        //User user = findUserByUsername(userDTO.getUsername());
+        User user = userRepository.findById(UUID.fromString(userDTO.getId()))
+                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Entity not found"));
+        User updatedUser = userMapper.toUser(userDTO);
+        user.setAccountStatus(updatedUser.isAccountStatus());
         User savedUser = userRepository.save(user);
         return userMapper.toUserDTO(savedUser);
     }

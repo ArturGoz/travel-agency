@@ -21,13 +21,13 @@ public class AuthController {
     @Autowired
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/login")
+/*    @PostMapping("/login")
     public ResponseEntity<RemoteResponse<AuthenticationResponse>> login(
             @RequestBody AuthenticationRequest request
     ) {
         AuthenticationResponse response = authenticationService.authenticate(request);
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
-                .body(RemoteResponse.success(response));
-    }
+                .body(RemoteResponse.create(response));
+    }*/
 }

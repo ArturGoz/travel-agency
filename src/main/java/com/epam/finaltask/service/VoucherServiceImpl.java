@@ -27,8 +27,6 @@ public class VoucherServiceImpl implements VoucherService {
                 .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Voucher not found"));
     }
 
-    ;
-
     @Override
     public VoucherDTO create(VoucherDTO voucherDTO) {
         Voucher voucher = voucherMapper.toVoucher(voucherDTO);
@@ -73,7 +71,7 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public void delete(String voucherId) {
         Voucher voucher = findVoucherById(voucherId);
-        voucherRepository.deleteById(voucher.getId());
+        voucherRepository.deleteById(UUID.fromString(voucherId));
     }
 
     @Override
