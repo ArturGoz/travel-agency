@@ -14,20 +14,23 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
     @Autowired
     private final AuthenticationService authenticationService;
 
-/*    @PostMapping("/login")
-    public ResponseEntity<RemoteResponse<AuthenticationResponse>> login(
-            @RequestBody AuthenticationRequest request
-    ) {
-        AuthenticationResponse response = authenticationService.authenticate(request);
-        return ResponseEntity
-                .status(HttpStatus.ACCEPTED)
-                .body(RemoteResponse.create(response));
-    }*/
+    @PostMapping("/login")
+    public ResponseEntity<RemoteResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
+        RemoteResponse remoteResponse = RemoteResponse.create(
+                true,
+                StatusCodes.OK.name(),
+                "User is successfully authenticated",
+                List.of(authenticationService.authenticate(authenticationRequest))
+        );
+        return new ResponseEntity<>(remoteResponse, HttpStatus.ACCEPTED);
+    }
 }
