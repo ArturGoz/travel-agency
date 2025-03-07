@@ -23,13 +23,15 @@ public class UserServiceImpl implements UserService{
 
     public void checkIfUserExists(String username) {
         if (userRepository.existsByUsername(username)) {
-            throw new EntityAlreadyExistsException(StatusCodes.DUPLICATE_USERNAME.name(), "This username is already exist");
+            throw new EntityAlreadyExistsException(StatusCodes.DUPLICATE_USERNAME.name(),
+                    "This username is already exist");
         }
     }
 
     public User findUserByUsername(String username) {
         return userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Entity not found"));
+                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(),
+                        "Entity not found"));
     }
 
     @Override
@@ -66,7 +68,8 @@ public class UserServiceImpl implements UserService{
     public UserDTO changeAccountStatus(UserDTO userDTO) {
         //User user = findUserByUsername(userDTO.getUsername());
         User user = userRepository.findById(UUID.fromString(userDTO.getId()))
-                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Entity not found"));
+                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(),
+                        "Entity not found"));
         User updatedUser = userMapper.toUser(userDTO);
         user.setAccountStatus(updatedUser.isAccountStatus());
         User savedUser = userRepository.save(user);
@@ -76,7 +79,8 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDTO getUserById(UUID id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Entity not found"));
+                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(),
+                        "Entity not found"));
         return userMapper.toUserDTO(user);
 
     }

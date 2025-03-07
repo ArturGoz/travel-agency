@@ -7,35 +7,36 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    @Autowired
-    private JwtService jwtService;
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+
+    private final JwtService jwtService;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        /*String token = getJwtFromRequest(request);*/
-
-        String token = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("JWT".equals(cookie.getName())) {
-                    token = cookie.getValue();
-                }
-            }
+        System.out.println(request.getServletPath());
+        if(request.getServletPath().contains("/auth") || request.getServletPath().contains("/register")) {
+            System.out.println("222");
+            filterChain.doFilter(request, response);
+            return;
         }
+
+        String token = getJwtFromRequest(request);
 
         if (StringUtils.hasText(token) && jwtService.validateJWT(token)) {
             String username = jwtService.getUsernameFromJWT(token);
@@ -49,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
-/*    private String getJwtFromRequest(HttpServletRequest request) {
+    private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         System.out.println("Token not found or invalid: " + bearerToken);
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
@@ -57,5 +58,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         System.out.println("Token not found or invalid: " + bearerToken);
         return null;
-    }*/
+    }
 }

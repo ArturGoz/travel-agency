@@ -24,7 +24,8 @@ public class VoucherServiceImpl implements VoucherService {
 
     private Voucher findVoucherById(String id) {
         return voucherRepository.findById(UUID.fromString(id))
-                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Voucher not found"));
+                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(),
+                        "Voucher not found"));
     }
 
     @Override
@@ -38,7 +39,8 @@ public class VoucherServiceImpl implements VoucherService {
     public VoucherDTO order(String id, String userId) {
         Voucher voucher = findVoucherById(id);
         User user = userRepository.findById(UUID.fromString(id))
-                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Entity not found"));
+                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(),
+                        "Entity not found"));
 
         voucher.setUser(user);
         voucher.setStatus(VoucherStatus.REGISTERED);
