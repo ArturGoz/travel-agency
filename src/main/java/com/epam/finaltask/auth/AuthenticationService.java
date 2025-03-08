@@ -1,11 +1,10 @@
 package com.epam.finaltask.auth;
 
 import com.epam.finaltask.config.JwtService;
-import com.epam.finaltask.controller.StatusCodes;
+import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.exception.EntityNotFoundException;
 import com.epam.finaltask.model.User;
 import com.epam.finaltask.repository.UserRepository;
-import com.epam.finaltask.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

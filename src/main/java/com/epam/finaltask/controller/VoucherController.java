@@ -2,7 +2,7 @@ package com.epam.finaltask.controller;
 
 import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.dto.VoucherDTO;
-import com.epam.finaltask.model.Voucher;
+import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class VoucherController {
         List<VoucherDTO> voucherDTOList = voucherService.findAll();
 
         RemoteResponse remoteResponse = RemoteResponse.create(
-                true,StatusCodes.OK.name(),"voucherList is successfully obtained",
+                true, StatusCodes.OK.name(),"voucherList is successfully obtained",
                 voucherDTOList
         );
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);

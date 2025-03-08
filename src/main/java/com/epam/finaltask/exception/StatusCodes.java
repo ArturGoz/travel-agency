@@ -1,4 +1,4 @@
-package com.epam.finaltask.controller;
+package com.epam.finaltask.exception;
 
 public enum StatusCodes {
     OK,

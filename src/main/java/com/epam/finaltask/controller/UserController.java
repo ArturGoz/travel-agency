@@ -3,8 +3,7 @@ package com.epam.finaltask.controller;
 
 import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.dto.UserDTO;
-import com.epam.finaltask.model.User;
-import com.epam.finaltask.repository.UserRepository;
+import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.service.UserService;
 
 import jakarta.validation.Valid;
@@ -26,7 +25,7 @@ public class UserController {
     public ResponseEntity<RemoteResponse> addUser(@RequestBody @Valid UserDTO userDTO) {
         UserDTO createdUserDto = userService.register(userDTO);
         RemoteResponse remoteResponse = RemoteResponse.create(
-                true,StatusCodes.OK.name(),"User is successfully registered",
+                true, StatusCodes.OK.name(),"User is successfully registered",
                 List.of(createdUserDto)
         );
         return new ResponseEntity<>(remoteResponse, HttpStatus.CREATED);

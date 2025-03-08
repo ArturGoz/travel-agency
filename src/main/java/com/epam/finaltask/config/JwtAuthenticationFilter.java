@@ -29,9 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println(request.getServletPath());
         if(request.getServletPath().contains("/auth") || request.getServletPath().contains("/register")) {
-            System.out.println("222");
             filterChain.doFilter(request, response);
             return;
         }
@@ -52,11 +50,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        System.out.println("Token not found or invalid: " + bearerToken);
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-        System.out.println("Token not found or invalid: " + bearerToken);
         return null;
     }
 }

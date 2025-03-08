@@ -1,6 +1,6 @@
 package com.epam.finaltask.service;
 
-import com.epam.finaltask.controller.StatusCodes;
+import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.exception.EntityAlreadyExistsException;
 import com.epam.finaltask.exception.EntityNotFoundException;
