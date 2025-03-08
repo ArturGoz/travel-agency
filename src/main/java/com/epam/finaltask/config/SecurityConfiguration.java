@@ -50,6 +50,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/users/**").permitAll()
+                        .requestMatchers("/vouchers/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

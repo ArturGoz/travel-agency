@@ -14,12 +14,22 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({EntityAlreadyExistsException.class})
+   @ExceptionHandler({EntityAlreadyExistsException.class})
     public ResponseEntity<RemoteResponse> handleEntityAlreadyExistsException(EntityAlreadyExistsException ex){
         RemoteResponse remoteResponse =
-                RemoteResponse.create(false,ex.getErrorCode(),ex.getMessage(),null);
+                RemoteResponse.create(false,ex.getMessage(),ex.getErrorCode(),null);
         return new ResponseEntity<>(remoteResponse, HttpStatus.BAD_REQUEST);
     }
+
+
+    @ExceptionHandler({EntityNotFoundException.class})
+    public ResponseEntity<RemoteResponse> handleEntityAlreadyExistsException(EntityNotFoundException ex){
+        RemoteResponse remoteResponse =
+                RemoteResponse.create(false,ex.getMessage(),ex.getErrorCode(),null);
+        return new ResponseEntity<>(remoteResponse, HttpStatus.NOT_FOUND);
+    }
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<RemoteResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         // Extract validation errors

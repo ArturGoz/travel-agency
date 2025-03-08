@@ -24,8 +24,8 @@ public class VoucherServiceImpl implements VoucherService {
 
     private Voucher findVoucherById(String id) {
         return voucherRepository.findById(UUID.fromString(id))
-                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(),
-                        "Voucher not found"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Voucher with Id %s not found", id),
+                        StatusCodes.ENTITY_NOT_FOUND.name()));
     }
 
     @Override
