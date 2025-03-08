@@ -1,4 +1,4 @@
-package com.epam.finaltask.config;
+package com.epam.finaltask.service;
 
 import com.epam.finaltask.model.User;
 import io.jsonwebtoken.Claims;
@@ -6,7 +6,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;

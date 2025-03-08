@@ -3,7 +3,10 @@ package com.epam.finaltask.controller;
 import com.epam.finaltask.dto.VoucherDTO;
 import com.epam.finaltask.exception.EntityNotFoundException;
 import com.epam.finaltask.exception.StatusCodes;
-import com.epam.finaltask.model.*;
+import com.epam.finaltask.model.HotelType;
+import com.epam.finaltask.model.TourType;
+import com.epam.finaltask.model.TransferType;
+import com.epam.finaltask.model.VoucherStatus;
 import com.epam.finaltask.service.VoucherService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,7 +39,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

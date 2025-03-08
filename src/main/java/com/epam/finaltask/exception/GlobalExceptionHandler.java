@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler({EntityNotFoundException.class})
-    public ResponseEntity<RemoteResponse> handleEntityAlreadyExistsException(EntityNotFoundException ex){
+    public ResponseEntity<RemoteResponse> handleEntityNotFound(EntityNotFoundException ex){
         RemoteResponse remoteResponse =
                 RemoteResponse.create(false,ex.getMessage(),ex.getErrorCode(),null);
         return new ResponseEntity<>(remoteResponse, HttpStatus.NOT_FOUND);

@@ -24,5 +24,4 @@ public class RemoteResponse {
 
         return response;
     }
-
 }

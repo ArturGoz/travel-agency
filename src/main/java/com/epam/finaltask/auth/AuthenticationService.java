@@ -1,6 +1,6 @@
 package com.epam.finaltask.auth;
 
-import com.epam.finaltask.config.JwtService;
+import com.epam.finaltask.service.JwtService;
 import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.exception.EntityNotFoundException;
 import com.epam.finaltask.model.User;
