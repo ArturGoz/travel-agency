@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -13,7 +14,11 @@ public class UserDetailsImpl implements UserDetails {
     User user;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRole().getAuthorities();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : user.getRoles()) {
+            authorities.addAll(role.getAuthorities());
+        }
+        return authorities;
     }
 
     @Override

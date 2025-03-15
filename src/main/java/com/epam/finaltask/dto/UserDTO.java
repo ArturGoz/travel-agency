@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -25,7 +26,7 @@ public class UserDTO {
                     "at least 7 and maximum 30 characters." +
                     "Password cannot contains spaces")
     private String password;
-    private String role;
+    private Set<String> roles;
     @Pattern(
             regexp = "^[0-9]+$",
             message = "Phone number must contain only numbers"

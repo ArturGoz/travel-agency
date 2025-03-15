@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Registration Page</title>
+</head>
+<body>
+<h1>Register</h1>
+<form th:action="@{/users/register}" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <br>
+    <label for="phoneNumber">Phone Number:</label>
+    <input type="text" id="phoneNumber" name="phoneNumber" required>
+    <br>
+    <label>Select Roles:</label>
+    <br>
+    <input type="checkbox" id="admin" name="roles" value="ADMIN">
+    <label for="admin">ADMIN</label>
+    <br>
+    <input type="checkbox" id="manager" name="roles" value="MANAGER">
+    <label for="manager">MANAGER</label>
+    <br>
+    <input type="checkbox" id="user" name="roles" value="USER">
+    <label for="user">USER</label>
+    <br>
+    <label for="balance">Balance:</label>
+    <input type="number" id="balance" name="balance" step="0.01">
+    <br>
+    <button type="submit">Register</button>
+</form>
+
+
+
+
+
+<script>
+    document.querySelector('form').addEventListener('submit', async (event) => {
+        event.preventDefault(); // Зупиняємо стандартну відправку форми
+
+        // Збираємо дані з форми
+        const formData = {
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value,
+            phoneNumber: document.getElementById('phoneNumber').value,
+            roles: Array.from(document.querySelectorAll('input[name="roles"]:checked')).map(cb => cb.value),
+            balance: parseFloat(document.getElementById('balance').value) || 0.0,
+        };
+
+        try {
+            const response = await fetch('/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Помилка реєстрації');
+            }
+
+            const result = await response.json();
+            console.log('Успішно створено:', result);
+            // Перенаправлення або оновлення інтерфейсу
+            window.location.href = '/login';
+        } catch (error) {
+            console.error('Помилка:', error);
+            alert(error.message);
+        }
+    });
+</script>
+</body>
+</html>

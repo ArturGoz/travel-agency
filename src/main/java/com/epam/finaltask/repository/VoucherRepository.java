@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface VoucherRepository extends JpaRepository<Voucher, UUID> {
-    List<Voucher> findAllByUserId(UUID userId);
+public interface VoucherRepository extends JpaRepository<Voucher, String> {
+    List<Voucher> findAllByUserId(String userId);
     List<Voucher> findAllByTourType(TourType tourType);
     List<Voucher> findAllByTransferType(TransferType transferType);
     List<Voucher> findAllByPrice(Double price);

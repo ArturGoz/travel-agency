@@ -1,6 +1,7 @@
 package com.epam.finaltask.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +24,8 @@ public class Voucher {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "UUID")
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "CHAR(36)")
+    @NotNull
     private UUID id;
     private String title;
     private String description;

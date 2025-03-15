@@ -23,7 +23,7 @@ public class VoucherServiceImpl implements VoucherService {
 
 
     private Voucher findVoucherById(String id) {
-        return voucherRepository.findById(UUID.fromString(id))
+        return voucherRepository.findById(String.valueOf(UUID.fromString(id)))
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Voucher with Id %s not found", id),
                         StatusCodes.ENTITY_NOT_FOUND.name()));
     }
@@ -38,7 +38,7 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public VoucherDTO order(String id, String userId) {
         Voucher voucher = findVoucherById(id);
-        User user = userRepository.findById(UUID.fromString(id))
+        User user = userRepository.findById(String.valueOf(UUID.fromString(id)))
                 .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(),
                         "Entity not found"));
 
@@ -73,7 +73,7 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public void delete(String voucherId) {
         Voucher voucher = findVoucherById(voucherId);
-        voucherRepository.deleteById(UUID.fromString(voucherId));
+        voucherRepository.deleteById(String.valueOf(UUID.fromString(voucherId)));
     }
 
     @Override
@@ -90,7 +90,7 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public List<VoucherDTO> findAllByUserId(String userId) {
-        return voucherRepository.findAllByUserId(UUID.fromString(userId)).stream()
+        return voucherRepository.findAllByUserId(String.valueOf(UUID.fromString(userId))).stream()
                 .map(voucherMapper::toVoucherDTO).collect(Collectors.toList());
     }
 

@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService{
         User updatedUser = userMapper.toUser(userDTO);
 
         user.setUsername(updatedUser.getUsername());
-        user.setRole(updatedUser.getRole());
+        user.setRoles(updatedUser.getRoles());
         user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         user.setBalance(userDTO.getBalance());
         user.setPhoneNumber(updatedUser.getPhoneNumber());
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDTO changeAccountStatus(UserDTO userDTO) {
         //User user = findUserByUsername(userDTO.getUsername());
-        User user = userRepository.findById(UUID.fromString(userDTO.getId()))
+        User user = userRepository.findById(String.valueOf(UUID.fromString(userDTO.getId())))
                 .orElseThrow(() -> new EntityNotFoundException("Entity not found",
                         StatusCodes.ENTITY_NOT_FOUND.name()));
         User updatedUser = userMapper.toUser(userDTO);
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDTO getUserById(UUID id) {
-        User user = userRepository.findById(id)
+        User user = userRepository.findById(String.valueOf(id))
                 .orElseThrow(() -> new EntityNotFoundException("Entity not found",
                         StatusCodes.ENTITY_NOT_FOUND.name()));
         return userMapper.toUserDTO(user);
