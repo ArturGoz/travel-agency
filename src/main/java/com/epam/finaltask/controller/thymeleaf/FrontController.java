@@ -1,4 +1,4 @@
-package com.epam.finaltask.controller;
+package com.epam.finaltask.controller.thymeleaf;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,5 +14,9 @@ public class FrontController {
     @GetMapping("/register")
     public String registerPage() {
         return "registerPage";
+    }
+    @GetMapping("/main")
+    public String mainPage() {
+        return "mainPage";
     }
 }

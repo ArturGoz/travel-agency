@@ -1,4 +1,4 @@
-package com.epam.finaltask.controller;
+package com.epam.finaltask.controller.rest;
 
 
 import com.epam.finaltask.dto.RemoteResponse;
@@ -9,6 +9,7 @@ import com.epam.finaltask.service.UserService;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
     private final UserService userService;
 
@@ -47,6 +49,19 @@ public class UserController {
     @GetMapping("/{username}")
     public ResponseEntity<RemoteResponse> getUserByUsername(@PathVariable("username") String username) {
         UserDTO createdUserDto = userService.getUserByUsername(username);
+        RemoteResponse remoteResponse = RemoteResponse.create(
+                true,StatusCodes.OK.name(),"User was obtained successfully",
+                List.of(createdUserDto)
+        );
+        return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/data")
+    public ResponseEntity<RemoteResponse> getUserByUsername2(
+            @RequestHeader(value = "X-User-Name", required = false) String username) {
+        log.info("getUserByUsername2 request received {}", username);
+        UserDTO createdUserDto = userService.getUserByUsername(username);
+        log.info(String.valueOf(createdUserDto));
         RemoteResponse remoteResponse = RemoteResponse.create(
                 true,StatusCodes.OK.name(),"User was obtained successfully",
                 List.of(createdUserDto)

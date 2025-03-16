@@ -39,19 +39,20 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(request -> {
+/*                .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(Arrays.asList(corsOrigins.split(",")));
                     configuration.setAllowedMethods(Arrays.asList(corsMethods.split(",")));
                     configuration.setAllowedHeaders(Arrays.asList(corsHeaders.split(",")));
+                    configuration.setExposedHeaders(List.of("X-User-Name"));
                     return configuration;
-                }))
+                }))*/
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/page/**").permitAll()
                         .requestMatchers("/users/**").permitAll()
-                        .requestMatchers("/vouchers/**").permitAll()
+                       // .requestMatchers("/vouchers/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

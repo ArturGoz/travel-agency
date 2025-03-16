@@ -1,4 +1,4 @@
-package com.epam.finaltask.controller;
+package com.epam.finaltask.controller.rest;
 
 import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.dto.VoucherDTO;

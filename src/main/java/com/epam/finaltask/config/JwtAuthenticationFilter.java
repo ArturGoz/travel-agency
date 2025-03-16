@@ -5,6 +5,7 @@ import com.epam.finaltask.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        log.debug("JWT Authentication Filter triggered");
+        log.info("JWT Authentication Filter triggered");
         if(request.getServletPath().contains("/auth") || request.getServletPath().contains("/register")) {
             filterChain.doFilter(request, response);
             return;
@@ -41,12 +43,46 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(token) && jwtService.validateJWT(token)) {
             String username = jwtService.getUsernameFromJWT(token);
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            // Створюємо обгортку з кастомним заголовком
+            HttpServletRequest wrappedRequest = new HttpServletRequestWrapper(request) {
+                private final Map<String, String> headers = new HashMap<>();
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
-                    null, userDetails.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                {
+                    headers.put("X-User-Name", username); // Додаємо заголовок
+                }
+
+                @Override
+                public String getHeader(String name) {
+                    return headers.containsKey(name)
+                            ? headers.get(name)
+                            : super.getHeader(name);
+                }
+
+                @Override
+                public Enumeration<String> getHeaders(String name) {
+                    return headers.containsKey(name)
+                            ? Collections.enumeration(Collections.singletonList(headers.get(name)))
+                            : super.getHeaders(name);
+                }
+
+                @Override
+                public Enumeration<String> getHeaderNames() {
+                    Set<String> names = new LinkedHashSet<>(headers.keySet());
+                    Collections.list(super.getHeaderNames()).forEach(names::add);
+                    return Collections.enumeration(names);
+                }
+            };
+
+            // Додаємо аутентифікацію
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities()
+            );
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+
+            // Продовжуємо ланцюжок з обгорнутим запитом
+            filterChain.doFilter(wrappedRequest, response);
+            return;
         }
         filterChain.doFilter(request, response);
     }

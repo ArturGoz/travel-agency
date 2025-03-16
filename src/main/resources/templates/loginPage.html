@@ -37,7 +37,17 @@
             });
 
             if (!response.ok) throw new Error('Login failed');
-            window.location.href = '/dashboard'; // Перенаправлення після успіху
+
+            const result = await response.json();
+
+            // Access the token from results array in RemoteResponse
+            const accessToken = result.results[0].access_token;
+            console.log(accessToken);
+            // Store the token securely
+            localStorage.setItem('accessToken', accessToken);
+
+            // Redirect on success
+          //  window.location.href = '/dashboard';
         } catch (error) {
             alert(error.message);
         }

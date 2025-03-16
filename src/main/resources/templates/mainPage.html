@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .profile-section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        .field label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="profile-section">
+    <h1>User Profile</h1>
+    <div class="field">
+        <label>Username:</label>
+        <span id="username"></span>
+    </div>
+    <div class="field">
+        <label>Balance:</label>
+        <span id="balance"></span>
+    </div>
+    <div class="field">
+        <label>Phone Number:</label>
+        <span id="phoneNumber"></span>
+    </div>
+    <div class="field">
+        <label>Account Status:</label>
+        <span id="accountStatus"></span>
+    </div>
+    <div class="field">
+        <label>Roles:</label>
+        <span id="roles"></span>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const accessToken = localStorage.getItem('accessToken');
+
+        if (!accessToken) {
+            alert('Authentication required. Please login.');
+            window.location.href = '/login.html'; // Перенаправлення на сторінку входу
+            return;
+        }
+
+        fetch('/users/data', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+                'Accept': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.message || 'Request failed');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.succeeded) { // Змінити з data.success на data.succeeded
+                    const user = data.results[0]; // Використовуємо results замість data
+
+                    document.getElementById('username').textContent = user.username;
+                    document.getElementById('balance').textContent = user.balance ?? '0.00';
+                    document.getElementById('phoneNumber').textContent = user.phoneNumber || 'N/A';
+                    document.getElementById('roles').textContent =
+                        user.roles ? Array.from(user.roles).join(', ') : 'No roles assigned';
+                } else {
+                    throw new Error(data.statusMessage || 'Failed to load user data'); // Використовуємо statusMessage
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error: ' + error.message);
+            });
+    });
+</script>
+</body>
+</html>
