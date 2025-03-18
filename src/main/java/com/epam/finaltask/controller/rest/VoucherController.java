@@ -5,6 +5,7 @@ import com.epam.finaltask.dto.VoucherDTO;
 import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.service.VoucherService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/vouchers")
 @RequiredArgsConstructor
+@Slf4j
 public class VoucherController {
     private final VoucherService voucherService;
 
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<RemoteResponse> getAllVouchers() {
         List<VoucherDTO> voucherDTOList = voucherService.findAll();
 
@@ -41,8 +43,21 @@ public class VoucherController {
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/userList")
+    public ResponseEntity<RemoteResponse> getAllVouchersByJwtForUser(
+            @RequestHeader(value = "X-User-Name", required = false) String username) {
+        List<VoucherDTO> voucherList = voucherService.findAllByUsername(username);
+
+        RemoteResponse remoteResponse = RemoteResponse.create(
+                true,StatusCodes.OK.name(),"voucherList is successfully obtained",
+                voucherList
+        );
+        return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<RemoteResponse> createVoucher(@RequestBody VoucherDTO vDto) {
+        log.info("Creating voucher : {}", vDto);
         VoucherDTO createdVDto = voucherService.create(vDto);
 
         RemoteResponse remoteResponse = RemoteResponse.create(

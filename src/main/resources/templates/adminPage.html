@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Створення ваучера</title>
+</head>
+<body>
+<h2>Створення ваучера</h2>
+<form id="voucherForm">
+    <label for="title">Назва:</label>
+    <input type="text" id="title" required><br>
+
+    <label for="description">Опис:</label>
+    <textarea id="description" required></textarea><br>
+
+    <label for="price">Ціна:</label>
+    <input type="number" id="price" step="0.01" required><br>
+
+    <label for="tourType">Тип туру:</label>
+    <select id="tourType" required>
+        <option value="HEALTH">Оздоровчий</option>
+        <option value="SPORTS">Спортивний</option>
+        <option value="LEISURE">Відпочинковий</option>
+        <option value="SAFARI">Сафарі</option>
+        <option value="WINE">Винний</option>
+        <option value="ECO">Екотур</option>
+        <option value="ADVENTURE">Пригодницький</option>
+        <option value="CULTURAL">Культурний</option>
+    </select><br>
+
+    <label for="transferType">Тип трансферу:</label>
+    <select id="transferType" required>
+        <option value="BUS">Автобус</option>
+        <option value="TRAIN">Потяг</option>
+        <option value="PLANE">Літак</option>
+        <option value="SHIP">Корабель</option>
+        <option value="PRIVATE_CAR">Приватний автомобіль</option>
+        <option value="JEEPS">Джипи</option>
+        <option value="MINIBUS">Мікроавтобус</option>
+        <option value="ELECTRICAL_CARS">Електрокари</option>
+    </select><br>
+
+    <label for="hotelType">Тип готелю:</label>
+    <select id="hotelType" required>
+        <option value="ONE_STAR">1 зірка</option>
+        <option value="TWO_STARS">2 зірки</option>
+        <option value="THREE_STARS">3 зірки</option>
+        <option value="FOUR_STARS">4 зірки</option>
+        <option value="FIVE_STARS">5 зірок</option>
+    </select><br>
+
+    <label for="status">Статус:</label>
+    <select id="status" required>
+        <option value="REGISTERED">Зареєстрований</option>
+        <option value="PAID">Оплачений</option>
+        <option value="CANCELED">Скасований</option>
+    </select><br>
+
+    <label for="arrivalDate">Дата прибуття:</label>
+    <input type="date" id="arrivalDate" required><br>
+
+    <label for="evictionDate">Дата виселення:</label>
+    <input type="date" id="evictionDate" required><br>
+
+    <label for="isHot">Гарячий тур:</label>
+    <select id="isHot">
+        <option value="true">Так</option>
+        <option value="false">Ні</option>
+    </select><br>
+
+    <button type="submit">Створити ваучер</button>
+</form>
+
+<script>
+    document.getElementById("voucherForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const accessToken = localStorage.getItem('accessToken');
+
+        if (!accessToken) {
+            alert('Authentication required. Please login.');
+            window.location.href = '/login.html';
+            return;
+        }
+
+        const voucherData = {
+            title: document.getElementById("title").value,
+            description: document.getElementById("description").value,
+            price: parseFloat(document.getElementById("price").value),
+            tourType: document.getElementById("tourType").value,
+            transferType: document.getElementById("transferType").value,
+            hotelType: document.getElementById("hotelType").value,
+            status: document.getElementById("status").value,
+            arrivalDate: document.getElementById("arrivalDate").value,
+            evictionDate: document.getElementById("evictionDate").value,
+            isHot: document.getElementById("isHot").value
+        };
+
+        try {
+            const response = await fetch("/vouchers/create", {
+                method: "POST",
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(voucherData)
+            });
+
+            const result = await response.json();
+            console.log(result);
+            alert(result.message || "Ваучер створено успішно!");
+        } catch (error) {
+            console.error("Помилка при створенні ваучера:", error);
+            alert("Не вдалося створити ваучер");
+        }
+    });
+</script>
+</body>
+</html>

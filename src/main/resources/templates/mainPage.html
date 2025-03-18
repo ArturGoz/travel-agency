@@ -41,10 +41,6 @@
         <span id="phoneNumber"></span>
     </div>
     <div class="field">
-        <label>Account Status:</label>
-        <span id="accountStatus"></span>
-    </div>
-    <div class="field">
         <label>Roles:</label>
         <span id="roles"></span>
     </div>
@@ -61,7 +57,7 @@
         }
 
         fetch('/users/data', {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + accessToken,
                 'Accept': 'application/json'

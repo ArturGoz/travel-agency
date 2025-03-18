@@ -13,7 +13,6 @@ import java.util.UUID;
 @NoArgsConstructor
 public class VoucherDTO {
     private String id;
-    private UUID userId;
     private String title;
     private String description;
     private Double price;

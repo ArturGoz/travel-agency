@@ -19,4 +19,8 @@ public class FrontController {
     public String mainPage() {
         return "mainPage";
     }
+    @GetMapping("/admin")
+    public String adminPage() {
+        return "adminPage";
+    }
 }

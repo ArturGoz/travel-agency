@@ -19,14 +19,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Voucher {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "CHAR(36)")
-    @NotNull
-    private UUID id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "VARCHAR(36)")
+    private String id;
     private String title;
     private String description;
     private double price;

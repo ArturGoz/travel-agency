@@ -50,9 +50,10 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                       // .requestMatchers("/page/adminPage").permitAll()
                         .requestMatchers("/page/**").permitAll()
                         .requestMatchers("/users/**").permitAll()
-                       // .requestMatchers("/vouchers/**").permitAll()
+                        .requestMatchers("/vouchers/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

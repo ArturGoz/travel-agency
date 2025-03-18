@@ -56,8 +56,8 @@ public class UserController {
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/data")
-    public ResponseEntity<RemoteResponse> getUserByUsername2(
+    @GetMapping("/data")
+    public ResponseEntity<RemoteResponse> getUserByJwt(
             @RequestHeader(value = "X-User-Name", required = false) String username) {
         log.info("getUserByUsername2 request received {}", username);
         UserDTO createdUserDto = userService.getUserByUsername(username);

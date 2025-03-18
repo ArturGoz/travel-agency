@@ -123,4 +123,10 @@ public class VoucherServiceImpl implements VoucherService {
         return voucherRepository.findAll().stream()
                 .map(voucherMapper::toVoucherDTO).collect(Collectors.toList());
     }
+
+    @Override
+    public List<VoucherDTO> findAllByUsername(String username) {
+        return voucherRepository.findAllByUserUsername(username).stream()
+                .map(voucherMapper::toVoucherDTO).collect(Collectors.toList());
+    }
 }
