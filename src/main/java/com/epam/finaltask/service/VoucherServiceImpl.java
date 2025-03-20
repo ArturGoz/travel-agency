@@ -8,14 +8,17 @@ import com.epam.finaltask.model.*;
 import com.epam.finaltask.repository.UserRepository;
 import com.epam.finaltask.repository.VoucherRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class VoucherServiceImpl implements VoucherService {
     private final VoucherRepository voucherRepository;
     private final VoucherMapper voucherMapper;
@@ -36,9 +39,15 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public VoucherDTO order(String id, String userId) {
+    public VoucherDTO order(String id, String username) {
+        log.info("Voucher with id {} ordered", id);
         Voucher voucher = findVoucherById(id);
-        User user = userRepository.findById(String.valueOf(UUID.fromString(id)))
+
+        if (voucher.getStatus() != VoucherStatus.UNREGISTERED)
+            throw new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(),
+                    "No voucher with id " + id + " UNREGISTERED");
+
+        User user = userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(),
                         "Entity not found"));
 
@@ -128,5 +137,16 @@ public class VoucherServiceImpl implements VoucherService {
     public List<VoucherDTO> findAllByUsername(String username) {
         return voucherRepository.findAllByUserUsername(username).stream()
                 .map(voucherMapper::toVoucherDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<VoucherDTO> findAllByStatus(String status) {
+        return voucherRepository.findAllByStatus(VoucherStatus.valueOf(status)).stream()
+                .map(voucherMapper::toVoucherDTO)
+                .sorted(Comparator.comparing(
+                        dto -> "true".equalsIgnoreCase(dto.getIsHot()),
+                        Comparator.reverseOrder()
+                ))
+                .collect(Collectors.toList());
     }
 }

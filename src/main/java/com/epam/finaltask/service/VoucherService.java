@@ -21,4 +21,5 @@ public interface VoucherService {
     List<VoucherDTO> findAll();
 
     List<VoucherDTO> findAllByUsername(String username);
+    List<VoucherDTO> findAllByStatus(String status);
 }

@@ -1,11 +1,9 @@
 package com.epam.finaltask.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
@@ -44,6 +42,8 @@ public class Voucher {
 
     @ManyToOne
     @JoinColumn(name = "user")
+    @ToString.Exclude
+    @JsonBackReference
     private User user;
 
     private boolean isHot;

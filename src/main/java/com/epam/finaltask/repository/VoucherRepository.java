@@ -1,10 +1,7 @@
 package com.epam.finaltask.repository;
 
 import com.epam.finaltask.dto.VoucherDTO;
-import com.epam.finaltask.model.HotelType;
-import com.epam.finaltask.model.TourType;
-import com.epam.finaltask.model.TransferType;
-import com.epam.finaltask.model.Voucher;
+import com.epam.finaltask.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +16,5 @@ public interface VoucherRepository extends JpaRepository<Voucher, String> {
     List<Voucher> findAllByPrice(Double price);
     List<Voucher> findAllByHotelType(HotelType hotelType);
     List<Voucher> findAllByUserUsername(String username);
+    List<Voucher> findAllByStatus(VoucherStatus status);
 }

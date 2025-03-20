@@ -2,6 +2,7 @@ package com.epam.finaltask.controller.rest;
 
 import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.dto.VoucherDTO;
+import com.epam.finaltask.dto.VoucherOrderRequest;
 import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.service.VoucherService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,16 @@ public class VoucherController {
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/status/{status}")
+    public ResponseEntity<RemoteResponse> getAllVouchersByStatus(@PathVariable String status) {
+        List<VoucherDTO> voucherList = voucherService.findAllByStatus(status);
+
+        RemoteResponse remoteResponse = RemoteResponse.create(
+                true,StatusCodes.OK.name(),"voucherList is successfully obtained",
+                voucherList
+        );
+        return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
+    }
 
 
     @GetMapping("/{usernameId}")
@@ -104,5 +115,20 @@ public class VoucherController {
                 null
         );
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/order")
+    public ResponseEntity<RemoteResponse> orderVoucher(
+            @RequestHeader(value = "X-User-Name", required = false) String username,
+            @RequestBody VoucherOrderRequest voucherOrderRequest) {
+        VoucherDTO voucherDTO = voucherService.order(voucherOrderRequest.getVoucherId(),username);
+
+        RemoteResponse remoteResponse = RemoteResponse.create(
+                true,StatusCodes.OK.name(),
+                "voucher was successfully ordered",
+                List.of(voucherDTO)
+        );
+        return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
+
     }
 }

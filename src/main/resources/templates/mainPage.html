@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>User Profile & Vouchers</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 600px;
+            max-width: 800px;
             margin: 20px auto;
             padding: 20px;
         }
-        .profile-section {
+        .profile-section, .vouchers-section {
             border: 1px solid #ddd;
             padding: 20px;
             border-radius: 8px;
+            margin-bottom: 20px;
         }
         .field {
             margin-bottom: 15px;
@@ -22,6 +23,12 @@
         .field label {
             font-weight: bold;
             margin-right: 10px;
+        }
+        .voucher {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -46,13 +53,29 @@
     </div>
 </div>
 
+<div class="user-vouchers-section">
+    <h2>Your Vouchers</h2>
+    <div id="user-vouchers-list"></div>
+</div>
+
+<div class="vouchers-section">
+    <h2>Available Vouchers</h2>
+    <div id="vouchers-list"></div>
+</div>
+
+<div class="order-section">
+    <h2>Order Voucher</h2>
+    <input type="text" id="voucherIdInput" placeholder="Enter Voucher ID">
+    <button onclick="orderVoucher()">Register Voucher</button>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const accessToken = localStorage.getItem('accessToken');
 
         if (!accessToken) {
             alert('Authentication required. Please login.');
-            window.location.href = '/login.html'; // Перенаправлення на сторінку входу
+            window.location.href = '/login.html';
             return;
         }
 
@@ -63,32 +86,112 @@
                 'Accept': 'application/json'
             }
         })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => {
-                        throw new Error(err.message || 'Request failed');
-                    });
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                if (data.succeeded) { // Змінити з data.success на data.succeeded
-                    const user = data.results[0]; // Використовуємо results замість data
-
+                if (data.succeeded) {
+                    const user = data.results[0];
                     document.getElementById('username').textContent = user.username;
                     document.getElementById('balance').textContent = user.balance ?? '0.00';
                     document.getElementById('phoneNumber').textContent = user.phoneNumber || 'N/A';
                     document.getElementById('roles').textContent =
-                        user.roles ? Array.from(user.roles).join(', ') : 'No roles assigned';
+                        user.roles ? user.roles.join(', ') : 'No roles assigned';
+
+                    // Додавання ваучерів користувача
+                    const userVouchersList = document.getElementById('user-vouchers-list');
+                    if (user.vouchers && user.vouchers.length > 0) {
+                        user.vouchers.forEach(voucher => {
+                            const voucherElement = document.createElement('div');
+                            voucherElement.classList.add('voucher');
+                            voucherElement.innerHTML = `
+                            <h3>${voucher.title}</h3>
+                            <p><strong>Id:</strong> ${voucher.id}</p>
+                            <p><strong>Description:</strong> ${voucher.description}</p>
+                            <p><strong>Price:</strong> $${voucher.price}</p>
+                            <p><strong>Type:</strong> ${voucher.tourType}</p>
+                            <p><strong>Transfer:</strong> ${voucher.transferType}</p>
+                            <p><strong>Hotel:</strong> ${voucher.hotelType}</p>
+                            <p><strong>Status:</strong> ${voucher.status}</p>
+                            <p><strong>Arrival:</strong> ${voucher.arrivalDate}</p>
+                            <p><strong>Eviction:</strong> ${voucher.evictionDate}</p>
+                        `;
+                            userVouchersList.appendChild(voucherElement);
+                        });
+                    } else {
+                        userVouchersList.innerHTML = '<p>No vouchers found.</p>';
+                    }
                 } else {
-                    throw new Error(data.statusMessage || 'Failed to load user data'); // Використовуємо statusMessage
+                    throw new Error(data.statusMessage || 'Failed to load user data');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
                 alert('Error: ' + error.message);
             });
+
+        // Fetch vouchers
+        fetch('/vouchers/status/UNREGISTERED', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+                'Accept': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.results && data.results.length > 0) {
+                    const vouchersList = document.getElementById('vouchers-list');
+                    data.results.forEach(voucher => {
+                        const voucherElement = document.createElement('div');
+                        voucherElement.classList.add('voucher');
+                        voucherElement.innerHTML = `
+                        <h3>${voucher.title}</h3>
+                        <p><strong>Id:</strong> ${voucher.id}</p>
+                        <p><strong>Description:</strong> ${voucher.description}</p>
+                        <p><strong>Price:</strong> $${voucher.price}</p>
+                    `;
+                        vouchersList.appendChild(voucherElement);
+                    });
+                } else {
+                    document.getElementById('vouchers-list').innerHTML = '<p>No vouchers available.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('vouchers-list').innerHTML = '<p>Error loading vouchers.</p>';
+            });
     });
+
+    function orderVoucher() {
+        const accessToken = localStorage.getItem('accessToken');
+        const voucherId = document.getElementById('voucherIdInput').value.trim();
+
+        if (!voucherId) {
+            alert('Please enter a valid Voucher ID.');
+            return;
+        }
+
+        fetch('/vouchers/order', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(voucherId)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.succeeded) {
+                    alert('Voucher successfully ordered!');
+                    window.location.href = "http://localhost:8080/page/main";
+                } else {
+                    throw new Error(data.statusMessage || 'Failed to order voucher');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error: ' + error.message);
+            });
+    }
 </script>
 </body>
 </html>

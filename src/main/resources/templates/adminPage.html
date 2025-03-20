@@ -50,12 +50,6 @@
         <option value="FIVE_STARS">5 зірок</option>
     </select><br>
 
-    <label for="status">Статус:</label>
-    <select id="status" required>
-        <option value="REGISTERED">Зареєстрований</option>
-        <option value="PAID">Оплачений</option>
-        <option value="CANCELED">Скасований</option>
-    </select><br>
 
     <label for="arrivalDate">Дата прибуття:</label>
     <input type="date" id="arrivalDate" required><br>
@@ -91,7 +85,7 @@
             tourType: document.getElementById("tourType").value,
             transferType: document.getElementById("transferType").value,
             hotelType: document.getElementById("hotelType").value,
-            status: document.getElementById("status").value,
+            status: "UNREGISTERED",
             arrivalDate: document.getElementById("arrivalDate").value,
             evictionDate: document.getElementById("evictionDate").value,
             isHot: document.getElementById("isHot").value
