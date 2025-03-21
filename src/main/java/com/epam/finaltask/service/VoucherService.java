@@ -10,7 +10,7 @@ public interface VoucherService {
     VoucherDTO order(String id, String userId);
     VoucherDTO update(String id, VoucherDTO voucherDTO);
     void delete(String voucherId);
-    VoucherDTO changeHotStatus(String id, VoucherDTO voucherDTO);
+    VoucherDTO changeHotStatus(String id, String isHot);
     List<VoucherDTO> findAllByUserId(String userId);
 
     List<VoucherDTO> findAllByTourType(String tourType);
@@ -22,4 +22,5 @@ public interface VoucherService {
 
     List<VoucherDTO> findAllByUsername(String username);
     List<VoucherDTO> findAllByStatus(String status);
+    VoucherDTO changeStatus(String id, String status);
 }

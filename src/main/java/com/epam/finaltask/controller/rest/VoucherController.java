@@ -3,6 +3,7 @@ package com.epam.finaltask.controller.rest;
 import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.dto.VoucherDTO;
 import com.epam.finaltask.dto.VoucherOrderRequest;
+import com.epam.finaltask.dto.VoucherRequest;
 import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.service.VoucherService;
 import lombok.RequiredArgsConstructor;
@@ -78,10 +79,10 @@ public class VoucherController {
         return new ResponseEntity<>(remoteResponse, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/change/{usernameId}")
-    public ResponseEntity<RemoteResponse> updateVoucher(@PathVariable String usernameId,
+    @PatchMapping("/change/{voucherId}")
+    public ResponseEntity<RemoteResponse> updateVoucher(@PathVariable String voucherId,
                                                         @RequestBody VoucherDTO vDto) {
-        VoucherDTO updatedVDto = voucherService.update(usernameId, vDto);
+        VoucherDTO updatedVDto = voucherService.update(voucherId, vDto);
 
         RemoteResponse remoteResponse = RemoteResponse.create(
                 true,StatusCodes.OK.name(),"Voucher is successfully updated",
@@ -91,7 +92,7 @@ public class VoucherController {
     }
 
 
-    @PatchMapping("/{usernameId}")
+/*    @PatchMapping("/{usernameId}")
     public ResponseEntity<RemoteResponse> changeVoucherStatus(@PathVariable String usernameId,
                                                               @RequestBody VoucherDTO vDto) {
 
@@ -102,16 +103,40 @@ public class VoucherController {
                 List.of(voucherDTO)
         );
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
+    }*/
+
+    @PostMapping("/changeStatus")
+    public ResponseEntity<RemoteResponse> changeVoucherStatus(@RequestBody VoucherRequest voucherRequest) {
+        VoucherDTO voucherDTO = voucherService.changeStatus(voucherRequest.getVoucherId(),
+                (String) voucherRequest.getAdditionalDetails().get(0));
+        RemoteResponse remoteResponse = RemoteResponse.create(
+                true,StatusCodes.OK.name(),
+                "Voucher status is successfully changed",
+                List.of(voucherDTO)
+        );
+        return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/changeHotStatus")
+    public ResponseEntity<RemoteResponse> changeVoucherHotStatus(@RequestBody VoucherRequest voucherRequest) {
+        VoucherDTO voucherDTO = voucherService.changeHotStatus(voucherRequest.getVoucherId(),
+                (String) voucherRequest.getAdditionalDetails().get(0));
+        RemoteResponse remoteResponse = RemoteResponse.create(
+                true,StatusCodes.OK.name(),
+                "Voucher hot status is successfully changed",
+                List.of(voucherDTO)
+        );
+        return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
     }
 
 
-    @DeleteMapping("/{usernameId}")
-    public ResponseEntity<RemoteResponse> deleteVoucher(@PathVariable String usernameId) {
-        voucherService.delete(usernameId);
+    @DeleteMapping("/{voucherId}")
+    public ResponseEntity<RemoteResponse> deleteVoucher(@PathVariable String voucherId) {
+        voucherService.delete(voucherId);
 
         RemoteResponse remoteResponse = RemoteResponse.create(
                 true,StatusCodes.OK.name(),
-                String.format("Voucher with Id %s has been deleted", usernameId),
+                String.format("Voucher with Id %s has been deleted", voucherId),
                 null
         );
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);

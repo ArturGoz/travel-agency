@@ -25,12 +25,6 @@ public class VoucherServiceImpl implements VoucherService {
     private final UserRepository userRepository;
 
 
-    private Voucher findVoucherById(String id) {
-        return voucherRepository.findById(String.valueOf(UUID.fromString(id)))
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Voucher with Id %s not found", id),
-                        StatusCodes.ENTITY_NOT_FOUND.name()));
-    }
-
     @Override
     public VoucherDTO create(VoucherDTO voucherDTO) {
         Voucher voucher = voucherMapper.toVoucher(voucherDTO);
@@ -73,7 +67,7 @@ public class VoucherServiceImpl implements VoucherService {
         voucher.setArrivalDate(updatedVoucher.getArrivalDate());
         voucher.setEvictionDate(updatedVoucher.getEvictionDate());
         voucher.setUser(updatedVoucher.getUser());
-        voucher.setHot(updatedVoucher.isHot());
+        voucher.setIsHot(updatedVoucher.getIsHot());
 
         Voucher savedVoucher = voucherRepository.save(voucher);
         return voucherMapper.toVoucherDTO(savedVoucher);
@@ -86,13 +80,9 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public VoucherDTO changeHotStatus(String id, VoucherDTO voucherDTO) {
+    public VoucherDTO changeHotStatus(String id, String isHot) {
         Voucher voucher = findVoucherById(id);
-        Voucher updatedVoucher = voucherMapper.toVoucher(voucherDTO);
-
-        voucher.setHot(updatedVoucher.isHot());
-        voucher.setStatus(updatedVoucher.getStatus());
-
+        voucher.setIsHot(Boolean.parseBoolean(isHot));
         Voucher savedVoucher = voucherRepository.save(voucher);
         return voucherMapper.toVoucherDTO(savedVoucher);
     }
@@ -129,9 +119,22 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public List<VoucherDTO> findAll() {
-        return voucherRepository.findAll().stream()
-                .map(voucherMapper::toVoucherDTO).collect(Collectors.toList());
+        return processAndSortVouchers(voucherRepository.findAll());
     }
+
+    @Override
+    public List<VoucherDTO> findAllByStatus(String status) {
+        return processAndSortVouchers(voucherRepository.findAllByStatus(VoucherStatus.valueOf(status)));
+    }
+
+    @Override
+    public VoucherDTO changeStatus(String id, String status) {
+        Voucher voucher = findVoucherById(id);
+        voucher.setStatus(VoucherStatus.valueOf(status));
+        Voucher savedVoucher = voucherRepository.save(voucher);
+        return voucherMapper.toVoucherDTO(savedVoucher);
+    }
+
 
     @Override
     public List<VoucherDTO> findAllByUsername(String username) {
@@ -139,14 +142,19 @@ public class VoucherServiceImpl implements VoucherService {
                 .map(voucherMapper::toVoucherDTO).collect(Collectors.toList());
     }
 
-    @Override
-    public List<VoucherDTO> findAllByStatus(String status) {
-        return voucherRepository.findAllByStatus(VoucherStatus.valueOf(status)).stream()
+    private List<VoucherDTO> processAndSortVouchers(List<Voucher> vouchers) {
+        return vouchers.stream()
                 .map(voucherMapper::toVoucherDTO)
                 .sorted(Comparator.comparing(
                         dto -> "true".equalsIgnoreCase(dto.getIsHot()),
                         Comparator.reverseOrder()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    private Voucher findVoucherById(String id) {
+        return voucherRepository.findById(String.valueOf(UUID.fromString(id)))
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Voucher with Id %s not found", id),
+                        StatusCodes.ENTITY_NOT_FOUND.name()));
     }
 }

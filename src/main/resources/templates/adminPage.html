@@ -65,6 +65,80 @@
 
     <button type="submit">Створити ваучер</button>
 </form>
+<div class="container">
+    <h2>Delete Voucher</h2>
+    <div class="input-group">
+        <label for="voucherId">Voucher ID:</label>
+        <input type="text" id="voucherId" placeholder="Enter voucher ID">
+    </div>
+    <button onclick="deleteVoucher()">Delete Voucher</button>
+    <div id="message"></div>
+</div>
+
+
+
+<h2>Оновлення ваучера</h2>
+<label for="voucherUpdateId">ID ваучера:</label>
+<input type="text" id="voucherUpdateId" required><br>
+
+<form id="voucherForm2">
+    <label for="title2">Назва:</label>
+    <input type="text" id="title2" ><br>
+
+    <label for="description2">Опис:</label>
+    <textarea id="description2" ></textarea><br>
+
+    <label for="price2">Ціна:</label>
+    <input type="number" id="price2" step="0.01" ><br>
+
+    <label for="tourType2">Тип туру:</label>
+    <select id="tourType2" >
+        <option value="HEALTH">Оздоровчий</option>
+        <option value="SPORTS">Спортивний</option>
+        <option value="LEISURE">Відпочинковий</option>
+        <option value="SAFARI">Сафарі</option>
+        <option value="WINE">Винний</option>
+        <option value="ECO">Екотур</option>
+        <option value="ADVENTURE">Пригодницький</option>
+        <option value="CULTURAL">Культурний</option>
+    </select><br>
+
+    <label for="transferType2">Тип трансферу:</label>
+    <select id="transferType2" >
+        <option value="BUS">Автобус</option>
+        <option value="TRAIN">Потяг</option>
+        <option value="PLANE">Літак</option>
+        <option value="SHIP">Корабель</option>
+        <option value="PRIVATE_CAR">Приватний автомобіль</option>
+        <option value="JEEPS">Джипи</option>
+        <option value="MINIBUS">Мікроавтобус</option>
+        <option value="ELECTRICAL_CARS">Електрокари</option>
+    </select><br>
+
+    <label for="hotelType2">Тип готелю:</label>
+    <select id="hotelType2" >
+        <option value="ONE_STAR">1 зірка</option>
+        <option value="TWO_STARS">2 зірки</option>
+        <option value="THREE_STARS">3 зірки</option>
+        <option value="FOUR_STARS">4 зірки</option>
+        <option value="FIVE_STARS">5 зірок</option>
+    </select><br>
+
+    <label for="arrivalDate2">Дата прибуття:</label>
+    <input type="date" id="arrivalDate2" ><br>
+
+    <label for="evictionDate2">Дата виселення:</label>
+    <input type="date" id="evictionDate2" ><br>
+
+    <label for="isHot2">Гарячий тур:</label>
+    <select id="isHot2">
+        <option value="true">Так</option>
+        <option value="false">Ні</option>
+    </select><br>
+
+    <button type="button" onclick="updateVoucher()">Оновити ваучер</button>
+</form>
+
 
 <script>
     document.getElementById("voucherForm").addEventListener("submit", async function(event) {
@@ -109,6 +183,76 @@
             alert("Не вдалося створити ваучер");
         }
     });
+
+
+
+    async function deleteVoucher() {
+        const voucherId = document.getElementById('voucherId').value;
+        const messageDiv = document.getElementById('message');
+
+        if (!voucherId) {
+            messageDiv.innerHTML = 'Please enter a voucher ID';
+            messageDiv.className = 'error';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/vouchers/${voucherId}`, {
+                method: 'DELETE'
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                messageDiv.innerHTML = `Success: ${result.message}`;
+                messageDiv.className = 'success';
+                document.getElementById('voucherId').value = '';
+            } else {
+                messageDiv.innerHTML = `Error: ${result.message || 'Failed to delete voucher'}`;
+                messageDiv.className = 'error';
+            }
+        } catch (error) {
+            messageDiv.innerHTML = `Error: ${error.message}`;
+            messageDiv.className = 'error';
+        }
+    }
+
+    function updateVoucher() {
+        const voucherId = document.getElementById("voucherUpdateId").value;
+        if (!voucherId) {
+            alert("Будь ласка, введіть ID ваучера");
+            return;
+        }
+
+        const voucherData = {
+            title: document.getElementById("title2").value,
+            description: document.getElementById("description2").value,
+            price: parseFloat(document.getElementById("price2").value),
+            tourType: document.getElementById("tourType2").value,
+            transferType: document.getElementById("transferType2").value,
+            hotelType: document.getElementById("hotelType2").value,
+            arrivalDate: document.getElementById("arrivalDate2").value,
+            evictionDate: document.getElementById("evictionDate2").value,
+            isHot: document.getElementById("isHot2").value
+        };
+
+        fetch(`/vouchers/change/${voucherId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(voucherData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message || "Ваучер успішно оновлено!");
+            })
+            .catch(error => {
+                console.error("Помилка:", error);
+                alert("Сталася помилка при оновленні ваучера.");
+            });
+    }
+
 </script>
 </body>
 </html>

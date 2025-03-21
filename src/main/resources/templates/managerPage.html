@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vouchers List</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .voucher { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+    .form-container { margin: 20px 0; }
+  </style>
+</head>
+<body>
+<h1>Vouchers</h1>
+<div id="voucherContainer">Loading...</div>
+
+<div class="form-container">
+  <h3>Change Voucher Hot Status</h3>
+  <label for="voucherId">Voucher ID:</label>
+  <input type="text" id="voucherId" placeholder="Enter Voucher ID">
+
+  <label for="hotStatus">Hot Status:</label>
+  <select id="hotStatus">
+    <option value="true">True</option>
+    <option value="false">False</option>
+  </select>
+
+  <button onclick="changeHotStatus()">Submit</button>
+</div>
+
+<div class="form-container">
+  <h3>Change Voucher Status</h3>
+  <label for="voucherId2">Voucher ID:</label>
+  <input type="text" id="voucherId2" placeholder="Enter Voucher ID">
+
+  <label for="Status">Status:</label>
+  <select id="Status">
+    <option value="REGISTERED">REGISTERED</option>
+    <option value="PAID">PAID</option>
+    <option value="CANCELED">CANCELED</option>
+    <option value="UNREGISTERED">UNREGISTERED</option>
+  </select>
+
+  <button onclick="changeStatus()">Submit</button>
+</div>
+
+<script>
+  async function fetchVouchers() {
+    const accessToken = localStorage.getItem('accessToken');
+    const response = await fetch('/vouchers/list', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      document.getElementById('voucherContainer').innerText = 'Failed to load vouchers';
+      return;
+    }
+
+    const data = await response.json();
+    const vouchers = data.results;
+    const container = document.getElementById('voucherContainer');
+    container.innerHTML = '';
+
+    vouchers.forEach(voucher => {
+      const div = document.createElement('div');
+      div.className = 'voucher';
+      div.innerHTML = `
+                    <h3>${voucher.title}</h3>
+                    <h3><strong>Id:</strong> ${voucher.id}</h3>
+                    <p><strong>Description:</strong> ${voucher.description}</p>
+                    <p><strong>Price:</strong> $${voucher.price}</p>
+                    <p><strong>Tour Type:</strong> ${voucher.tourType}</p>
+                    <p><strong>Transfer Type:</strong> ${voucher.transferType}</p>
+                    <p><strong>Hotel Type:</strong> ${voucher.hotelType}</p>
+                    <p><strong>Status:</strong> ${voucher.status}</p>
+                    <p><strong>Arrival Date:</strong> ${voucher.arrivalDate}</p>
+                    <p><strong>Eviction Date:</strong> ${voucher.evictionDate}</p>
+                    <p><strong>Hot Deal:</strong> ${voucher.isHot}</p>
+                `;
+      container.appendChild(div);
+    });
+  }
+
+  async function changeHotStatus() {
+    const voucherId = document.getElementById('voucherId').value;
+    const isHot = document.getElementById('hotStatus').value;
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (!voucherId) {
+      alert('Please enter a Voucher ID');
+      return;
+    }
+
+    const requestBody = {
+      voucherId: voucherId,
+      additionalDetails: [isHot]
+    };
+
+    const response = await fetch('/vouchers/changeHotStatus', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (response.ok) {
+      alert('Voucher status changed successfully');
+      fetchVouchers();
+    } else {
+      alert('Failed to change voucher status');
+    }
+  }
+
+  async function changeStatus() {
+    const voucherId = document.getElementById('voucherId2').value;
+    const status = document.getElementById('Status').value;
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (!voucherId) {
+      alert('Please enter a Voucher ID');
+      return;
+    }
+
+    const requestBody = {
+      voucherId: voucherId,
+      additionalDetails: [status]
+    };
+
+    const response = await fetch('/vouchers/changeStatus', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (response.ok) {
+      alert('Voucher status changed successfully');
+      fetchVouchers();
+    } else {
+      alert('Failed to change voucher status');
+    }
+  }
+
+  fetchVouchers();
+</script>
+</body>
+</html>

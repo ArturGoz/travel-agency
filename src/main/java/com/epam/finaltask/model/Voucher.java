@@ -46,5 +46,5 @@ public class Voucher {
     @JsonBackReference
     private User user;
 
-    private boolean isHot;
+    private Boolean isHot;
 }

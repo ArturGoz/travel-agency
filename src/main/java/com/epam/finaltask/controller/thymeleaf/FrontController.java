@@ -23,4 +23,8 @@ public class FrontController {
     public String adminPage() {
         return "adminPage";
     }
+    @GetMapping("/manager")
+    public String managerPage() {
+        return "managerPage";
+    }
 }
