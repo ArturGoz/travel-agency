@@ -86,7 +86,8 @@
         hotelLabel: /*[[#{voucher.hotelLabel}]]*/,
         statusLabel: /*[[#{voucher.status}]]*/,
         arrivalLabel: /*[[#{voucher.arrivalLabel}]]*/,
-        evictionLabel: /*[[#{voucher.evictionLabel}]]*/
+        evictionLabel: /*[[#{voucher.evictionLabel}]]*/,
+        isHot: /*[[#{voucher.hotStatus}]]*/
     };
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -132,6 +133,7 @@
                         <p><strong>${translations.statusLabel}:</strong> ${voucher.status}</p>
                         <p><strong>${translations.arrivalLabel}:</strong> ${voucher.arrivalDate}</p>
                         <p><strong>${translations.evictionLabel}:</strong> ${voucher.evictionDate}</p>
+                        <p><strong>${translations.isHot}:</strong> ${voucher.isHot}</p>
                         `;
                             userVouchersList.appendChild(voucherElement);
                         });

@@ -6,149 +6,171 @@
     <title>Створення ваучера</title>
 </head>
 <body>
-<h2>Створення ваучера</h2>
-<form id="voucherForm">
-    <label for="title">Назва:</label>
-    <input type="text" id="title" required><br>
+    <h2 th:text="#{voucher.create.title}">Create Voucher</h2>
+    <form id="voucherForm">
+        <div class="field">
+            <label th:text="#{voucher.title}" for="title">Title:</label>
+            <input type="text" id="title" required>
+        </div>
 
-    <label for="description">Опис:</label>
-    <textarea id="description" required></textarea><br>
+        <div class="field">
+            <label th:text="#{voucher.description}" for="description">Description:</label>
+            <textarea id="description" required></textarea>
+        </div>
 
-    <label for="price">Ціна:</label>
-    <input type="number" id="price" step="0.01" required><br>
+        <div class="field">
+            <label th:text="#{voucher.price}" for="price">Price:</label>
+            <input type="number" id="price" step="0.01" required>
+        </div>
 
-    <label for="tourType">Тип туру:</label>
-    <select id="tourType" required>
-        <option value="HEALTH">Оздоровчий</option>
-        <option value="SPORTS">Спортивний</option>
-        <option value="LEISURE">Відпочинковий</option>
-        <option value="SAFARI">Сафарі</option>
-        <option value="WINE">Винний</option>
-        <option value="ECO">Екотур</option>
-        <option value="ADVENTURE">Пригодницький</option>
-        <option value="CULTURAL">Культурний</option>
-    </select><br>
+        <div class="field">
+            <label th:text="#{voucher.type}" for="tourType">Tour Type:</label>
+            <select id="tourType" required>
+                <option th:each="type : ${tourTypes}"
+                        th:value="${type}"
+                        th:text="#{'tour.type.' + ${type}}"></option>
+            </select>
+        </div>
 
-    <label for="transferType">Тип трансферу:</label>
-    <select id="transferType" required>
-        <option value="BUS">Автобус</option>
-        <option value="TRAIN">Потяг</option>
-        <option value="PLANE">Літак</option>
-        <option value="SHIP">Корабель</option>
-        <option value="PRIVATE_CAR">Приватний автомобіль</option>
-        <option value="JEEPS">Джипи</option>
-        <option value="MINIBUS">Мікроавтобус</option>
-        <option value="ELECTRICAL_CARS">Електрокари</option>
-    </select><br>
+        <div class="field">
+            <label th:text="#{voucher.transfer}" for="transferType">Transfer Type:</label>
+            <select id="transferType" required>
+                <option th:each="transfer : ${transferTypes}"
+                        th:value="${transfer}"
+                        th:text="#{'transfer.type.' + ${transfer}}"></option>
+            </select>
+        </div>
 
-    <label for="hotelType">Тип готелю:</label>
-    <select id="hotelType" required>
-        <option value="ONE_STAR">1 зірка</option>
-        <option value="TWO_STARS">2 зірки</option>
-        <option value="THREE_STARS">3 зірки</option>
-        <option value="FOUR_STARS">4 зірки</option>
-        <option value="FIVE_STARS">5 зірок</option>
-    </select><br>
+        <div class="field">
+            <label th:text="#{voucher.hotel}" for="hotelType">Hotel Type:</label>
+            <select id="hotelType" required>
+                <option th:each="hotel : ${hotelTypes}"
+                        th:value="${hotel}"
+                        th:text="#{'hotel.type.' + ${hotel}}"></option>
+            </select>
+        </div>
 
+        <div class="field">
+            <label th:text="#{voucher.status}" for="Status">Status Type:</label>
+            <select id="Status" required>
+                <option th:each="status : ${statusTypes}"
+                        th:value="${status}"
+                        th:text="#{'hotel.type.' + ${status}}"></option>
+            </select>
+        </div>
 
-    <label for="arrivalDate">Дата прибуття:</label>
-    <input type="date" id="arrivalDate" required><br>
+        <div class="field">
+            <label th:text="#{voucher.arrival}" for="arrivalDate">Arrival Date:</label>
+            <input type="date" id="arrivalDate" required>
+        </div>
 
-    <label for="evictionDate">Дата виселення:</label>
-    <input type="date" id="evictionDate" required><br>
+        <div class="field">
+            <label th:text="#{voucher.eviction}" for="evictionDate">Eviction Date:</label>
+            <input type="date" id="evictionDate" required>
+        </div>
 
     <label for="isHot">Гарячий тур:</label>
     <select id="isHot">
-        <option value="true">Так</option>
-        <option value="false">Ні</option>
+        <option value="true" th:text="#{boolean.true}">Так</option>
+        <option value="false" th:text="#{boolean.false}">Ні</option>
     </select><br>
 
-    <button type="submit">Створити ваучер</button>
+        <button type="submit" th:text="#{button.create}">Create</button>
 </form>
-<div class="container">
-    <h2>Delete Voucher</h2>
-    <div class="input-group">
-        <label for="voucherId">Voucher ID:</label>
-        <input type="text" id="voucherId" placeholder="Enter voucher ID">
+
+
+    <!-- Delete Voucher Section -->
+    <div class="section">
+        <h2 th:text="#{voucher.delete.title}">Delete Voucher</h2>
+        <div class="field">
+            <label th:text="#{voucher.id}" for="voucherId">Voucher ID:</label>
+            <input type="text" id="voucherId" th:placeholder="#{voucher.id.placeholder}">
+        </div>
+        <button onclick="deleteVoucher()" th:text="#{button.delete}">Delete</button>
+        <div id="deleteMessage"></div>
     </div>
-    <button onclick="deleteVoucher()">Delete Voucher</button>
-    <div id="message"></div>
-</div>
 
 
 
-<h2>Оновлення ваучера</h2>
-<label for="voucherUpdateId">ID ваучера:</label>
-<input type="text" id="voucherUpdateId" required><br>
+    <h2 th:text="#{voucher.update.title}">Update Voucher</h2>
+    <div class="field">
+        <label th:text="#{voucher.id}" for="voucherUpdateId">Voucher ID:</label>
+        <input type="text" id="voucherUpdateId" required>
+    </div>
 
 <form id="voucherForm2">
-    <label for="title2">Назва:</label>
-    <input type="text" id="title2" ><br>
+    <div class="field">
+        <label th:text="#{voucher.title}" for="title2">Title:</label>
+        <input type="text" id="title2" required>
+    </div>
 
-    <label for="description2">Опис:</label>
-    <textarea id="description2" ></textarea><br>
+    <div class="field">
+        <label th:text="#{voucher.description}" for="description2">Description:</label>
+        <textarea id="description2" required></textarea>
+    </div>
 
-    <label for="price2">Ціна:</label>
-    <input type="number" id="price2" step="0.01" ><br>
+    <div class="field">
+        <label th:text="#{voucher.price}" for="price2">Price:</label>
+        <input type="number" id="price2" step="0.01" required>
+    </div>
 
-    <label for="tourType2">Тип туру:</label>
-    <select id="tourType2" >
-        <option value="HEALTH">Оздоровчий</option>
-        <option value="SPORTS">Спортивний</option>
-        <option value="LEISURE">Відпочинковий</option>
-        <option value="SAFARI">Сафарі</option>
-        <option value="WINE">Винний</option>
-        <option value="ECO">Екотур</option>
-        <option value="ADVENTURE">Пригодницький</option>
-        <option value="CULTURAL">Культурний</option>
-    </select><br>
+    <div class="field">
+        <label th:text="#{voucher.type}" for="tourType2">Tour Type:</label>
+        <select id="tourType2" required>
+            <option th:each="type : ${tourTypes}"
+                    th:value="${type}"
+                    th:text="#{'tour.type.' + ${type}}"></option>
+        </select>
+    </div>
 
-    <label for="transferType2">Тип трансферу:</label>
-    <select id="transferType2" >
-        <option value="BUS">Автобус</option>
-        <option value="TRAIN">Потяг</option>
-        <option value="PLANE">Літак</option>
-        <option value="SHIP">Корабель</option>
-        <option value="PRIVATE_CAR">Приватний автомобіль</option>
-        <option value="JEEPS">Джипи</option>
-        <option value="MINIBUS">Мікроавтобус</option>
-        <option value="ELECTRICAL_CARS">Електрокари</option>
-    </select><br>
+    <div class="field">
+        <label th:text="#{voucher.transfer}" for="transferType2">Transfer Type:</label>
+        <select id="transferType2" required>
+            <option th:each="transfer : ${transferTypes}"
+                    th:value="${transfer}"
+                    th:text="#{'transfer.type.' + ${transfer}}"></option>
+        </select>
+    </div>
 
-    <label for="hotelType2">Тип готелю:</label>
-    <select id="hotelType2" >
-        <option value="ONE_STAR">1 зірка</option>
-        <option value="TWO_STARS">2 зірки</option>
-        <option value="THREE_STARS">3 зірки</option>
-        <option value="FOUR_STARS">4 зірки</option>
-        <option value="FIVE_STARS">5 зірок</option>
-    </select><br>
+    <div class="field">
+        <label th:text="#{voucher.hotel}" for="hotelType2">Hotel Type:</label>
+        <select id="hotelType2" required>
+            <option th:each="hotel : ${hotelTypes}"
+                    th:value="${hotel}"
+                    th:text="#{'hotel.type.' + ${hotel}}"></option>
+        </select>
+    </div>
 
-    <label for="Status">Status:</label>
-    <select id="Status">
-        <option value="REGISTERED">REGISTERED</option>
-        <option value="PAID">PAID</option>
-        <option value="CANCELED">CANCELED</option>
-        <option value="UNREGISTERED">UNREGISTERED</option>
-    </select>
+    <div class="field">
+        <label th:text="#{voucher.arrival}" for="arrivalDate2">Arrival Date:</label>
+        <input type="date" id="arrivalDate2" required>
+    </div>
 
-    <label for="arrivalDate2">Дата прибуття:</label>
-    <input type="date" id="arrivalDate2" ><br>
-
-    <label for="evictionDate2">Дата виселення:</label>
-    <input type="date" id="evictionDate2" ><br>
+    <div class="field">
+        <label th:text="#{voucher.eviction}" for="evictionDate2">Eviction Date:</label>
+        <input type="date" id="evictionDate2" required>
+    </div>
 
     <label for="isHot2">Гарячий тур:</label>
     <select id="isHot2">
-        <option value="true">Так</option>
-        <option value="false">Ні</option>
+        <option value="true" th:text="#{boolean.true}">Так</option>
+        <option value="false" th:text="#{boolean.false}">Ні</option>
     </select><br>
 
-    <button type="button" onclick="updateVoucher()">Оновити ваучер</button>
+    <button type="button" onclick="updateVoucher()" th:text="#{button.update}">Update</button>
 </form>
 
 
-<script>
+    <script th:inline="javascript">
+        const messages = {
+            authRequired: /*[[#{error.authRequired}]]*/ 'Authentication required',
+            createSuccess: /*[[#{voucher.create.success}]]*/ 'Voucher created successfully!',
+            updateSuccess: /*[[#{voucher.update.success}]]*/ 'Voucher updated successfully!',
+            deleteSuccess: /*[[#{voucher.delete.success}]]*/ 'Voucher deleted successfully!',
+            errorGeneric: /*[[#{error.generic}]]*/ 'An error occurred'
+        };
+
+
     document.getElementById("voucherForm").addEventListener("submit", async function(event) {
         event.preventDefault();
 
@@ -197,7 +219,7 @@
 
     async function deleteVoucher() {
         const voucherId = document.getElementById('voucherId').value;
-        const messageDiv = document.getElementById('message');
+        const messageDiv = document.getElementById('deleteMessage');
         const accessToken = localStorage.getItem('accessToken');
 
         if (!voucherId) {

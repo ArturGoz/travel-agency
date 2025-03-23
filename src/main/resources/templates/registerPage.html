@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Registration Page</title>
+    <title th:text="#{page.title}">Registration Page</title>
 </head>
 <body>
-<h1>Register</h1>
+<h1 th:text="#{page.title}">Register</h1>
 <form th:action="@{/users/register}" method="post">
-    <label for="username">Username:</label>
+    <label for="username" th:text="#{label.username}">Username:</label>
     <input type="text" id="username" name="username" required>
     <br>
-    <label for="password">Password:</label>
+    <label for="password" th:text="#{label.password}">Password:</label>
     <input type="password" id="password" name="password" required>
     <br>
-    <label for="phoneNumber">Phone Number:</label>
+    <label for="phoneNumber" th:text="#{label.phoneNumber}">Phone Number:</label>
     <input type="text" id="phoneNumber" name="phoneNumber" required>
     <br>
-    <label>Select Roles:</label>
+    <label th:text="#{label.roles}"></label>
     <br>
     <input type="checkbox" id="admin" name="roles" value="ADMIN">
-    <label for="admin">ADMIN</label>
+    <label for="admin" th:text="#{role.admin}">ADMIN</label>
     <br>
     <input type="checkbox" id="manager" name="roles" value="MANAGER">
-    <label for="manager">MANAGER</label>
+    <label for="manager" th:text="#{role.manager}">MANAGER</label>
     <br>
     <input type="checkbox" id="user" name="roles" value="USER">
-    <label for="user">USER</label>
+    <label for="user" th:text="#{role.user}">USER</label>
     <br>
-    <label for="balance">Balance:</label>
+    <label for="balance" th:text="#{label.balance}">Balance:</label>
     <input type="number" id="balance" name="balance" step="0.01">
     <br>
-    <button type="submit">Register</button>
+    <button type="submit" th:text="#{button.register}">Register</button>
 </form>
 
 

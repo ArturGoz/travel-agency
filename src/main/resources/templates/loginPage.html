@@ -1,18 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <head>
-    <title>Login Page</title>
+    <meta charset="UTF-8">
+    <title th:text="#{login.title}">Login</title>
 </head>
 <body>
-<h1>Login</h1>
+<h1 th:text="#{login.title}">Login</h1>
 <form th:action="@{/auth/login}" method="post" id="loginForm">
-    <label for="username">Username:</label>
+    <label for="username" th:text="#{label.username}">Username:</label>
     <input type="text" id="username" name="username" required>
     <br>
-    <label for="password">Password:</label>
+    <label for="password" th:text="#{label.password}">Password:</label>
     <input type="password" id="password" name="password" required>
     <br>
-    <button type="submit">Login</button>
+    <button type="submit" th:text="#{button.login}">Login</button>
 </form>
 </body>
 
