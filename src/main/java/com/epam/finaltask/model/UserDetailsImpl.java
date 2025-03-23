@@ -2,6 +2,7 @@ package com.epam.finaltask.model;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -33,12 +34,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !this.getAuthorities().contains(new SimpleGrantedAuthority(Permission.BLOCKED.name()));
     }
 
     @Override

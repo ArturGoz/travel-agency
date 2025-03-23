@@ -1,5 +1,6 @@
 package com.epam.finaltask.config;
 
+import com.epam.finaltask.model.Permission;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -27,34 +28,31 @@ import java.util.List;
 public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    @Value("${cors.origins}")
-    private String corsOrigins;
 
-    @Value("${cors.methods}")
-    private String corsMethods;
-
-    @Value("${cors.headers}")
-    private String corsHeaders;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-/*                .cors(cors -> cors.configurationSource(request -> {
-                    CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(Arrays.asList(corsOrigins.split(",")));
-                    configuration.setAllowedMethods(Arrays.asList(corsMethods.split(",")));
-                    configuration.setAllowedHeaders(Arrays.asList(corsHeaders.split(",")));
-                    configuration.setExposedHeaders(List.of("X-User-Name"));
-                    return configuration;
-                }))*/
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                       // .requestMatchers("/page/adminPage").permitAll()
-                        .requestMatchers("/page/**").permitAll()
-                        .requestMatchers("/users/**").permitAll()
-                        .requestMatchers("/vouchers/**").permitAll()
-                        .anyRequest().authenticated()
+                        // Endpoints accessible by anyone
+                        .requestMatchers("/auth/**",
+                                "/users/register",
+                                "/page/**")
+                        .permitAll()
+
+                        .requestMatchers("/vouchers/status/UNREGISTERED",
+                                "/vouchers/order",
+                                "/users/data")
+                        .hasAuthority(Permission.USER_READ.name())
+                        // Endpoints accessible by MANAGERs
+                        .requestMatchers("/vouchers/list",
+                                "/vouchers/changeStatus",
+                                "/vouchers/changeHotStatus")
+                        .hasAuthority(Permission.MANAGER_UPDATE.name())
+
+                        // All other endpoints require ADMIN role
+                        .anyRequest().hasAuthority(Permission.ADMIN_READ.name())
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

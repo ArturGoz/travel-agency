@@ -124,6 +124,14 @@
         <option value="FIVE_STARS">5 зірок</option>
     </select><br>
 
+    <label for="Status">Status:</label>
+    <select id="Status">
+        <option value="REGISTERED">REGISTERED</option>
+        <option value="PAID">PAID</option>
+        <option value="CANCELED">CANCELED</option>
+        <option value="UNREGISTERED">UNREGISTERED</option>
+    </select>
+
     <label for="arrivalDate2">Дата прибуття:</label>
     <input type="date" id="arrivalDate2" ><br>
 
@@ -163,6 +171,7 @@
             arrivalDate: document.getElementById("arrivalDate").value,
             evictionDate: document.getElementById("evictionDate").value,
             isHot: document.getElementById("isHot").value
+
         };
 
         try {
@@ -189,6 +198,7 @@
     async function deleteVoucher() {
         const voucherId = document.getElementById('voucherId').value;
         const messageDiv = document.getElementById('message');
+        const accessToken = localStorage.getItem('accessToken');
 
         if (!voucherId) {
             messageDiv.innerHTML = 'Please enter a voucher ID';
@@ -198,7 +208,11 @@
 
         try {
             const response = await fetch(`/vouchers/${voucherId}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                }
             });
 
             const result = await response.json();
@@ -217,8 +231,13 @@
         }
     }
 
+
     function updateVoucher() {
         const voucherId = document.getElementById("voucherUpdateId").value;
+
+        const accessToken = localStorage.getItem('accessToken');
+
+
         if (!voucherId) {
             alert("Будь ласка, введіть ID ваучера");
             return;
@@ -233,12 +252,14 @@
             hotelType: document.getElementById("hotelType2").value,
             arrivalDate: document.getElementById("arrivalDate2").value,
             evictionDate: document.getElementById("evictionDate2").value,
-            isHot: document.getElementById("isHot2").value
+            isHot: document.getElementById("isHot2").value,
+            status: document.getElementById("Status").value
         };
 
         fetch(`/vouchers/change/${voucherId}`, {
             method: "PATCH",
             headers: {
+                'Authorization': `Bearer ${accessToken}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(voucherData)

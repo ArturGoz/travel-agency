@@ -145,10 +145,15 @@
                         voucherElement.classList.add('voucher');
                         voucherElement.innerHTML = `
                         <h3>${voucher.title}</h3>
-                        <p><strong>Id:</strong> ${voucher.id}</p>
-                        <p><strong>Description:</strong> ${voucher.description}</p>
-                        <p><strong>Price:</strong> $${voucher.price}</p>
-                        <p><strong>Hot Deal:</strong> ${voucher.isHot}</p>
+                            <p><strong>Id:</strong> ${voucher.id}</p>
+                            <p><strong>Description:</strong> ${voucher.description}</p>
+                            <p><strong>Price:</strong> $${voucher.price}</p>
+                            <p><strong>Type:</strong> ${voucher.tourType}</p>
+                            <p><strong>Transfer:</strong> ${voucher.transferType}</p>
+                            <p><strong>Hotel:</strong> ${voucher.hotelType}</p>
+                            <p><strong>Status:</strong> ${voucher.status}</p>
+                            <p><strong>Arrival:</strong> ${voucher.arrivalDate}</p>
+                            <p><strong>Eviction:</strong> ${voucher.evictionDate}</p>
                     `;
                         vouchersList.appendChild(voucherElement);
                     });

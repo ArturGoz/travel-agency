@@ -69,4 +69,16 @@ public class UserController {
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
     }
 
+    @PatchMapping("/{userId}/block")
+    public ResponseEntity<RemoteResponse> block_unblockUser(@PathVariable String userId,
+                                                            @RequestParam Boolean doBlock) {
+        UserDTO userDto = userService.doBlockUser(userId, doBlock);
+        log.info(String.valueOf(userDto));
+        RemoteResponse remoteResponse = RemoteResponse.create(
+                true,StatusCodes.OK.name(),"User block changed to " + doBlock,
+                List.of(userDto)
+        );
+        return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
+    }
+
 }

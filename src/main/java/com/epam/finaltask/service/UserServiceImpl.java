@@ -5,12 +5,14 @@ import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.exception.EntityAlreadyExistsException;
 import com.epam.finaltask.exception.EntityNotFoundException;
 import com.epam.finaltask.mapper.UserMapper;
+import com.epam.finaltask.model.Role;
 import com.epam.finaltask.model.User;
 import com.epam.finaltask.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -77,11 +79,28 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDTO getUserById(UUID id) {
-        User user = userRepository.findById(String.valueOf(id))
+    public UserDTO getUserById(String id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Entity not found",
                         StatusCodes.ENTITY_NOT_FOUND.name()));
         return userMapper.toUserDTO(user);
 
     }
+
+    @Override
+    public UserDTO doBlockUser(String id, Boolean doBlock) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Entity not found",
+                        StatusCodes.ENTITY_NOT_FOUND.name()));
+        Set<Role> userRoles = user.getRoles();
+        if (doBlock) {
+            userRoles.add(Role.BANNED);
+        } else {
+            userRoles.remove(Role.BANNED);
+        }
+        user.setRoles(userRoles);
+        userRepository.save(user);
+        return userMapper.toUserDTO(user);
+    }
+
 }

@@ -75,6 +75,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // Додаємо аутентифікацію
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            log.info("User Details : {}", userDetails.getAuthorities());
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities()
             );
