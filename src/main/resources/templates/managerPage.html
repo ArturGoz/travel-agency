@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:lang="${#locale.language}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vouchers List</title>
+  <title th:text="#{page.title}">User Profile &amp; Vouchers</title>
   <style>
     body { font-family: Arial, sans-serif; }
     .voucher { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
@@ -11,38 +11,57 @@
   </style>
 </head>
 <body>
-<h1>Vouchers</h1>
+<!-- Use localized title for available vouchers -->
+<h1 th:text="#{vouchers.available}">Available Vouchers</h1>
 <div id="voucherContainer">Loading...</div>
 
 <div class="form-container">
-  <h3>Change Voucher Hot Status</h3>
-  <label for="voucherId">Voucher ID:</label>
-  <input type="text" id="voucherId" placeholder="Enter Voucher ID">
+  <!-- Localize form headings and labels -->
+  <h3 th:text="#{voucher.changeHotStatus}">Change Voucher Hot Status</h3>
+  <label for="voucherId" th:text="#{voucher.id} + ':'">Voucher ID:</label>
+  <input type="text" id="voucherId" th:placeholder="#{vouchers.enterId}">
 
-  <label for="hotStatus">Hot Status:</label>
+  <label for="hotStatus" th:text="#{voucher.hotStatus} + ':'">Hot Status:</label>
   <select id="hotStatus">
-    <option value="true">True</option>
-    <option value="false">False</option>
+    <option value="true">true</option>
+    <option value="false">false</option>
   </select>
 
-  <button onclick="changeHotStatus()">Submit</button>
+  <button onclick="changeHotStatus()" th:text="#{vouchers.register}">Submit</button>
 </div>
 
 <div class="form-container">
-  <h3>Change Voucher Status</h3>
-  <label for="voucherId2">Voucher ID:</label>
-  <input type="text" id="voucherId2" placeholder="Enter Voucher ID">
+  <h3 th:text="#{voucher.changeStatus}">Change Voucher Status</h3>
+  <label for="voucherId2" th:text="#{voucher.id} + ':'">Voucher ID:</label>
+  <input type="text" id="voucherId2" th:placeholder="#{vouchers.enterId}">
 
-  <label for="Status">Status:</label>
+  <label for="Status" th:text="#{voucher.status} + ':'">Status:</label>
   <select id="Status">
-    <option value="REGISTERED">REGISTERED</option>
-    <option value="PAID">PAID</option>
-    <option value="CANCELED">CANCELED</option>
-    <option value="UNREGISTERED">UNREGISTERED</option>
+    <option value="REGISTERED" th:text="'REGISTERED'">REGISTERED</option>
+    <option value="PAID" th:text="'PAID'">PAID</option>
+    <option value="CANCELED" th:text="'CANCELED'">CANCELED</option>
+    <option value="UNREGISTERED" th:text="#{status.UNREGISTERED}">UNREGISTERED</option>
   </select>
 
-  <button onclick="changeStatus()">Submit</button>
+  <button onclick="changeStatus()" th:text="#{vouchers.register}">Submit</button>
 </div>
+
+<!-- Create a JavaScript object with localized voucher labels -->
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  var translations = {
+    idLabel: /*[[#{voucher.id}]]*/,
+    descriptionLabel: /*[[#{voucher.description}]]*/,
+    priceLabel: /*[[#{voucher.priceLabel}]]*/,
+    tourTypeLabel: /*[[#{voucher.type}]]*/,
+    transferLabel: /*[[#{voucher.transferLabel}]]*/,
+    hotelLabel: /*[[#{voucher.hotelLabel}]]*/,
+    statusLabel: /*[[#{voucher.status}]]*/,
+    arrivalLabel: /*[[#{voucher.arrivalLabel}]]*/,
+    evictionLabel: /*[[#{voucher.evictionLabel}]]*/
+  };
+  /*]]>*/
+</script>
 
 <script>
   async function fetchVouchers() {
@@ -56,7 +75,8 @@
     });
 
     if (!response.ok) {
-      document.getElementById('voucherContainer').innerText = 'Failed to load vouchers';
+      // Using inline localization for error messages as needed
+      document.getElementById('voucherContainer').innerText = /*[[#{error.generic}]]*/ 'An error occurred';
       return;
     }
 
@@ -70,15 +90,15 @@
       div.className = 'voucher';
       div.innerHTML = `
                     <h3>${voucher.title}</h3>
-                    <h3><strong>Id:</strong> ${voucher.id}</h3>
-                    <p><strong>Description:</strong> ${voucher.description}</p>
-                    <p><strong>Price:</strong> $${voucher.price}</p>
-                    <p><strong>Tour Type:</strong> ${voucher.tourType}</p>
-                    <p><strong>Transfer Type:</strong> ${voucher.transferType}</p>
-                    <p><strong>Hotel Type:</strong> ${voucher.hotelType}</p>
-                    <p><strong>Status:</strong> ${voucher.status}</p>
-                    <p><strong>Arrival Date:</strong> ${voucher.arrivalDate}</p>
-                    <p><strong>Eviction Date:</strong> ${voucher.evictionDate}</p>
+                    <h3><strong>${translations.idLabel}:</strong> ${voucher.id}</h3>
+                    <p><strong>${translations.descriptionLabel}:</strong> ${voucher.description}</p>
+                    <p><strong>${translations.priceLabel}:</strong> $${voucher.price}</p>
+                    <p><strong>${translations.tourTypeLabel}:</strong> ${voucher.tourType}</p>
+                    <p><strong>${translations.transferLabel}:</strong> ${voucher.transferType}</p>
+                    <p><strong>${translations.hotelLabel}:</strong> ${voucher.hotelType}</p>
+                    <p><strong>${translations.statusLabel}:</strong> ${voucher.status}</p>
+                    <p><strong>${translations.arrivalLabel}:</strong> ${voucher.arrivalDate}</p>
+                    <p><strong>${translations.evictionLabel}:</strong> ${voucher.evictionDate}</p>
                     <p><strong>Hot Deal:</strong> ${voucher.isHot}</p>
                 `;
       container.appendChild(div);
@@ -91,7 +111,7 @@
     const accessToken = localStorage.getItem('accessToken');
 
     if (!voucherId) {
-      alert('Please enter a Voucher ID');
+      alert(/*[[#{error.generic}]]*/ 'An error occurred');
       return;
     }
 
@@ -110,10 +130,10 @@
     });
 
     if (response.ok) {
-      alert('Voucher status changed successfully');
+      alert(/*[[#{vouchers.success}]]*/ 'Voucher successfully ordered!');
       fetchVouchers();
     } else {
-      alert('Failed to change voucher status');
+      alert(/*[[#{error.generic}]]*/ 'An error occurred');
     }
   }
 
@@ -123,7 +143,7 @@
     const accessToken = localStorage.getItem('accessToken');
 
     if (!voucherId) {
-      alert('Please enter a Voucher ID');
+      alert(/*[[#{error.generic}]]*/ 'An error occurred');
       return;
     }
 
@@ -142,10 +162,10 @@
     });
 
     if (response.ok) {
-      alert('Voucher status changed successfully');
+      alert(/*[[#{vouchers.success}]]*/ 'Voucher successfully ordered!');
       fetchVouchers();
     } else {
-      alert('Failed to change voucher status');
+      alert(/*[[#{error.generic}]]*/ 'An error occurred');
     }
   }
 
