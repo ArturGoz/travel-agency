@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-@Slf4j
 public class UserController {
     private final UserService userService;
 
@@ -57,11 +56,9 @@ public class UserController {
     }
 
     @GetMapping("/data")
-    public ResponseEntity<RemoteResponse> getUserByJwt(
+    public ResponseEntity<RemoteResponse> getUserByHeader(
             @RequestHeader(value = "X-User-Name", required = false) String username) {
-        log.info("getUserByUsername2 request received {}", username);
         UserDTO createdUserDto = userService.getUserByUsername(username);
-        log.info(String.valueOf(createdUserDto));
         RemoteResponse remoteResponse = RemoteResponse.create(
                 true,StatusCodes.OK.name(),"User was obtained successfully",
                 List.of(createdUserDto)
@@ -73,7 +70,6 @@ public class UserController {
     public ResponseEntity<RemoteResponse> block_unblockUser(@PathVariable String userId,
                                                             @RequestParam Boolean doBlock) {
         UserDTO userDto = userService.doBlockUser(userId, doBlock);
-        log.info(String.valueOf(userDto));
         RemoteResponse remoteResponse = RemoteResponse.create(
                 true,StatusCodes.OK.name(),"User block changed to " + doBlock,
                 List.of(userDto)

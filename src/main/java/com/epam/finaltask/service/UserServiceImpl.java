@@ -25,8 +25,8 @@ public class UserServiceImpl implements UserService{
 
     public void checkIfUserExists(String username) {
         if (userRepository.existsByUsername(username)) {
-            throw new EntityAlreadyExistsException( "This username is already exist"
-                    ,StatusCodes.DUPLICATE_USERNAME.name());
+            throw new EntityAlreadyExistsException( "This username is already exist",
+                    StatusCodes.DUPLICATE_USERNAME.name());
         }
     }
 

@@ -17,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/vouchers")
 @RequiredArgsConstructor
-@Slf4j
 public class VoucherController {
     private final VoucherService voucherService;
 
@@ -69,7 +68,6 @@ public class VoucherController {
 
     @PostMapping("/create")
     public ResponseEntity<RemoteResponse> createVoucher(@RequestBody VoucherDTO vDto) {
-        log.info("Creating voucher : {}", vDto);
         VoucherDTO createdVDto = voucherService.create(vDto);
 
         RemoteResponse remoteResponse = RemoteResponse.create(
@@ -91,19 +89,6 @@ public class VoucherController {
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
     }
 
-
-/*    @PatchMapping("/{usernameId}")
-    public ResponseEntity<RemoteResponse> changeVoucherStatus(@PathVariable String usernameId,
-                                                              @RequestBody VoucherDTO vDto) {
-
-        VoucherDTO voucherDTO = voucherService.changeHotStatus(usernameId,vDto);
-        RemoteResponse remoteResponse = RemoteResponse.create(
-                true,StatusCodes.OK.name(),
-                "Voucher status is successfully changed",
-                List.of(voucherDTO)
-        );
-        return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
-    }*/
 
     @PostMapping("/changeStatus")
     public ResponseEntity<RemoteResponse> changeVoucherStatus(@RequestBody VoucherRequest voucherRequest) {

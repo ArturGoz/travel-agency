@@ -4,6 +4,7 @@ import com.epam.finaltask.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+@Slf4j
 @Service
 public class JwtService {
     @Value("${jwtSecret}")
@@ -49,8 +51,8 @@ public class JwtService {
                     .parseClaimsJws(token); // Верифікація токена
             return true;
         } catch (Exception e) {
-            System.out.println("Invalid JWT");
-            throw new AuthenticationCredentialsNotFoundException("JWT was expired or incorrect");
+            log.error("Invalid JWT", e);
+            return false;
         }
     }
 }

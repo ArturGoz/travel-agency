@@ -6,6 +6,7 @@ import com.epam.finaltask.exception.EntityNotFoundException;
 import com.epam.finaltask.model.User;
 import com.epam.finaltask.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
 
     private final UserRepository userRepository;
@@ -38,7 +40,7 @@ public class AuthenticationService {
                 ));
 
         String generatedToken = jwtService.generateToken(user);
-
+        log.info("Generated token: {} for user {}", generatedToken, user.getUsername());
         return new AuthenticationResponse(generatedToken);
     }
 }

@@ -32,60 +32,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        log.info("JWT Authentication Filter triggered");
-        if(request.getServletPath().contains("/auth") || request.getServletPath().contains("/register")) {
-            filterChain.doFilter(request, response);
+        log.info("JWT Authentication Filter triggered for request: {}", request.getServletPath());
+
+        if (request.getServletPath().contains("/auth") || request.getServletPath().contains("/register")) {
+            log.info("Skipping authentication for public path: {}", request.getServletPath());
+            proceedWithoutAuthentication(request, response, filterChain);
             return;
         }
 
-        String token = getJwtFromRequest(request);
+        String username = extractAndValidateToken(request);
+        if (username != null) {
+            log.info("Valid JWT found. Authenticating user: {}", username);
+            HttpServletRequest wrappedRequest = new CustomHeaderRequestWrapper(request, username);
 
-        if (StringUtils.hasText(token) && jwtService.validateJWT(token)) {
-            String username = jwtService.getUsernameFromJWT(token);
-
-            // Створюємо обгортку з кастомним заголовком
-            HttpServletRequest wrappedRequest = new HttpServletRequestWrapper(request) {
-                private final Map<String, String> headers = new HashMap<>();
-
-                {
-                    headers.put("X-User-Name", username); // Додаємо заголовок
-                }
-
-                @Override
-                public String getHeader(String name) {
-                    return headers.containsKey(name)
-                            ? headers.get(name)
-                            : super.getHeader(name);
-                }
-
-                @Override
-                public Enumeration<String> getHeaders(String name) {
-                    return headers.containsKey(name)
-                            ? Collections.enumeration(Collections.singletonList(headers.get(name)))
-                            : super.getHeaders(name);
-                }
-
-                @Override
-                public Enumeration<String> getHeaderNames() {
-                    Set<String> names = new LinkedHashSet<>(headers.keySet());
-                    Collections.list(super.getHeaderNames()).forEach(names::add);
-                    return Collections.enumeration(names);
-                }
-            };
-
-            // Додаємо аутентифікацію
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            log.info("User Details : {}", userDetails.getAuthorities());
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities()
             );
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
-            // Продовжуємо ланцюжок з обгорнутим запитом
+            log.info("Authentication successful for user: {}", username);
             filterChain.doFilter(wrappedRequest, response);
             return;
         }
-        filterChain.doFilter(request, response);
+
+        log.warn("No valid JWT found. Proceeding without authentication.");
+        proceedWithoutAuthentication(request, response, filterChain);
+
     }
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
@@ -93,5 +66,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return bearerToken.substring(7);
         }
         return null;
+    }
+    private String extractAndValidateToken(HttpServletRequest request) {
+        String token = getJwtFromRequest(request);
+        if (StringUtils.hasText(token) && jwtService.validateJWT(token)) {
+            return jwtService.getUsernameFromJWT(token);
+        }
+        return null;
+    }
+    private void proceedWithoutAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        filterChain.doFilter(request, response);
     }
 }
