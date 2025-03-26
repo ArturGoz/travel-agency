@@ -19,13 +19,15 @@ import java.util.Date;
 public class JwtService {
     @Value("${jwtSecret}")
     private String jwtSecret;
+    @Value("${jwtExpiration}")
+    private Integer jwtExpiration;
 
     public String generateToken(User expectedUser) {
         SecretKey key = getSigningKey();
         return Jwts.builder()
                 .setSubject(expectedUser.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 864_000_000)) // 10 днів
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(key)
                 .compact();
     }

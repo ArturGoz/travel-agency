@@ -1,4 +1,4 @@
-/*
+
 package com.epam.finaltask.service;
 
 import com.epam.finaltask.dto.VoucherDTO;
@@ -48,7 +48,7 @@ public class VoucherServiceImplTest {
         voucherDTO.setStatus(VoucherStatus.CANCELED.name());
         voucherDTO.setArrivalDate(LocalDate.of(2023, 7, 15));
         voucherDTO.setEvictionDate(LocalDate.of(2023, 7, 20));
-        voucherDTO.setUserId(UUID.randomUUID());
+        voucherDTO.setId(UUID.randomUUID().toString());
         voucherDTO.setIsHot("false");
 
         Voucher voucher = Voucher.builder()
@@ -108,7 +108,7 @@ public class VoucherServiceImplTest {
         existingVoucher.setStatus(VoucherStatus.REGISTERED);
         existingVoucher.setArrivalDate(LocalDate.now());
         existingVoucher.setEvictionDate(LocalDate.now().plusDays(5));
-        existingVoucher.setHot(true);
+        existingVoucher.setIsHot(true);
 
 
         Voucher updatedVoucher = new Voucher();
@@ -120,9 +120,9 @@ public class VoucherServiceImplTest {
         updatedVoucher.setStatus(VoucherStatus.valueOf(voucherDTO.getStatus()));
         updatedVoucher.setArrivalDate(voucherDTO.getArrivalDate());
         updatedVoucher.setEvictionDate(voucherDTO.getEvictionDate());
-        updatedVoucher.setHot(Boolean.parseBoolean(voucherDTO.getIsHot()));
+        updatedVoucher.setIsHot(Boolean.parseBoolean(voucherDTO.getIsHot()));
 
-        when(voucherRepository.findById(UUID.fromString(id))).thenReturn(Optional.of(existingVoucher));
+        when(voucherRepository.findById(UUID.fromString(id).toString())).thenReturn(Optional.of(existingVoucher));
         when(voucherMapper.toVoucher(any(VoucherDTO.class))).thenReturn(updatedVoucher);
         when(voucherRepository.save(any(Voucher.class))).thenReturn(updatedVoucher);
         when(voucherMapper.toVoucherDTO(any(Voucher.class))).thenReturn(voucherDTO);
@@ -134,7 +134,7 @@ public class VoucherServiceImplTest {
         assertNotNull(resultDTO, "The returned VoucherDTO should not be null");
         assertEquals(voucherDTO.getTitle(), resultDTO.getTitle(), "The title should match the updated value");
 
-        verify(voucherRepository, times(1)).findById(UUID.fromString(id));
+        verify(voucherRepository, times(1)).findById(UUID.fromString(id).toString());
         verify(voucherRepository, times(1)).save(any(Voucher.class));
         verify(voucherMapper, times(1)).toVoucher(any(VoucherDTO.class));
         verify(voucherMapper, times(1)).toVoucherDTO(any(Voucher.class));
@@ -146,13 +146,13 @@ public class VoucherServiceImplTest {
         String id = UUID.randomUUID().toString();
         VoucherDTO voucherDTO = new VoucherDTO();
 
-        when(voucherRepository.findById(UUID.fromString(id))).thenReturn(Optional.empty());
+        when(voucherRepository.findById(UUID.fromString(id).toString())).thenReturn(Optional.empty());
 
         // When & Then
         assertThrows(EntityNotFoundException.class, () -> voucherService.update(id, voucherDTO),
                 "Expected EntityNotFoundException to be thrown if the voucher is not found");
 
-        verify(voucherRepository, times(1)).findById(UUID.fromString(id));
+        verify(voucherRepository, times(1)).findById(UUID.fromString(id).toString());
         verify(voucherRepository, never()).save(any(Voucher.class));
     }
 
@@ -161,28 +161,28 @@ public class VoucherServiceImplTest {
         // Given
         String voucherId = UUID.randomUUID().toString();
         Voucher existingVoucher = new Voucher();
-        when(voucherRepository.findById(UUID.fromString(voucherId))).thenReturn(Optional.of(existingVoucher));
+        when(voucherRepository.findById(UUID.fromString(voucherId).toString())).thenReturn(Optional.of(existingVoucher));
 
         // When
         voucherService.delete(voucherId);
 
         // Then
-        verify(voucherRepository, times(1)).findById(UUID.fromString(voucherId));
-        verify(voucherRepository, times(1)).deleteById(UUID.fromString(voucherId));
+        verify(voucherRepository, times(1)).findById(UUID.fromString(voucherId).toString());
+        verify(voucherRepository, times(1)).deleteById(UUID.fromString(voucherId).toString());
     }
 
     @Test
     void deleteVoucher_VoucherDoesNotExist_ThrowEntityNotFoundException() {
         // Given
         String voucherId = UUID.randomUUID().toString();
-        when(voucherRepository.findById(UUID.fromString(voucherId))).thenReturn(Optional.empty());
+        when(voucherRepository.findById(UUID.fromString(voucherId).toString())).thenReturn(Optional.empty());
 
         // When & Then
         assertThrows(EntityNotFoundException.class, () -> voucherService.delete(voucherId),
                 "Expected EntityNotFoundException to be thrown if the voucher is not found");
 
-        verify(voucherRepository, times(1)).findById(UUID.fromString(voucherId));
-        verify(voucherRepository, never()).deleteById(UUID.fromString(voucherId));
+        verify(voucherRepository, times(1)).findById(UUID.fromString(voucherId).toString());
+        verify(voucherRepository, never()).deleteById(UUID.fromString(voucherId).toString());
     }
 
     @Test
@@ -194,27 +194,26 @@ public class VoucherServiceImplTest {
         voucherDTO.setStatus("REGISTERED");
 
         Voucher existingVoucher = new Voucher();
-        existingVoucher.setHot(false);
+        existingVoucher.setIsHot(false);
         existingVoucher.setStatus(VoucherStatus.REGISTERED);
 
         Voucher updatedVoucher = new Voucher();
-        updatedVoucher.setHot(Boolean.parseBoolean(voucherDTO.getIsHot()));
+        updatedVoucher.setIsHot(Boolean.parseBoolean(voucherDTO.getIsHot()));
         updatedVoucher.setStatus(VoucherStatus.valueOf(voucherDTO.getStatus()));
 
-        when(voucherRepository.findById(UUID.fromString(id))).thenReturn(Optional.of(existingVoucher));
-        when(voucherMapper.toVoucher(any(VoucherDTO.class))).thenReturn(updatedVoucher);
+        when(voucherRepository.findById(id)).thenReturn(Optional.of(existingVoucher));
         when(voucherRepository.save(any(Voucher.class))).thenReturn(updatedVoucher);
         when(voucherMapper.toVoucherDTO(any(Voucher.class))).thenReturn(voucherDTO);
 
         // When
-        VoucherDTO resultDTO = voucherService.changeHotStatus(id, voucherDTO);
+        VoucherDTO resultDTO = voucherService.changeHotStatus(id, voucherDTO.getIsHot());
 
         // Then
         assertNotNull(resultDTO, "The returned VoucherDTO should not be null");
         assertTrue(Boolean.parseBoolean(resultDTO.getIsHot()), "The 'isHot' status should be true");
         assertEquals("REGISTERED", resultDTO.getStatus(), "The status should be updated to AVAILABLE");
 
-        verify(voucherRepository, times(1)).findById(UUID.fromString(id));
+        verify(voucherRepository, times(1)).findById(id);
         verify(voucherRepository, times(1)).save(any(Voucher.class));
     }
 
@@ -222,13 +221,13 @@ public class VoucherServiceImplTest {
     void changeHotStatus_VoucherDoesNotExist_ThrowEntityNotFoundException() {
         // Given
         String id = UUID.randomUUID().toString();
-        when(voucherRepository.findById(UUID.fromString(id))).thenReturn(Optional.empty());
+        when(voucherRepository.findById(id)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(EntityNotFoundException.class, () -> voucherService.changeHotStatus(id, new VoucherDTO()),
+        assertThrows(EntityNotFoundException.class, () -> voucherService.changeHotStatus(id, String.valueOf(true)),
                 "Expected EntityNotFoundException to be thrown if the voucher is not found");
 
-        verify(voucherRepository, times(1)).findById(UUID.fromString(id));
+        verify(voucherRepository, times(1)).findById(id);
         verify(voucherRepository, never()).save(any(Voucher.class));
     }
 
@@ -238,7 +237,7 @@ public class VoucherServiceImplTest {
         String userId = UUID.randomUUID().toString();
 
         Voucher voucher1 = new Voucher();
-        voucher1.setId(UUID.randomUUID());
+        voucher1.setId(UUID.randomUUID().toString());
         voucher1.setTitle("Adventure Trip");
         voucher1.setDescription("An exciting adventure trip.");
         voucher1.setPrice(500.0);
@@ -248,10 +247,10 @@ public class VoucherServiceImplTest {
         voucher1.setStatus(VoucherStatus.REGISTERED);
         voucher1.setArrivalDate(LocalDate.of(2023, 5, 10));
         voucher1.setEvictionDate(LocalDate.of(2023, 5, 15));
-        voucher1.setHot(true);
+        voucher1.setIsHot(true);
 
         Voucher voucher2 = new Voucher();
-        voucher2.setId(UUID.randomUUID());
+        voucher2.setId(UUID.randomUUID().toString());
         voucher2.setTitle("Beach Holiday");
         voucher2.setDescription("A relaxing beach holiday.");
         voucher2.setPrice(750.0);
@@ -261,13 +260,13 @@ public class VoucherServiceImplTest {
         voucher2.setStatus(VoucherStatus.PAID);
         voucher2.setArrivalDate(LocalDate.of(2023, 6, 20));
         voucher2.setEvictionDate(LocalDate.of(2023, 6, 25));
-        voucher2.setHot(false);
+        voucher2.setIsHot(false);
 
         List<Voucher> vouchers = Arrays.asList(voucher1, voucher2);
         List<VoucherDTO> expectedVoucherDTOs = vouchers.stream()
                 .map(voucher -> {
                     VoucherDTO dto = new VoucherDTO();
-                    dto.setId(voucher.getId().toString());
+                    dto.setId(voucher.getId());
                     dto.setTitle(voucher.getTitle());
                     dto.setDescription(voucher.getDescription());
                     dto.setPrice(voucher.getPrice());
@@ -277,16 +276,16 @@ public class VoucherServiceImplTest {
                     dto.setStatus(String.valueOf(voucher.getStatus()));
                     dto.setArrivalDate(voucher.getArrivalDate());
                     dto.setEvictionDate(voucher.getEvictionDate());
-                    dto.setIsHot(String.valueOf(voucher.isHot()));
+                    dto.setIsHot(String.valueOf(voucher.getIsHot()));
                     return dto;
                 })
                 .toList();
 
-        when(voucherRepository.findAllByUserId(UUID.fromString(userId))).thenReturn(vouchers);
+        when(voucherRepository.findAllByUserId(userId)).thenReturn(vouchers);
         when(voucherMapper.toVoucherDTO(any(Voucher.class))).thenAnswer(invocation -> {
             Voucher voucher = invocation.getArgument(0);
             VoucherDTO dto = new VoucherDTO();
-            dto.setId(voucher.getId().toString());
+            dto.setId(voucher.getId());
             dto.setTitle(voucher.getTitle());
             dto.setDescription(voucher.getDescription());
             dto.setPrice(voucher.getPrice());
@@ -296,7 +295,7 @@ public class VoucherServiceImplTest {
             dto.setStatus(String.valueOf(voucher.getStatus()));
             dto.setArrivalDate(voucher.getArrivalDate());
             dto.setEvictionDate(voucher.getEvictionDate());
-            dto.setIsHot(String.valueOf(voucher.isHot()));
+            dto.setIsHot(String.valueOf(voucher.getIsHot()));
             return dto;
         });
 
@@ -307,7 +306,7 @@ public class VoucherServiceImplTest {
         assertNotNull(resultDTOs, "The returned list of VoucherDTO should not be null");
         assertEquals(expectedVoucherDTOs.size(), resultDTOs.size(), "The size of the returned list should match the expected list");
 
-        verify(voucherRepository, times(1)).findAllByUserId(UUID.fromString(userId));
+        verify(voucherRepository, times(1)).findAllByUserId(userId);
         verify(voucherMapper, times(vouchers.size())).toVoucherDTO(any(Voucher.class));
     }
 
@@ -315,7 +314,7 @@ public class VoucherServiceImplTest {
     void findAllVouchers_Success() {
         // Given
         Voucher voucher1 = new Voucher();
-        voucher1.setId(UUID.randomUUID());
+        voucher1.setId(UUID.randomUUID().toString());
         voucher1.setTitle("Summer Getaway");
         voucher1.setDescription("A summer trip to the beach");
         voucher1.setPrice(300.00);
@@ -325,10 +324,10 @@ public class VoucherServiceImplTest {
         voucher1.setStatus(VoucherStatus.REGISTERED);
         voucher1.setArrivalDate(LocalDate.now());
         voucher1.setEvictionDate(LocalDate.now().plusDays(7));
-        voucher1.setHot(false);
+        voucher1.setIsHot(false);
 
         Voucher voucher2 = new Voucher();
-        voucher2.setId(UUID.randomUUID());
+        voucher2.setId(UUID.randomUUID().toString());
         voucher2.setTitle("Winter Ski Adventure");
         voucher2.setDescription("Skiing in the mountains");
         voucher2.setPrice(500.00);
@@ -338,7 +337,7 @@ public class VoucherServiceImplTest {
         voucher2.setStatus(VoucherStatus.PAID);
         voucher2.setArrivalDate(LocalDate.now().plusMonths(1));
         voucher2.setEvictionDate(LocalDate.now().plusMonths(1).plusDays(7));
-        voucher2.setHot(true);
+        voucher2.setIsHot(true);
 
         List<Voucher> vouchers = Arrays.asList(voucher1, voucher2);
 
@@ -346,7 +345,7 @@ public class VoucherServiceImplTest {
         when(voucherMapper.toVoucherDTO(any(Voucher.class))).thenAnswer(invocation -> {
             Voucher voucher = invocation.getArgument(0);
             VoucherDTO dto = new VoucherDTO();
-            dto.setId(voucher.getId().toString());
+            dto.setId(voucher.getId());
             dto.setTitle(voucher.getTitle());
             dto.setDescription(voucher.getDescription());
             dto.setPrice(voucher.getPrice());
@@ -356,7 +355,7 @@ public class VoucherServiceImplTest {
             dto.setStatus(String.valueOf(voucher.getStatus()));
             dto.setArrivalDate(voucher.getArrivalDate());
             dto.setEvictionDate(voucher.getEvictionDate());
-            dto.setIsHot(voucher.isHot() ? "true" : "false");
+            dto.setIsHot(voucher.getIsHot() ? "true" : "false");
             return dto;
         });
 
@@ -371,4 +370,4 @@ public class VoucherServiceImplTest {
         verify(voucherMapper, times(vouchers.size())).toVoucherDTO(any(Voucher.class));
     }
 }
-*/
+

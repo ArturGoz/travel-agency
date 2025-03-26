@@ -1,4 +1,4 @@
-/*
+
 package com.epam.finaltask.service;
 
 import com.epam.finaltask.dto.UserDTO;
@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,7 +46,7 @@ public class UserServiceImplTest {
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername("TestUser123");
         userDTO.setPassword("Passw0rd");
-        userDTO.setRole("USER");
+        userDTO.setRoles(Set.of(Role.USER.name()));
         userDTO.setAccountStatus(false);
         userDTO.setBalance(100.0);
         String encryptedPassword = "$2a$12$Tq7niswv6pFvG/u/Xvic0Oae88eFXKsBsiB8IeLre8QSWB4/lNS32";
@@ -54,7 +55,7 @@ public class UserServiceImplTest {
         User user = User.builder()
                 .username(userDTO.getUsername())
                 .password(userDTO.getPassword())
-                .role(Role.USER)
+                .roles(Set.of(Role.USER))
                 .accountStatus(userDTO.isAccountStatus())
                 .balance(userDTO.getBalance())
                 .vouchers(null)
@@ -104,19 +105,19 @@ public class UserServiceImplTest {
 
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername("UpdatedUser");
-        userDTO.setRole("ADMIN");
+        userDTO.setRoles(Set.of(Role.ADMIN.name()));
         userDTO.setAccountStatus(true);
         userDTO.setBalance(200.0);
 
         User existingUser = new User();
         existingUser.setUsername("existingUser");
-        existingUser.setRole(Role.USER);
+        existingUser.setRoles(Set.of(Role.ADMIN));
         existingUser.setAccountStatus(false);
         existingUser.setBalance(100.0);
 
         User updatedUser = new User();
         updatedUser.setUsername(userDTO.getUsername());
-        updatedUser.setRole(Role.valueOf(userDTO.getRole()));
+        updatedUser.setRoles(Set.of(Role.ADMIN));
         updatedUser.setAccountStatus(userDTO.isAccountStatus());
         updatedUser.setBalance(userDTO.getBalance());
 
@@ -131,7 +132,7 @@ public class UserServiceImplTest {
         // Then
         assertNotNull(result, "The returned UserDTO should not be null");
         assertEquals(userDTO.getUsername(), result.getUsername());
-        assertEquals(userDTO.getRole(), result.getRole());
+        assertEquals(userDTO.getRoles(), result.getRoles());
         assertEquals(userDTO.isAccountStatus(), result.isAccountStatus());
         assertEquals(userDTO.getBalance(), result.getBalance());
 
@@ -187,14 +188,14 @@ public class UserServiceImplTest {
         userDTO.setAccountStatus(true);
 
         User user = new User();
-        user.setId(UUID.fromString(userId));
+        user.setId(userId);
         user.setAccountStatus(false);
 
         User updatedUser = new User();
-        updatedUser.setId(UUID.fromString(userId));
+        updatedUser.setId(userId);
         updatedUser.setAccountStatus(true);
 
-        when(userRepository.findById(UUID.fromString(userId))).thenReturn(Optional.of(user));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(userMapper.toUser(any(UserDTO.class))).thenReturn(updatedUser);
         when(userRepository.save(any(User.class))).thenReturn(updatedUser);
         when(userMapper.toUserDTO(any(User.class))).thenReturn(userDTO);
@@ -206,7 +207,7 @@ public class UserServiceImplTest {
         assertNotNull(resultDTO, "The returned UserDTO should not be null");
         assertTrue(resultDTO.isAccountStatus(), "The account status should be updated to true");
 
-        verify(userRepository, times(1)).findById(UUID.fromString(userId));
+        verify(userRepository, times(1)).findById(userId);
         verify(userRepository, times(1)).save(any(User.class));
     }
 
@@ -217,26 +218,26 @@ public class UserServiceImplTest {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(userId);
 
-        when(userRepository.findById(UUID.fromString(userId))).thenReturn(Optional.empty());
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // When & Then
         assertThrows(EntityNotFoundException.class, () -> {
             userService.changeAccountStatus(userDTO);
         }, "Expected EntityNotFoundException to be thrown if user is not found");
 
-        verify(userRepository, times(1)).findById(UUID.fromString(userId));
+        verify(userRepository, times(1)).findById(userId);
         verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
     void getUserById_UserExist_Success() {
         // Given
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         User user = new User();
         user.setId(id);
 
         UserDTO expectedUserDTO = new UserDTO();
-        expectedUserDTO.setId(id.toString());
+        expectedUserDTO.setId(id);
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
         when(userMapper.toUserDTO(any(User.class))).thenReturn(expectedUserDTO);
@@ -255,7 +256,7 @@ public class UserServiceImplTest {
     @Test
     void getUserById_UserDoesNotExist_ThrowEntityNotFoundException() {
         // Given
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
         // When & Then
@@ -267,4 +268,4 @@ public class UserServiceImplTest {
         verify(userMapper, never()).toUserDTO(any(User.class)); // Ensure the mapper is not called
     }
 }
-*/
+

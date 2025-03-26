@@ -1,4 +1,4 @@
-/*
+
 package com.epam.finaltask.service;
 
 import com.epam.finaltask.auth.AuthenticationRequest;
@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,10 +44,10 @@ public class AuthenticationServiceTest {
 
     @Test
     void testUserFindByUserName() {
-        UUID id = UUID.fromString("05b392fe-20c2-4fad-8648-abcc19e5428c");
+        String id = "1111";
         String userName = "Admin";
         String password = "password";
-        Role role = Role.ADMIN;
+        Set<Role> role = Set.of(Role.USER);
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(userName, password);
 
@@ -100,4 +101,4 @@ public class AuthenticationServiceTest {
     }
 
 }
-*/
+

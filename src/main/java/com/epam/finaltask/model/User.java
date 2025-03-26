@@ -19,6 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Table(name = "users")
+//@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(generator = "uuid2")

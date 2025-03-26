@@ -41,7 +41,8 @@ public class Voucher {
     private LocalDate evictionDate;
 
     @ManyToOne
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "users")
+    //@JoinColumn(name = "user")
     @ToString.Exclude
     @JsonBackReference
     private User user;
