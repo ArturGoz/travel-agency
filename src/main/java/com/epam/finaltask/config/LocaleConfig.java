@@ -13,7 +13,6 @@ import java.util.Locale;
 @Configuration
 public class LocaleConfig implements WebMvcConfigurer {
 
-    // Set default locale and resolve via session
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver resolver = new SessionLocaleResolver();
@@ -21,7 +20,6 @@ public class LocaleConfig implements WebMvcConfigurer {
         return resolver;
     }
 
-    // Enable switching locales via URL parameter (e.g., ?lang=fr)
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();

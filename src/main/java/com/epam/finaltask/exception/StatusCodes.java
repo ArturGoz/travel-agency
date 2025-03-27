@@ -6,6 +6,6 @@ public enum StatusCodes {
     ENTITY_NOT_FOUND,
     DUPLICATE_USERNAME,
     WRONG_PASSWORD,
-    WRONG_LOGIN;
+    WRONG_LOGIN
 }
 

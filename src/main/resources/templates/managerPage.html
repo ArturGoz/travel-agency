@@ -11,6 +11,13 @@
   </style>
 </head>
 <body>
+
+<!-- Add language switcher links -->
+<div class="language-switcher">
+  <a th:href="@{/page/managerPage(lang='en')}">English</a>
+  <a th:href="@{/page/managerPage(lang='uk')}">Українська</a>
+</div>
+
 <!-- Use localized title for available vouchers -->
 <h1 th:text="#{vouchers.available}">Available Vouchers</h1>
 <div id="voucherContainer">Loading...</div>

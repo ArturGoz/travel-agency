@@ -7,5 +7,6 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface VoucherMapper {
     Voucher toVoucher(VoucherDTO any);
+
     VoucherDTO toVoucherDTO(Voucher any);
 }

@@ -1,10 +1,10 @@
 package com.epam.finaltask.auth;
 
-import com.epam.finaltask.service.JwtService;
-import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.exception.EntityNotFoundException;
+import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.model.User;
 import com.epam.finaltask.repository.UserRepository;
+import com.epam.finaltask.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,8 +29,8 @@ public class AuthenticationService {
                 .orElseThrow(() -> new EntityNotFoundException(StatusCodes.WRONG_PASSWORD.name(),
                         "Such login does not exist"));
 
-        if(!passwordEncoder.matches(authenticationRequest.getPassword(), user.getPassword())) {
-            throw new EntityNotFoundException(StatusCodes.WRONG_PASSWORD.name(),"Wrong password");
+        if (!passwordEncoder.matches(authenticationRequest.getPassword(), user.getPassword())) {
+            throw new EntityNotFoundException(StatusCodes.WRONG_PASSWORD.name(), "Wrong password");
         }
 
         Authentication authentication = authenticationManager.authenticate(

@@ -27,7 +27,6 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoints accessible by anyone
                         .requestMatchers("/auth/**",
                                 "/users/register",
                                 "/page/**")
@@ -38,7 +37,6 @@ public class SecurityConfiguration {
                                 "/users/data")
                         .hasAuthority(Permission.USER_READ.name())
 
-                        // Endpoints accessible by MANAGERs
                         .requestMatchers("/vouchers/list",
                                 "/vouchers/changeStatus",
                                 "/vouchers/changeHotStatus")

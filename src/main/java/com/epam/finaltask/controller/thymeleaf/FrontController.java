@@ -18,14 +18,17 @@ public class FrontController {
     public String loginPage() {
         return "loginPage";
     }
+
     @GetMapping("/register")
     public String registerPage() {
         return "registerPage";
     }
+
     @GetMapping("/main")
     public String mainPage() {
         return "mainPage";
     }
+
     @GetMapping("/admin")
     public String adminPage(Model model) {
         model.addAttribute("tourTypes",

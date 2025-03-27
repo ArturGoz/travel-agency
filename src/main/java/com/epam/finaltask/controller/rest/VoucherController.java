@@ -7,7 +7,6 @@ import com.epam.finaltask.dto.VoucherRequest;
 import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.service.VoucherService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,7 @@ public class VoucherController {
         List<VoucherDTO> voucherDTOList = voucherService.findAll();
 
         RemoteResponse remoteResponse = RemoteResponse.create(
-                true, StatusCodes.OK.name(),"voucherList is successfully obtained",
+                true, StatusCodes.OK.name(), "voucherList is successfully obtained",
                 voucherDTOList
         );
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
@@ -36,7 +35,7 @@ public class VoucherController {
         List<VoucherDTO> voucherList = voucherService.findAllByStatus(status);
 
         RemoteResponse remoteResponse = RemoteResponse.create(
-                true,StatusCodes.OK.name(),"voucherList is successfully obtained",
+                true, StatusCodes.OK.name(), "voucherList is successfully obtained",
                 voucherList
         );
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
@@ -48,7 +47,7 @@ public class VoucherController {
         List<VoucherDTO> voucherList = voucherService.findAllByUserId(usernameId);
 
         RemoteResponse remoteResponse = RemoteResponse.create(
-                true,StatusCodes.OK.name(),"voucherList is successfully obtained",
+                true, StatusCodes.OK.name(), "voucherList is successfully obtained",
                 voucherList
         );
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
@@ -60,7 +59,7 @@ public class VoucherController {
         List<VoucherDTO> voucherList = voucherService.findAllByUsername(username);
 
         RemoteResponse remoteResponse = RemoteResponse.create(
-                true,StatusCodes.OK.name(),"voucherList is successfully obtained",
+                true, StatusCodes.OK.name(), "voucherList is successfully obtained",
                 voucherList
         );
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
@@ -71,7 +70,7 @@ public class VoucherController {
         VoucherDTO createdVDto = voucherService.create(vDto);
 
         RemoteResponse remoteResponse = RemoteResponse.create(
-                true,StatusCodes.OK.name(),"Voucher is successfully created",
+                true, StatusCodes.OK.name(), "Voucher is successfully created",
                 List.of(createdVDto)
         );
         return new ResponseEntity<>(remoteResponse, HttpStatus.CREATED);
@@ -83,7 +82,7 @@ public class VoucherController {
         VoucherDTO updatedVDto = voucherService.update(voucherId, vDto);
 
         RemoteResponse remoteResponse = RemoteResponse.create(
-                true,StatusCodes.OK.name(),"Voucher is successfully updated",
+                true, StatusCodes.OK.name(), "Voucher is successfully updated",
                 List.of(updatedVDto)
         );
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
@@ -95,7 +94,7 @@ public class VoucherController {
         VoucherDTO voucherDTO = voucherService.changeStatus(voucherRequest.getVoucherId(),
                 (String) voucherRequest.getAdditionalDetails().get(0));
         RemoteResponse remoteResponse = RemoteResponse.create(
-                true,StatusCodes.OK.name(),
+                true, StatusCodes.OK.name(),
                 "Voucher status is successfully changed",
                 List.of(voucherDTO)
         );
@@ -107,7 +106,7 @@ public class VoucherController {
         VoucherDTO voucherDTO = voucherService.changeHotStatus(voucherRequest.getVoucherId(),
                 (String) voucherRequest.getAdditionalDetails().get(0));
         RemoteResponse remoteResponse = RemoteResponse.create(
-                true,StatusCodes.OK.name(),
+                true, StatusCodes.OK.name(),
                 "Voucher hot status is successfully changed",
                 List.of(voucherDTO)
         );
@@ -120,7 +119,7 @@ public class VoucherController {
         voucherService.delete(voucherId);
 
         RemoteResponse remoteResponse = RemoteResponse.create(
-                true,StatusCodes.OK.name(),
+                true, StatusCodes.OK.name(),
                 String.format("Voucher with Id %s has been deleted", voucherId),
                 null
         );
@@ -131,10 +130,10 @@ public class VoucherController {
     public ResponseEntity<RemoteResponse> orderVoucher(
             @RequestHeader(value = "X-User-Name", required = false) String username,
             @RequestBody VoucherOrderRequest voucherOrderRequest) {
-        VoucherDTO voucherDTO = voucherService.order(voucherOrderRequest.getVoucherId(),username);
+        VoucherDTO voucherDTO = voucherService.order(voucherOrderRequest.getVoucherId(), username);
 
         RemoteResponse remoteResponse = RemoteResponse.create(
-                true,StatusCodes.OK.name(),
+                true, StatusCodes.OK.name(),
                 "voucher was successfully ordered",
                 List.of(voucherDTO)
         );

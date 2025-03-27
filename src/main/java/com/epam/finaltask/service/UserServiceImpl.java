@@ -1,9 +1,9 @@
 package com.epam.finaltask.service;
 
-import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.exception.EntityAlreadyExistsException;
 import com.epam.finaltask.exception.EntityNotFoundException;
+import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.mapper.UserMapper;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.model.User;
@@ -18,14 +18,14 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     public void checkIfUserExists(String username) {
         if (userRepository.existsByUsername(username)) {
-            throw new EntityAlreadyExistsException( "This username is already exist",
+            throw new EntityAlreadyExistsException("This username is already exist",
                     StatusCodes.DUPLICATE_USERNAME.name());
         }
     }
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService{
     public UserDTO register(UserDTO userDTO) {
         checkIfUserExists(userDTO.getUsername());
         User user = userMapper.toUser(userDTO);
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword())); // Зверніть увагу: беремо пароль з DTO
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User savedUser = userRepository.save(user);
         return userMapper.toUserDTO(savedUser);
     }
@@ -68,7 +68,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDTO changeAccountStatus(UserDTO userDTO) {
-        //User user = findUserByUsername(userDTO.getUsername());
         User user = userRepository.findById(String.valueOf(UUID.fromString(userDTO.getId())))
                 .orElseThrow(() -> new EntityNotFoundException("Entity not found",
                         StatusCodes.ENTITY_NOT_FOUND.name()));

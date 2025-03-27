@@ -4,6 +4,13 @@
     <title th:text="#{page.title}">Registration Page</title>
 </head>
 <body>
+
+<!-- Add language switcher links -->
+<div class="language-switcher">
+    <a th:href="@{/page/registerPage(lang='en')}">English</a>
+    <a th:href="@{/page/registerPage(lang='uk')}">Українська</a>
+</div>
+
 <h1 th:text="#{page.title}">Register</h1>
 <form th:action="@{/users/register}" method="post">
     <label for="username" th:text="#{label.username}">Username:</label>

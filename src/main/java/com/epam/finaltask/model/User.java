@@ -3,16 +3,14 @@ package com.epam.finaltask.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Set;
-import java.util.UUID;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -20,7 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Table(name = "users")
-//@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(generator = "uuid2")

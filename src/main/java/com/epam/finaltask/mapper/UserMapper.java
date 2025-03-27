@@ -9,5 +9,6 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
     @Mapping(target = "password", ignore = true)
     User toUser(UserDTO any);
+
     UserDTO toUserDTO(User any);
 }

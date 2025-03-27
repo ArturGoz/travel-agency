@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-   @ExceptionHandler({EntityAlreadyExistsException.class})
-    public ResponseEntity<RemoteResponse> handleEntityAlreadyExistsException(EntityAlreadyExistsException ex){
-       log.error(ex.getMessage());
+    @ExceptionHandler({EntityAlreadyExistsException.class})
+    public ResponseEntity<RemoteResponse> handleEntityAlreadyExistsException(EntityAlreadyExistsException ex) {
+        log.error(ex.getMessage());
         RemoteResponse remoteResponse =
-                RemoteResponse.create(false,ex.getMessage(),ex.getErrorCode(),null);
+                RemoteResponse.create(false, ex.getMessage(), ex.getErrorCode(), null);
         return new ResponseEntity<>(remoteResponse, HttpStatus.BAD_REQUEST);
     }
 
 
     @ExceptionHandler({EntityNotFoundException.class})
-    public ResponseEntity<RemoteResponse> handleEntityNotFound(EntityNotFoundException ex){
+    public ResponseEntity<RemoteResponse> handleEntityNotFound(EntityNotFoundException ex) {
         log.error(ex.getMessage());
         RemoteResponse remoteResponse =
-                RemoteResponse.create(false,ex.getMessage(),ex.getErrorCode(),null);
+                RemoteResponse.create(false, ex.getMessage(), ex.getErrorCode(), null);
         return new ResponseEntity<>(remoteResponse, HttpStatus.NOT_FOUND);
     }
 
@@ -33,17 +33,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<RemoteResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         log.error(ex.getMessage());
-        // Extract validation errors
+
         String errors = ex.getBindingResult()
                 .getAllErrors()
                 .stream()
                 .findFirst().map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .orElse(ex.getMessage());
 
-        // Build the error response
+
         RemoteResponse remoteResponse = RemoteResponse.create(
                 false,
-                StatusCodes.INVALID_DATA.name(), // Or a custom status code
+                StatusCodes.INVALID_DATA.name(),
                 errors,
                 null
         );

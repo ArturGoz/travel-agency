@@ -5,6 +5,13 @@
     <title th:text="#{login.title}">Login</title>
 </head>
 <body>
+
+<!-- Add language switcher links -->
+<div class="language-switcher">
+    <a th:href="@{/page/loginPage(lang='en')}">English</a>
+    <a th:href="@{/page/loginPage(lang='uk')}">Українська</a>
+</div>
+
 <h1 th:text="#{login.title}">Login</h1>
 <form th:action="@{/auth/login}" method="post" id="loginForm">
     <label for="username" th:text="#{label.username}">Username:</label>
