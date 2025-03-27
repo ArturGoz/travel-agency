@@ -1,4 +1,3 @@
-/*
 package com.epam.finaltask.controller;
 
 import com.epam.finaltask.dto.VoucherDTO;
@@ -58,11 +57,11 @@ public class VoucherControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = "MANAGER_UPDATE")
     void findAll_Successfully() throws Exception {
         List<VoucherDTO> voucherDTOList = new ArrayList<>();
         when(voucherService.findAll()).thenReturn(voucherDTOList);
-        MvcResult result = mockMvc.perform(get("/vouchers"))
+        MvcResult result = mockMvc.perform(get("/vouchers/list"))
                 .andExpect(status().isOk())
                 .andReturn();
         String responseBody = result.getResponse().getContentAsString();
@@ -75,29 +74,9 @@ public class VoucherControllerTest {
         assertEquals(voucherDTOList, responseVoucherDTOList);
     }
 
-    @Test
-    @WithMockUser
-    void findAllByUserId_Successfully() throws Exception {
-        String userId = String.valueOf(UUID.randomUUID());
-        List<VoucherDTO> voucherDTOList = new ArrayList<>();
-
-        when(voucherService.findAllByUserId(userId)).thenReturn(voucherDTOList);
-
-        MvcResult result = mockMvc.perform(get("/vouchers/" + userId))
-                .andExpect(status().isOk())
-                .andReturn();
-        String responseBody = result.getResponse().getContentAsString();
-
-        JsonNode rootNode = objectMapper.readTree(responseBody);
-        JsonNode resultsNode = rootNode.path("results");
-
-        List<VoucherDTO> responseVoucherDTOList = objectMapper.convertValue(resultsNode, new TypeReference<List<VoucherDTO>>() {});
-
-        assertEquals(voucherDTOList, responseVoucherDTOList);
-    }
 
     @Test
-    @WithMockUser(authorities = "ROLE_ADMIN")
+    @WithMockUser(authorities = "ADMIN_CREATE")
     void createVoucher_ValidData_SuccessfullyCreated() throws Exception {
         VoucherDTO voucherDTO = new VoucherDTO();
         voucherDTO.setTitle("SummerSale2024");
@@ -109,7 +88,7 @@ public class VoucherControllerTest {
         voucherDTO.setStatus(VoucherStatus.PAID.name());
         voucherDTO.setArrivalDate(LocalDate.of(2024, 6, 15));
         voucherDTO.setEvictionDate(LocalDate.of(2024, 6, 20));
-        voucherDTO.setUserId(UUID.randomUUID());
+        voucherDTO.setId(UUID.randomUUID().toString());
         voucherDTO.setIsHot("false");
 
         String expectedStatusCode = "OK";
@@ -128,7 +107,7 @@ public class VoucherControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "ROLE_ADMIN")
+    @WithMockUser(authorities = "ADMIN_UPDATE")
     void updateVoucher_ValidData_SuccessfullyUpdated() throws Exception {
         VoucherDTO voucherDTO = new VoucherDTO();
         voucherDTO.setTitle("UpdatedTitle");
@@ -140,7 +119,7 @@ public class VoucherControllerTest {
         voucherDTO.setStatus(VoucherStatus.PAID.name());
         voucherDTO.setArrivalDate(LocalDate.of(2024, 7, 15));
         voucherDTO.setEvictionDate(LocalDate.of(2024, 7, 20));
-        voucherDTO.setUserId(UUID.randomUUID());
+        voucherDTO.setId(UUID.randomUUID().toString());
         voucherDTO.setIsHot("true");
 
         String voucherId = String.valueOf(UUID.randomUUID());
@@ -160,7 +139,7 @@ public class VoucherControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "ROLE_ADMIN")
+    @WithMockUser(authorities = "ADMIN_DELETE")
     void deleteVoucherById_VoucherExists_SuccessfullyDeleted() throws Exception {
         String voucherId = String.valueOf(UUID.randomUUID());
         String expectedStatusCode = "OK";
@@ -178,7 +157,7 @@ public class VoucherControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "ROLE_ADMIN")
+    @WithMockUser(authorities = "ADMIN_DELETE")
     void deleteVoucherById_VoucherDoesNotExist_NotFound() throws Exception {
         String voucherId = String.valueOf(UUID.randomUUID());
         String expectedStatusCode = StatusCodes.ENTITY_NOT_FOUND.name();
@@ -196,29 +175,4 @@ public class VoucherControllerTest {
         verify(voucherService, times(1)).delete(voucherId);
     }
 
-
-    @Test
-    @WithMockUser(authorities = {"ROLE_ADMIN", "ROLE_MANAGER"})
-    void changeVoucherStatus_ValidData_SuccessfullyChanged() throws Exception {
-        VoucherDTO voucherDTO = new VoucherDTO();
-        voucherDTO.setIsHot("true");
-
-        String voucherId = String.valueOf(UUID.randomUUID());
-        String expectedStatusCode = "OK";
-        String expectedMessage = "Voucher status is successfully changed";
-
-        when(voucherService.changeHotStatus(eq(voucherId), any(VoucherDTO.class))).thenReturn(voucherDTO);
-
-        mockMvc.perform(patch("/vouchers/" + voucherId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(voucherDTO)))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.statusCode").value(expectedStatusCode))
-                .andExpect(jsonPath("$.statusMessage").value(expectedMessage));
-
-        verify(voucherService, times(1)).changeHotStatus(eq(voucherId), any(VoucherDTO.class));
-    }
 }
-*/

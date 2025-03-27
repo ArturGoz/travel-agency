@@ -1,4 +1,4 @@
-/*
+
 package com.epam.finaltask.controller;
 
 import com.epam.finaltask.auth.AuthenticationRequest;
@@ -64,4 +64,4 @@ public class AuthenticationControllerTest {
                 .andExpect(jsonPath("$.results[0].access_token").value(authenticationResponse.getAccessToken()));
     }
 }
-*/
+

@@ -1,8 +1,8 @@
-/*
 package com.epam.finaltask.controller;
 
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.exception.StatusCodes;
+import com.epam.finaltask.model.Permission;
 import com.epam.finaltask.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -130,7 +130,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"ADMIN_UPDATE"})
     void updateUser_allDataValid_UpdatedSuccessfully() throws Exception {
         UserDTO userDto = new UserDTO();
         userDto.setId(String.valueOf(UUID.randomUUID()));
@@ -152,7 +152,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"ADMIN_UPDATE"})
     void updateUser_nonValidUsername_BadRequest() throws Exception {
         UserDTO userDto = new UserDTO();
         userDto.setId(String.valueOf(UUID.randomUUID()));
@@ -174,7 +174,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"ADMIN_UPDATE"})
     void updateUser_nonValidPassword_BadRequest() throws Exception {
         UserDTO userDto = new UserDTO();
         userDto.setId(String.valueOf(UUID.randomUUID()));
@@ -198,7 +198,7 @@ public class UserControllerTest {
 
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"ADMIN_UPDATE"})
     void updateUser_nonValidPhoneNumber_BadRequest() throws Exception {
         UserDTO userDto = new UserDTO();
         userDto.setId(String.valueOf(UUID.randomUUID()));
@@ -221,28 +221,28 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"USER_READ"})
     void getUserByUsername_RetrievedSuccessfully() throws Exception {
-
         String username = "admin";
-
         UserDTO userDto = new UserDTO();
-        userDto.setUsername("admin");
+        userDto.setUsername(username);
         userDto.setPassword("PasSw1ord");
 
         when(userService.getUserByUsername(username)).thenReturn(userDto);
+
         String expectedStatusCode = StatusCodes.OK.name();
         String expectedMessage = "User was obtained successfully";
 
-        mockMvc.perform(get("/users/" + userDto.getUsername())
+        mockMvc.perform(get("/users/data")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(userDto)))
+                        .header("X-User-Name", username))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.statusCode").value(expectedStatusCode))
-                .andExpect(jsonPath("$.statusMessage").value(expectedMessage));
+                .andExpect(jsonPath("$.statusMessage").value(expectedMessage))
+                .andExpect(jsonPath("$.results[0].username").value(username));
     }
 
 }
-*/
+

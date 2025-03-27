@@ -55,7 +55,7 @@
             <select id="Status" required>
                 <option th:each="status : ${statusTypes}"
                         th:value="${status}"
-                        th:text="#{'hotel.type.' + ${status}}"></option>
+                        th:text="#{'status.' + ${status}}"></option>
             </select>
         </div>
 

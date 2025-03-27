@@ -44,8 +44,12 @@ public class SecurityConfiguration {
                                 "/vouchers/changeHotStatus")
                         .hasAuthority(Permission.MANAGER_UPDATE.name())
 
-                        // All other endpoints require ADMIN role
-                        .anyRequest().hasAuthority(Permission.ADMIN_READ.name())
+                        .anyRequest().hasAnyAuthority(
+                                Permission.ADMIN_READ.name(),
+                                Permission.ADMIN_CREATE.name(),
+                                Permission.ADMIN_UPDATE.name(),
+                                Permission.ADMIN_DELETE.name()
+                        )
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
