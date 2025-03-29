@@ -2,7 +2,6 @@ package com.epam.finaltask.controller.rest;
 
 import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.dto.VoucherDTO;
-import com.epam.finaltask.dto.VoucherOrderRequest;
 import com.epam.finaltask.dto.VoucherRequest;
 import com.epam.finaltask.exception.StatusCodes;
 import com.epam.finaltask.service.VoucherService;
@@ -129,7 +128,7 @@ public class VoucherController {
     @PostMapping("/order")
     public ResponseEntity<RemoteResponse> orderVoucher(
             @RequestHeader(value = "X-User-Name", required = false) String username,
-            @RequestBody VoucherOrderRequest voucherOrderRequest) {
+            @RequestBody VoucherRequest voucherOrderRequest) {
         VoucherDTO voucherDTO = voucherService.order(voucherOrderRequest.getVoucherId(), username);
 
         RemoteResponse remoteResponse = RemoteResponse.create(

@@ -89,7 +89,8 @@
         statusLabel: /*[[#{voucher.status}]]*/,
         arrivalLabel: /*[[#{voucher.arrivalLabel}]]*/,
         evictionLabel: /*[[#{voucher.evictionLabel}]]*/,
-        isHot: /*[[#{voucher.hotStatus}]]*/
+        isHot: /*[[#{voucher.hotStatus}]]*/,
+        noVouchers: /*[[#{empty.voucher}]]*/
     };
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -140,7 +141,7 @@
                             userVouchersList.appendChild(voucherElement);
                         });
                     } else {
-                        userVouchersList.innerHTML = '<p>No vouchers found.</p>';
+                        userVouchersList.innerHTML = `<p>${translations.noVouchers}</p>`;
                     }
                 } else {
                     throw new Error(data.statusMessage || 'Failed to load user data');
@@ -181,12 +182,11 @@
                         vouchersList.appendChild(voucherElement);
                     });
                 } else {
-                    document.getElementById('vouchers-list').innerHTML = '<p>No vouchers available.</p>';
-                }
+                    document.getElementById('vouchers-list').innerHTML = `<p>${translations.noVouchers}</p>`;                }
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('vouchers-list').innerHTML = '<p>Error loading vouchers.</p>';
+                document.getElementById('vouchers-list').innerHTML = `<p>${translations.noVouchers}</p>`;
             });
     });
 
@@ -199,13 +199,18 @@
             return;
         }
 
+        const requestBody = {
+            voucherId: voucherId,
+            additionalDetails: null
+        };
+
         fetch('/vouchers/order', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + accessToken,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(voucherId)
+            body: JSON.stringify(requestBody)
         })
             .then(response => response.json())
             .then(data => {
