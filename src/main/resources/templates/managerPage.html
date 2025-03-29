@@ -138,8 +138,13 @@
     messageContainer.className = isError ? 'error' : 'success';
   }
 
+  const accessToken = localStorage.getItem('accessToken');
+
+  if (!accessToken) {
+    window.location.href = '/page/login';
+  }
+
   async function fetchVouchers() {
-    const accessToken = localStorage.getItem('accessToken');
     const response = await fetch('/vouchers/list', {
       method: 'GET',
       headers: {
