@@ -1,4 +1,4 @@
-package com.epam.finaltask.service;
+package com.epam.finaltask.DbTest;
 
 
 import com.epam.finaltask.model.User;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DataJpaTest
 @ActiveProfiles("test")
 @Slf4j
-public class DbH2Test {
+public class DbRetrieveDataTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired

@@ -47,6 +47,8 @@ public class UserControllerTest {
     void registerUser_ValidUserData_SuccessfullyRegistered() throws Exception {
         UserDTO userDto = new UserDTO();
         userDto.setUsername("user1");
+        userDto.setBalance(0.1);
+        userDto.setPhoneNumber("380997779395");
         userDto.setPassword("PasSw1ord");
 
         String expectedStatusCode = "OK";
@@ -68,11 +70,14 @@ public class UserControllerTest {
     void registerUser_ValidUserData_UnsatisfiedPassword() throws Exception {
         UserDTO userDto = new UserDTO();
         userDto.setUsername("user1");
+        userDto.setBalance(0.1);
+        userDto.setPhoneNumber("380997779395");
         userDto.setPassword("cd");
 
         String expectedStatusCode = "INVALID_DATA";
-        String expectedMessage = "Your password must contain upper and lower case letters and numbers," +
-                " at least 7 and maximum 30 characters.Password cannot contains spaces";
+        String expectedMessage = "Your password must contain upper and lower case letters and numbers, " +
+                "at least 7 and maximum 30 characters." +
+                "Password cannot contains spaces";
 
         when(userService.register(userDto)).thenReturn(userDto);
 
@@ -90,6 +95,8 @@ public class UserControllerTest {
     void registerUser_ValidUserData_UnsatisfiedUsername() throws Exception {
         UserDTO userDto = new UserDTO();
         userDto.setUsername("user###1");
+        userDto.setBalance(0.1);
+        userDto.setPhoneNumber("380997779395");
         userDto.setPassword("PasSw1ord");
 
         String expectedStatusCode = "INVALID_DATA";
@@ -112,6 +119,7 @@ public class UserControllerTest {
         UserDTO userDto = new UserDTO();
         userDto.setUsername("user1");
         userDto.setPassword("PasSw1ord");
+        userDto.setBalance(0.1);
         userDto.setPhoneNumber("abcdefg");
 
         String expectedStatusCode = "INVALID_DATA";
@@ -135,6 +143,8 @@ public class UserControllerTest {
         UserDTO userDto = new UserDTO();
         userDto.setId(String.valueOf(UUID.randomUUID()));
         userDto.setUsername("Test");
+        userDto.setBalance(0.1);
+        userDto.setPhoneNumber("380997779395");
         userDto.setPassword("PasSw1ord");
 
         when(userService.updateUser(userDto.getUsername(), userDto)).thenReturn(userDto);
@@ -157,6 +167,8 @@ public class UserControllerTest {
         UserDTO userDto = new UserDTO();
         userDto.setId(String.valueOf(UUID.randomUUID()));
         userDto.setUsername("Te#st");
+        userDto.setBalance(0.1);
+        userDto.setPhoneNumber("380997779395");
         userDto.setPassword("PasSw1ord");
 
         when(userService.updateUser(userDto.getUsername(), userDto)).thenReturn(userDto);
@@ -179,12 +191,15 @@ public class UserControllerTest {
         UserDTO userDto = new UserDTO();
         userDto.setId(String.valueOf(UUID.randomUUID()));
         userDto.setUsername("Test");
+        userDto.setBalance(0.1);
+        userDto.setPhoneNumber("380997779395");
         userDto.setPassword("bb");
 
         when(userService.updateUser(userDto.getUsername(), userDto)).thenReturn(userDto);
         String expectedStatusCode = StatusCodes.INVALID_DATA.name();
-        String expectedMessage = "Your password must contain upper and lower case letters and numbers," +
-                " at least 7 and maximum 30 characters.Password cannot contains spaces";
+        String expectedMessage = "Your password must contain upper and lower case letters and numbers, " +
+                "at least 7 and maximum 30 characters." +
+                "Password cannot contains spaces";
 
         mockMvc.perform(patch("/users/" + userDto.getUsername())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -204,6 +219,7 @@ public class UserControllerTest {
         userDto.setId(String.valueOf(UUID.randomUUID()));
         userDto.setUsername("Test");
         userDto.setPassword("PasSw1ord");
+        userDto.setBalance(0.1);
         userDto.setPhoneNumber("bbb");
 
         when(userService.updateUser(userDto.getUsername(), userDto)).thenReturn(userDto);

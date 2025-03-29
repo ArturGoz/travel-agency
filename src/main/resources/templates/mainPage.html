@@ -10,12 +10,15 @@
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
+            background-color: #f4f4f4;
         }
-        .profile-section, .vouchers-section {
+        .profile-section, .vouchers-section, .user-vouchers-section, .order-section {
+            background-color: #fff;
             border: 1px solid #ddd;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .field {
             margin-bottom: 15px;
@@ -25,16 +28,62 @@
             margin-right: 10px;
         }
         .voucher {
+            background-color: #f9f9f9;
             border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
             border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .voucher h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .language-switcher {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .language-switcher a {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        input[type="text"], button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
         }
     </style>
 </head>
 <body>
 
-<!-- Add language switcher links -->
+<!-- Language switcher -->
 <div class="language-switcher">
     <a th:href="@{/page/main(lang='en')}">English</a>
     <a th:href="@{/page/main(lang='uk')}">Українська</a>
@@ -74,8 +123,8 @@
     <h2 th:text="#{vouchers.order}">Order Voucher</h2>
     <input type="text" id="voucherIdInput" th:placeholder="#{vouchers.enterId}">
     <button onclick="orderVoucher()" th:text="#{vouchers.register}">Register Voucher</button>
+    <div id="orderMessage" class="message"></div>
 </div>
-
 
 <script th:inline="javascript">
     /*<![CDATA[*/
@@ -97,7 +146,7 @@
         const accessToken = localStorage.getItem('accessToken');
 
         if (!accessToken) {
-            alert('Authentication required. Please login.');
+            showMessage('Authentication required. Please login.', true);
             window.location.href = '/login.html';
             return;
         }
@@ -116,28 +165,12 @@
                     document.getElementById('username').textContent = user.username;
                     document.getElementById('balance').textContent = user.balance ?? '0.00';
                     document.getElementById('phoneNumber').textContent = user.phoneNumber || 'N/A';
-                    document.getElementById('roles').textContent =
-                        user.roles ? user.roles.join(', ') : 'No roles assigned';
+                    document.getElementById('roles').textContent = user.roles ? user.roles.join(', ') : 'No roles assigned';
 
-                    // Додавання ваучерів користувача
                     const userVouchersList = document.getElementById('user-vouchers-list');
                     if (user.vouchers && user.vouchers.length > 0) {
                         user.vouchers.forEach(voucher => {
-                            const voucherElement = document.createElement('div');
-                            voucherElement.classList.add('voucher');
-                            voucherElement.innerHTML = `
-                            <h3>${voucher.title}</h3>
-                        <p><strong>${translations.idLabel}:</strong> ${voucher.id}</p>
-                        <p><strong>${translations.descriptionLabel}:</strong> ${voucher.description}</p>
-                        <p><strong>${translations.priceLabel}:</strong> $${voucher.price}</p>
-                        <p><strong>${translations.typeLabel}:</strong> ${voucher.tourType}</p>
-                        <p><strong>${translations.transferLabel}:</strong> ${voucher.transferType}</p>
-                        <p><strong>${translations.hotelLabel}:</strong> ${voucher.hotelType}</p>
-                        <p><strong>${translations.statusLabel}:</strong> ${voucher.status}</p>
-                        <p><strong>${translations.arrivalLabel}:</strong> ${voucher.arrivalDate}</p>
-                        <p><strong>${translations.evictionLabel}:</strong> ${voucher.evictionDate}</p>
-                        <p><strong>${translations.isHot}:</strong> ${voucher.isHot}</p>
-                        `;
+                            const voucherElement = createVoucherElement(voucher);
                             userVouchersList.appendChild(voucherElement);
                         });
                     } else {
@@ -148,11 +181,9 @@
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Error: ' + error.message);
+                showMessage('Error: ' + error.message, true);
             });
 
-        // Fetch vouchers
         fetch('/vouchers/status/UNREGISTERED', {
             method: 'GET',
             headers: {
@@ -162,40 +193,46 @@
         })
             .then(response => response.json())
             .then(data => {
+                const vouchersList = document.getElementById('vouchers-list');
                 if (data.results && data.results.length > 0) {
-                    const vouchersList = document.getElementById('vouchers-list');
                     data.results.forEach(voucher => {
-                        const voucherElement = document.createElement('div');
-                        voucherElement.classList.add('voucher');
-                        voucherElement.innerHTML = `
-                        <h3>${voucher.title}</h3>
-                        <p><strong>${translations.idLabel}:</strong> ${voucher.id}</p>
-                        <p><strong>${translations.descriptionLabel}:</strong> ${voucher.description}</p>
-                        <p><strong>${translations.priceLabel}:</strong> $${voucher.price}</p>
-                        <p><strong>${translations.typeLabel}:</strong> ${voucher.tourType}</p>
-                        <p><strong>${translations.transferLabel}:</strong> ${voucher.transferType}</p>
-                        <p><strong>${translations.hotelLabel}:</strong> ${voucher.hotelType}</p>
-                        <p><strong>${translations.statusLabel}:</strong> ${voucher.status}</p>
-                        <p><strong>${translations.arrivalLabel}:</strong> ${voucher.arrivalDate}</p>
-                        <p><strong>${translations.evictionLabel}:</strong> ${voucher.evictionDate}</p>
-                    `;
+                        const voucherElement = createVoucherElement(voucher);
                         vouchersList.appendChild(voucherElement);
                     });
                 } else {
-                    document.getElementById('vouchers-list').innerHTML = `<p>${translations.noVouchers}</p>`;                }
+                    vouchersList.innerHTML = `<p>${translations.noVouchers}</p>`;
+                }
             })
             .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('vouchers-list').innerHTML = `<p>${translations.noVouchers}</p>`;
+                showMessage('Error: ' + error.message, true);
             });
     });
+
+    function createVoucherElement(voucher) {
+        const voucherElement = document.createElement('div');
+        voucherElement.classList.add('voucher');
+        voucherElement.innerHTML = `
+            <h3>${voucher.title}</h3>
+            <p><strong>${translations.idLabel}:</strong> ${voucher.id}</p>
+            <p><strong>${translations.descriptionLabel}:</strong> ${voucher.description}</p>
+            <p><strong>${translations.priceLabel}:</strong> $${voucher.price}</p>
+            <p><strong>${translations.typeLabel}:</strong> ${voucher.tourType}</p>
+            <p><strong>${translations.transferLabel}:</strong> ${voucher.transferType}</p>
+            <p><strong>${translations.hotelLabel}:</strong> ${voucher.hotelType}</p>
+            <p><strong>${translations.statusLabel}:</strong> ${voucher.status}</p>
+            <p><strong>${translations.arrivalLabel}:</strong> ${voucher.arrivalDate}</p>
+            <p><strong>${translations.evictionLabel}:</strong> ${voucher.evictionDate}</p>
+            <p><strong>${translations.isHot}:</strong> ${voucher.isHot}</p>
+        `;
+        return voucherElement;
+    }
 
     function orderVoucher() {
         const accessToken = localStorage.getItem('accessToken');
         const voucherId = document.getElementById('voucherIdInput').value.trim();
 
         if (!voucherId) {
-            alert('Please enter a valid Voucher ID.');
+            showMessage('Please enter a valid Voucher ID.', true);
             return;
         }
 
@@ -215,17 +252,29 @@
             .then(response => response.json())
             .then(data => {
                 if (data.succeeded) {
-                    alert('Voucher successfully ordered!');
-                    window.location.href = "http://localhost:8080/page/main";
+                    showMessage('Voucher successfully ordered!', false);
+                    setTimeout(() => {
+                        window.location.href = "http://localhost:8080/page/main";
+                    }, 2000);
                 } else {
                     throw new Error(data.statusMessage || 'Failed to order voucher');
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Error: ' + error.message);
+                showMessage('Error: ' + error.message, true);
             });
     }
+
+    function showMessage(message, isError) {
+        const messageElement = document.getElementById('orderMessage');
+        messageElement.textContent = message;
+        messageElement.className = isError ? 'message error' : 'message success';
+        messageElement.style.display = 'block';
+        setTimeout(() => {
+            messageElement.style.display = 'none';
+        }, 5000);
+    }
+    /*]]>*/
 </script>
 </body>
 </html>

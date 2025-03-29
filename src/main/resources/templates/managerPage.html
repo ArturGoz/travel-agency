@@ -3,57 +3,120 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title th:text="#{page.title}">User Profile &amp; Vouchers</title>
+  <title th:text="#{page.title}">User Profile & Vouchers</title>
   <style>
-    body { font-family: Arial, sans-serif; }
-    .voucher { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
-    .form-container { margin: 20px 0; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .voucher {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: box-shadow 0.3s ease;
+    }
+    .voucher:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .form-container {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15px;
+    }
+    input[type="text"], select {
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 200px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .language-switcher a {
+      margin-right: 10px;
+      text-decoration: none;
+      color: #007bff;
+    }
+    .language-switcher a:hover {
+      text-decoration: underline;
+    }
+    #messageContainer {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    #messageContainer.error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    #messageContainer.success {
+      background-color: #d4edda;
+      color: #155724;
+    }
   </style>
 </head>
 <body>
 
-<!-- Add language switcher links -->
 <div class="language-switcher">
-  <a th:href="@{/page/managerPage(lang='en')}">English</a>
-  <a th:href="@{/page/managerPage(lang='uk')}">Українська</a>
+  <a th:href="@{/page/manager(lang='en')}">English</a>
+  <a th:href="@{/page/manager(lang='uk')}">Українська</a>
 </div>
 
-<!-- Use localized title for available vouchers -->
 <h1 th:text="#{vouchers.available}">Available Vouchers</h1>
 <div id="voucherContainer"></div>
 
 <div class="form-container">
-  <!-- Localize form headings and labels -->
   <h3 th:text="#{voucher.changeHotStatus}">Change Voucher Hot Status</h3>
-  <label for="voucherId" th:text="#{voucher.id} + ':'">Voucher ID:</label>
-  <input type="text" id="voucherId" th:placeholder="#{vouchers.enterId}">
-
-  <label for="hotStatus" th:text="#{voucher.hotStatus} + ':'">Hot Status:</label>
-  <select id="hotStatus">
-    <option value="true">true</option>
-    <option value="false">false</option>
-  </select>
-
+  <div class="form-group">
+    <label for="voucherId" th:text="#{voucher.id} + ':'">Voucher ID:</label>
+    <input type="text" id="voucherId" th:placeholder="#{vouchers.enterId}">
+  </div>
+  <div class="form-group">
+    <label for="hotStatus" th:text="#{voucher.hotStatus} + ':'">Hot Status:</label>
+    <select id="hotStatus">
+      <option value="true" th:text="#{boolean.true}">Yes</option>
+      <option value="false" th:text="#{boolean.false}">No</option>
+    </select><br>
+  </div>
   <button onclick="changeHotStatus()" th:text="#{vouchers.register}">Submit</button>
 </div>
 
 <div class="form-container">
   <h3 th:text="#{voucher.changeStatus}">Change Voucher Status</h3>
-  <label for="voucherId2" th:text="#{voucher.id} + ':'">Voucher ID:</label>
-  <input type="text" id="voucherId2" th:placeholder="#{vouchers.enterId}">
-
-  <label for="Status" th:text="#{voucher.status} + ':'">Status:</label>
-  <select id="Status">
-    <option value="REGISTERED" th:text="'REGISTERED'">REGISTERED</option>
-    <option value="PAID" th:text="'PAID'">PAID</option>
-    <option value="CANCELED" th:text="'CANCELED'">CANCELED</option>
-    <option value="UNREGISTERED" th:text="#{status.UNREGISTERED}">UNREGISTERED</option>
-  </select>
-
+  <div class="form-group">
+    <label for="voucherId2" th:text="#{voucher.id} + ':'">Voucher ID:</label>
+    <input type="text" id="voucherId2" th:placeholder="#{vouchers.enterId}">
+  </div>
+  <div class="form-group">
+    <label th:text="#{voucher.status}" for="Status">Status Type:</label>
+    <select id="Status" required>
+      <option th:each="status : ${statusTypes}"
+              th:value="${status}"
+              th:text="#{'status.' + ${status}}"></option>
+    </select>
+  </div>
   <button onclick="changeStatus()" th:text="#{vouchers.register}">Submit</button>
 </div>
 
-<!-- Create a JavaScript object with localized voucher labels -->
+<div id="messageContainer"></div>
+
 <script th:inline="javascript">
   /*<![CDATA[*/
   var translations = {
@@ -68,10 +131,13 @@
     evictionLabel: /*[[#{voucher.evictionLabel}]]*/,
     isHot: /*[[#{voucher.hotStatus}]]*/
   };
-  /*]]>*/
-</script>
 
-<script>
+  function showMessage(message, isError) {
+    const messageContainer = document.getElementById('messageContainer');
+    messageContainer.innerText = message;
+    messageContainer.className = isError ? 'error' : 'success';
+  }
+
   async function fetchVouchers() {
     const accessToken = localStorage.getItem('accessToken');
     const response = await fetch('/vouchers/list', {
@@ -83,8 +149,8 @@
     });
 
     if (!response.ok) {
-      // Using inline localization for error messages as needed
-      document.getElementById('voucherContainer').innerText = /*[[#{error.generic}]]*/ 'An error occurred';
+      showMessage(/*[[#{error.fetchVouchers}]]*/ 'Failed to fetch vouchers', true);
+      document.getElementById('voucherContainer').innerHTML = '';
       return;
     }
 
@@ -97,18 +163,18 @@
       const div = document.createElement('div');
       div.className = 'voucher';
       div.innerHTML = `
-                    <h3>${voucher.title}</h3>
-                    <h3><strong>${translations.idLabel}:</strong> ${voucher.id}</h3>
-                    <p><strong>${translations.descriptionLabel}:</strong> ${voucher.description}</p>
-                    <p><strong>${translations.priceLabel}:</strong> $${voucher.price}</p>
-                    <p><strong>${translations.tourTypeLabel}:</strong> ${voucher.tourType}</p>
-                    <p><strong>${translations.transferLabel}:</strong> ${voucher.transferType}</p>
-                    <p><strong>${translations.hotelLabel}:</strong> ${voucher.hotelType}</p>
-                    <p><strong>${translations.statusLabel}:</strong> ${voucher.status}</p>
-                    <p><strong>${translations.arrivalLabel}:</strong> ${voucher.arrivalDate}</p>
-                    <p><strong>${translations.evictionLabel}:</strong> ${voucher.evictionDate}</p>
-                    <p><strong>${translations.isHot}:</strong> ${voucher.isHot}</p>
-                `;
+        <h3>${voucher.title}</h3>
+        <p><strong>${translations.idLabel}:</strong> ${voucher.id}</p>
+        <p><strong>${translations.descriptionLabel}:</strong> ${voucher.description}</p>
+        <p><strong>${translations.priceLabel}:</strong> $${voucher.price}</p>
+        <p><strong>${translations.tourTypeLabel}:</strong> ${voucher.tourType}</p>
+        <p><strong>${translations.transferLabel}:</strong> ${voucher.transferType}</p>
+        <p><strong>${translations.hotelLabel}:</strong> ${voucher.hotelType}</p>
+        <p><strong>${translations.statusLabel}:</strong> ${voucher.status}</p>
+        <p><strong>${translations.arrivalLabel}:</strong> ${voucher.arrivalDate}</p>
+        <p><strong>${translations.evictionLabel}:</strong> ${voucher.evictionDate}</p>
+        <p><strong>${translations.isHot}:</strong> ${voucher.isHot}</p>
+      `;
       container.appendChild(div);
     });
   }
@@ -119,7 +185,7 @@
     const accessToken = localStorage.getItem('accessToken');
 
     if (!voucherId) {
-      alert(/*[[#{error.generic}]]*/ 'An error occurred');
+      showMessage(/*[[#{error.enterId}]]*/ 'Please enter a voucher ID', true);
       return;
     }
 
@@ -138,10 +204,10 @@
     });
 
     if (response.ok) {
-      alert(/*[[#{vouchers.success}]]*/ 'Voucher successfully ordered!');
+      showMessage(/*[[#{vouchers.success}]]*/ 'Voucher hot status changed successfully!', false);
       fetchVouchers();
     } else {
-      alert(/*[[#{error.generic}]]*/ 'An error occurred');
+      showMessage(/*[[#{error.generic}]]*/ 'An error occurred', true);
     }
   }
 
@@ -151,7 +217,7 @@
     const accessToken = localStorage.getItem('accessToken');
 
     if (!voucherId) {
-      alert(/*[[#{error.generic}]]*/ 'An error occurred');
+      showMessage(/*[[#{error.enterId}]]*/ 'Please enter a voucher ID', true);
       return;
     }
 
@@ -170,14 +236,15 @@
     });
 
     if (response.ok) {
-      alert(/*[[#{vouchers.success}]]*/ 'Voucher successfully ordered!');
+      showMessage(/*[[#{request.success}]]*/ 'Request is successful!', false);
       fetchVouchers();
     } else {
-      alert(/*[[#{error.generic}]]*/ 'An error occurred');
+      showMessage(/*[[#{error.generic}]]*/ 'An error occurred', true);
     }
   }
 
   fetchVouchers();
+  /*]]>*/
 </script>
 </body>
 </html>

@@ -43,7 +43,9 @@ public class FrontController {
     }
 
     @GetMapping("/manager")
-    public String managerPage() {
+    public String managerPage(Model model) {
+        model.addAttribute("statusTypes",
+                Arrays.stream(VoucherStatus.values()).map(VoucherStatus::name).toArray());
         return "managerPage";
     }
 }
