@@ -26,11 +26,11 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
         User user = userRepository.findUserByUsername(authenticationRequest.getUsername())
-                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.WRONG_PASSWORD.name(),
-                        "Such login does not exist"));
+                .orElseThrow(() -> new EntityNotFoundException("Such login does not exist",
+                        StatusCodes.WRONG_PASSWORD.name()));
 
         if (!passwordEncoder.matches(authenticationRequest.getPassword(), user.getPassword())) {
-            throw new EntityNotFoundException(StatusCodes.WRONG_PASSWORD.name(), "Wrong password");
+            throw new EntityNotFoundException("Wrong password",StatusCodes.WRONG_PASSWORD.name());
         }
 
         Authentication authentication = authenticationManager.authenticate(

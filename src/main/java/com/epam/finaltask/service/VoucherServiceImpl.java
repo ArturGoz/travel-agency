@@ -38,12 +38,12 @@ public class VoucherServiceImpl implements VoucherService {
         Voucher voucher = findVoucherById(id);
 
         if (voucher.getStatus() != VoucherStatus.UNREGISTERED)
-            throw new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(),
-                    "No voucher with id " + id + " UNREGISTERED");
+            throw new EntityNotFoundException("No voucher with id " + id + " UNREGISTERED",
+                    StatusCodes.ENTITY_NOT_FOUND.name());
 
         User user = userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(),
-                        "Entity not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Entity not found",
+                        StatusCodes.ENTITY_NOT_FOUND.name()));
 
         voucher.setUser(user);
         voucher.setStatus(VoucherStatus.REGISTERED);

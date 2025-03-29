@@ -1,89 +1,163 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Створення ваучера</title>
+    <title th:text="#{page.title}">Створення ваучера</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .section {
+            background-color: #ffffff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        .field label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .field input, .field select, .field textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .field textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .language-switcher {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .language-switcher a {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        .message.success {
+            color: #28a745;
+            margin-top: 10px;
+        }
+        .message.error {
+            color: #dc3545;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-<!-- Add language switcher links -->
-<div class="language-switcher">
-    <a th:href="@{/page/adminPage(lang='en')}">English</a>
-    <a th:href="@{/page/adminPage(lang='uk')}">Українська</a>
-</div>
+<div class="container">
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <a th:href="@{/page/admin(lang='en')}">English</a>
+        <a th:href="@{/page/admin(lang='uk')}">Українська</a>
+    </div>
 
-    <h2 th:text="#{voucher.create.title}">Create Voucher</h2>
-    <form id="voucherForm">
-        <div class="field">
-            <label th:text="#{voucher.title}" for="title">Title:</label>
-            <input type="text" id="title" required>
-        </div>
+    <!-- Authentication Message -->
+    <div id="authMessage" class="message"></div>
 
-        <div class="field">
-            <label th:text="#{voucher.description}" for="description">Description:</label>
-            <textarea id="description" required></textarea>
-        </div>
-
-        <div class="field">
-            <label th:text="#{voucher.price}" for="price">Price:</label>
-            <input type="number" id="price" step="0.01" required>
-        </div>
-
-        <div class="field">
-            <label th:text="#{voucher.type}" for="tourType">Tour Type:</label>
-            <select id="tourType" required>
-                <option th:each="type : ${tourTypes}"
-                        th:value="${type}"
-                        th:text="#{'tour.type.' + ${type}}"></option>
-            </select>
-        </div>
-
-        <div class="field">
-            <label th:text="#{voucher.transfer}" for="transferType">Transfer Type:</label>
-            <select id="transferType" required>
-                <option th:each="transfer : ${transferTypes}"
-                        th:value="${transfer}"
-                        th:text="#{'transfer.type.' + ${transfer}}"></option>
-            </select>
-        </div>
-
-        <div class="field">
-            <label th:text="#{voucher.hotel}" for="hotelType">Hotel Type:</label>
-            <select id="hotelType" required>
-                <option th:each="hotel : ${hotelTypes}"
-                        th:value="${hotel}"
-                        th:text="#{'hotel.type.' + ${hotel}}"></option>
-            </select>
-        </div>
-
-        <div class="field">
-            <label th:text="#{voucher.status}" for="Status">Status Type:</label>
-            <select id="Status" required>
-                <option th:each="status : ${statusTypes}"
-                        th:value="${status}"
-                        th:text="#{'status.' + ${status}}"></option>
-            </select>
-        </div>
-
-        <div class="field">
-            <label th:text="#{voucher.arrival}" for="arrivalDate">Arrival Date:</label>
-            <input type="date" id="arrivalDate" required>
-        </div>
-
-        <div class="field">
-            <label th:text="#{voucher.eviction}" for="evictionDate">Eviction Date:</label>
-            <input type="date" id="evictionDate" required>
-        </div>
-
-    <label for="isHot">Гарячий тур:</label>
-    <select id="isHot">
-        <option value="true" th:text="#{boolean.true}">Так</option>
-        <option value="false" th:text="#{boolean.false}">Ні</option>
-    </select><br>
-
-        <button type="submit" th:text="#{button.create}">Create</button>
-</form>
-
+    <!-- Create Voucher Section -->
+    <div class="section">
+        <h2 th:text="#{voucher.create.title}">Create Voucher</h2>
+        <form id="voucherForm">
+            <div class="field">
+                <label th:text="#{voucher.title}" for="title">Title:</label>
+                <input type="text" id="title" required>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.description}" for="description">Description:</label>
+                <textarea id="description" required></textarea>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.price}" for="price">Price:</label>
+                <input type="number" id="price" step="0.01" required>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.type}" for="tourType">Tour Type:</label>
+                <select id="tourType" required>
+                    <option th:each="type : ${tourTypes}"
+                            th:value="${type}"
+                            th:text="#{'tour.type.' + ${type}}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.transfer}" for="transferType">Transfer Type:</label>
+                <select id="transferType" required>
+                    <option th:each="transfer : ${transferTypes}"
+                            th:value="${transfer}"
+                            th:text="#{'transfer.type.' + ${transfer}}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.hotel}" for="hotelType">Hotel Type:</label>
+                <select id="hotelType" required>
+                    <option th:each="hotel : ${hotelTypes}"
+                            th:value="${hotel}"
+                            th:text="#{'hotel.type.' + ${hotel}}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.status}" for="Status">Status Type:</label>
+                <select id="Status" required>
+                    <option th:each="status : ${statusTypes}"
+                            th:value="${status}"
+                            th:text="#{'status.' + ${status}}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.arrival}" for="arrivalDate">Arrival Date:</label>
+                <input type="date" id="arrivalDate" required>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.eviction}" for="evictionDate">Eviction Date:</label>
+                <input type="date" id="evictionDate" required>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.hotStatus}" for="isHot">Hot Tour:</label>
+                <select id="isHot">
+                    <option value="true" th:text="#{boolean.true}">Yes</option>
+                    <option value="false" th:text="#{boolean.false}">No</option>
+                </select>
+            </div>
+            <button type="submit" th:text="#{button.create}">Create</button>
+        </form>
+        <div id="createMessage" class="message"></div>
+    </div>
 
     <!-- Delete Voucher Section -->
     <div class="section">
@@ -93,98 +167,107 @@
             <input type="text" id="voucherId" th:placeholder="#{voucher.id.placeholder}">
         </div>
         <button onclick="deleteVoucher()" th:text="#{button.delete}">Delete</button>
-        <div id="deleteMessage"></div>
+        <div id="deleteMessage" class="message"></div>
     </div>
 
-
-
-    <h2 th:text="#{voucher.update.title}">Update Voucher</h2>
-    <div class="field">
-        <label th:text="#{voucher.id}" for="voucherUpdateId">Voucher ID:</label>
-        <input type="text" id="voucherUpdateId" required>
+    <!-- Update Voucher Section -->
+    <div class="section">
+        <h2 th:text="#{voucher.update.title}">Update Voucher</h2>
+        <div class="field">
+            <label th:text="#{voucher.id}" for="voucherUpdateId">Voucher ID:</label>
+            <input type="text" id="voucherUpdateId" required>
+        </div>
+        <form id="voucherForm2">
+            <div class="field">
+                <label th:text="#{voucher.title}" for="title2">Title:</label>
+                <input type="text" id="title2" required>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.description}" for="description2">Description:</label>
+                <textarea id="description2" required></textarea>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.price}" for="price2">Price:</label>
+                <input type="number" id="price2" step="0.01" required>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.type}" for="tourType2">Tour Type:</label>
+                <select id="tourType2" required>
+                    <option th:each="type : ${tourTypes}"
+                            th:value="${type}"
+                            th:text="#{'tour.type.' + ${type}}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.transfer}" for="transferType2">Transfer Type:</label>
+                <select id="transferType2" required>
+                    <option th:each="transfer : ${transferTypes}"
+                            th:value="${transfer}"
+                            th:text="#{'transfer.type.' + ${transfer}}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.hotel}" for="hotelType2">Hotel Type:</label>
+                <select id="hotelType2" required>
+                    <option th:each="hotel : ${hotelTypes}"
+                            th:value="${hotel}"
+                            th:text="#{'hotel.type.' + ${hotel}}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.status}" for="Status2">Status Type:</label>
+                <select id="Status2" required>
+                    <option th:each="status : ${statusTypes}"
+                            th:value="${status}"
+                            th:text="#{'status.' + ${status}}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.arrival}" for="arrivalDate2">Arrival Date:</label>
+                <input type="date" id="arrivalDate2" required>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.eviction}" for="evictionDate2">Eviction Date:</label>
+                <input type="date" id="evictionDate2" required>
+            </div>
+            <div class="field">
+                <label th:text="#{voucher.hotStatus}" for="isHot2">Hot Tour:</label>
+                <select id="isHot2">
+                    <option value="true" th:text="#{boolean.true}">Yes</option>
+                    <option value="false" th:text="#{boolean.false}">No</option>
+                </select>
+            </div>
+            <button type="button" onclick="updateVoucher()" th:text="#{button.update}">Update</button>
+        </form>
+        <div id="updateMessage" class="message"></div>
     </div>
+</div>
 
-<form id="voucherForm2">
-    <div class="field">
-        <label th:text="#{voucher.title}" for="title2">Title:</label>
-        <input type="text" id="title2" required>
-    </div>
+<!-- JavaScript with Alerts and Console Logs Removed -->
+<script th:inline="javascript">
+    const messages = {
+        authRequired: /*[[#{error.authRequired}]]*/ 'Authentication required',
+        createSuccess: /*[[#{voucher.create.success}]]*/ 'Voucher created successfully!',
+        updateSuccess: /*[[#{voucher.update.success}]]*/ 'Voucher updated successfully!',
+        deleteSuccess: /*[[#{voucher.delete.success}]]*/ 'Voucher deleted successfully!',
+        errorGeneric: /*[[#{error.generic}]]*/ 'An error occurred',
+        missingId: /*[[#{error.missingId}]]*/ 'Please enter a voucher ID'
+    };
 
-    <div class="field">
-        <label th:text="#{voucher.description}" for="description2">Description:</label>
-        <textarea id="description2" required></textarea>
-    </div>
-
-    <div class="field">
-        <label th:text="#{voucher.price}" for="price2">Price:</label>
-        <input type="number" id="price2" step="0.01" required>
-    </div>
-
-    <div class="field">
-        <label th:text="#{voucher.type}" for="tourType2">Tour Type:</label>
-        <select id="tourType2" required>
-            <option th:each="type : ${tourTypes}"
-                    th:value="${type}"
-                    th:text="#{'tour.type.' + ${type}}"></option>
-        </select>
-    </div>
-
-    <div class="field">
-        <label th:text="#{voucher.transfer}" for="transferType2">Transfer Type:</label>
-        <select id="transferType2" required>
-            <option th:each="transfer : ${transferTypes}"
-                    th:value="${transfer}"
-                    th:text="#{'transfer.type.' + ${transfer}}"></option>
-        </select>
-    </div>
-
-    <div class="field">
-        <label th:text="#{voucher.hotel}" for="hotelType2">Hotel Type:</label>
-        <select id="hotelType2" required>
-            <option th:each="hotel : ${hotelTypes}"
-                    th:value="${hotel}"
-                    th:text="#{'hotel.type.' + ${hotel}}"></option>
-        </select>
-    </div>
-
-    <div class="field">
-        <label th:text="#{voucher.arrival}" for="arrivalDate2">Arrival Date:</label>
-        <input type="date" id="arrivalDate2" required>
-    </div>
-
-    <div class="field">
-        <label th:text="#{voucher.eviction}" for="evictionDate2">Eviction Date:</label>
-        <input type="date" id="evictionDate2" required>
-    </div>
-
-    <label for="isHot2">Гарячий тур:</label>
-    <select id="isHot2">
-        <option value="true" th:text="#{boolean.true}">Так</option>
-        <option value="false" th:text="#{boolean.false}">Ні</option>
-    </select><br>
-
-    <button type="button" onclick="updateVoucher()" th:text="#{button.update}">Update</button>
-</form>
-
-
-    <script th:inline="javascript">
-        const messages = {
-            authRequired: /*[[#{error.authRequired}]]*/ 'Authentication required',
-            createSuccess: /*[[#{voucher.create.success}]]*/ 'Voucher created successfully!',
-            updateSuccess: /*[[#{voucher.update.success}]]*/ 'Voucher updated successfully!',
-            deleteSuccess: /*[[#{voucher.delete.success}]]*/ 'Voucher deleted successfully!',
-            errorGeneric: /*[[#{error.generic}]]*/ 'An error occurred'
-        };
-
-
+    // Create Voucher Form Submission
     document.getElementById("voucherForm").addEventListener("submit", async function(event) {
         event.preventDefault();
 
         const accessToken = localStorage.getItem('accessToken');
+        const authMessageDiv = document.getElementById('authMessage');
+        const createMessageDiv = document.getElementById('createMessage');
 
         if (!accessToken) {
-            alert('Authentication required. Please login.');
-            window.location.href = '/login.html';
+            authMessageDiv.innerHTML = messages.authRequired;
+            authMessageDiv.className = 'message error';
+            setTimeout(() => {
+                window.location.href = '/login.html';
+            }, 2000);
             return;
         }
 
@@ -195,11 +278,10 @@
             tourType: document.getElementById("tourType").value,
             transferType: document.getElementById("transferType").value,
             hotelType: document.getElementById("hotelType").value,
-            status: "UNREGISTERED",
+            status: document.getElementById("Status").value, // Use selected status instead of hardcoding
             arrivalDate: document.getElementById("arrivalDate").value,
             evictionDate: document.getElementById("evictionDate").value,
             isHot: document.getElementById("isHot").value
-
         };
 
         try {
@@ -213,24 +295,28 @@
             });
 
             const result = await response.json();
-            console.log(result);
-            alert(result.message || "Ваучер створено успішно!");
+            if (response.ok) {
+                createMessageDiv.innerHTML = result.message || messages.createSuccess;
+                createMessageDiv.className = 'message success';
+            } else {
+                createMessageDiv.innerHTML = result.message || messages.errorGeneric;
+                createMessageDiv.className = 'message error';
+            }
         } catch (error) {
-            console.error("Помилка при створенні ваучера:", error);
-            alert("Не вдалося створити ваучер");
+            createMessageDiv.innerHTML = messages.errorGeneric;
+            createMessageDiv.className = 'message error';
         }
     });
 
-
-
+    // Delete Voucher Function
     async function deleteVoucher() {
         const voucherId = document.getElementById('voucherId').value;
         const messageDiv = document.getElementById('deleteMessage');
         const accessToken = localStorage.getItem('accessToken');
 
         if (!voucherId) {
-            messageDiv.innerHTML = 'Please enter a voucher ID';
-            messageDiv.className = 'error';
+            messageDiv.innerHTML = messages.missingId;
+            messageDiv.className = 'message error';
             return;
         }
 
@@ -244,30 +330,29 @@
             });
 
             const result = await response.json();
-
             if (response.ok) {
-                messageDiv.innerHTML = `Success: ${result.message}`;
-                messageDiv.className = 'success';
+                messageDiv.innerHTML = result.message || messages.deleteSuccess;
+                messageDiv.className = 'message success';
                 document.getElementById('voucherId').value = '';
             } else {
-                messageDiv.innerHTML = `Error: ${result.message || 'Failed to delete voucher'}`;
-                messageDiv.className = 'error';
+                messageDiv.innerHTML = result.message || messages.errorGeneric;
+                messageDiv.className = 'message error';
             }
         } catch (error) {
-            messageDiv.innerHTML = `Error: ${error.message}`;
-            messageDiv.className = 'error';
+            messageDiv.innerHTML = messages.errorGeneric;
+            messageDiv.className = 'message error';
         }
     }
 
-
-    function updateVoucher() {
+    // Update Voucher Function
+    async function updateVoucher() {
         const voucherId = document.getElementById("voucherUpdateId").value;
-
         const accessToken = localStorage.getItem('accessToken');
-
+        const updateMessageDiv = document.getElementById('updateMessage');
 
         if (!voucherId) {
-            alert("Будь ласка, введіть ID ваучера");
+            updateMessageDiv.innerHTML = messages.missingId;
+            updateMessageDiv.className = 'message error';
             return;
         }
 
@@ -278,30 +363,35 @@
             tourType: document.getElementById("tourType2").value,
             transferType: document.getElementById("transferType2").value,
             hotelType: document.getElementById("hotelType2").value,
+            status: document.getElementById("Status2").value,
             arrivalDate: document.getElementById("arrivalDate2").value,
             evictionDate: document.getElementById("evictionDate2").value,
-            isHot: document.getElementById("isHot2").value,
-            status: document.getElementById("Status").value
+            isHot: document.getElementById("isHot2").value
         };
 
-        fetch(`/vouchers/change/${voucherId}`, {
-            method: "PATCH",
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(voucherData)
-        })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message || "Ваучер успішно оновлено!");
-            })
-            .catch(error => {
-                console.error("Помилка:", error);
-                alert("Сталася помилка при оновленні ваучера.");
+        try {
+            const response = await fetch(`/vouchers/change/${voucherId}`, {
+                method: "PATCH",
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(voucherData)
             });
-    }
 
+            const data = await response.json();
+            if (response.ok) {
+                updateMessageDiv.innerHTML = data.message || messages.updateSuccess;
+                updateMessageDiv.className = 'message success';
+            } else {
+                updateMessageDiv.innerHTML = data.message || messages.errorGeneric;
+                updateMessageDiv.className = 'message error';
+            }
+        } catch (error) {
+            updateMessageDiv.innerHTML = messages.errorGeneric;
+            updateMessageDiv.className = 'message error';
+        }
+    }
 </script>
 </body>
 </html>

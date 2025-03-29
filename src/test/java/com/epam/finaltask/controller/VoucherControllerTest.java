@@ -163,7 +163,7 @@ public class VoucherControllerTest {
         String expectedStatusCode = StatusCodes.ENTITY_NOT_FOUND.name();
         String expectedMessage = String.format("Voucher with Id %s not found", voucherId);
 
-        doThrow(new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), String.format("Voucher with Id %s not found", voucherId)))
+        doThrow(new EntityNotFoundException(expectedMessage,expectedStatusCode))
                 .when(voucherService).delete(voucherId);
 
         mockMvc.perform(delete("/vouchers/" + voucherId))

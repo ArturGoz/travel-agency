@@ -3,32 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="#{login.title}">Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .language-switcher {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .language-switcher a {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-
-<!-- Add language switcher links -->
+<!-- Language switcher -->
 <div class="language-switcher">
-    <a th:href="@{/page/loginPage(lang='en')}">English</a>
-    <a th:href="@{/page/loginPage(lang='uk')}">Українська</a>
+    <a th:href="@{/page/login(lang='en')}">English</a>
+    <a th:href="@{/page/login(lang='uk')}">Українська</a>
 </div>
 
 <h1 th:text="#{login.title}">Login</h1>
 <form th:action="@{/auth/login}" method="post" id="loginForm">
     <label for="username" th:text="#{label.username}">Username:</label>
     <input type="text" id="username" name="username" required>
-    <br>
+
     <label for="password" th:text="#{label.password}">Password:</label>
     <input type="password" id="password" name="password" required>
-    <br>
-    <button type="submit" th:text="#{button.login}">Login</button>
+
+    <button type="submit" id="loginButton" th:text="#{button.login}">Login</button>
+    <div id="errorMessage" class="error"></div>
 </form>
-</body>
-
-
 
 <script>
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.innerText = ''; // Clear any previous error
+
+        const button = document.getElementById('loginButton');
+        const originalText = button.innerText;
+        button.disabled = true;
+        button.innerText = 'Logging in...';
 
         const data = {
             username: document.getElementById('username').value,
@@ -44,22 +110,23 @@
                 body: JSON.stringify(data)
             });
 
-            if (!response.ok) throw new Error('Login failed');
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                // Throw the error response so that it can be caught below
+                throw errorResponse;
+            }
 
             const result = await response.json();
-
-            // Access the token from results array in RemoteResponse
             const accessToken = result.results[0].access_token;
-            console.log(accessToken);
-            // Store the token securely
+            // Removed console.log(accessToken) to avoid exposing sensitive info
             localStorage.setItem('accessToken', accessToken);
-
-            // Redirect on success
-          //  window.location.href = '/dashboard';
+            window.location.href = '/page/main';
         } catch (error) {
-            alert(error.message);
+            errorMessage.innerText = error.statusMessage || error.message || 'Login failed';
+            button.disabled = false;
+            button.innerText = originalText;
         }
     });
 </script>
-
+</body>
 </html>
