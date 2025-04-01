@@ -83,6 +83,14 @@
 </head>
 <body>
 
+
+<!-- Навігаційна панель -->
+<nav id="navigation-bar">
+    <a href="/page/register"><label th:text="#{nav.register}">Register</label></a>
+    <a href="/page/login"><label th:text="#{nav.login}">Log in</label></a>
+    <a href="/page/main"><label th:text="#{nav.main}">Main</label></a>
+</nav>
+
 <!-- Language switcher -->
 <div class="language-switcher">
     <a th:href="@{/page/main(lang='en')}">English</a>
