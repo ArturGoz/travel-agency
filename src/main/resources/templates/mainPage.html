@@ -147,7 +147,9 @@
         arrivalLabel: /*[[#{voucher.arrivalLabel}]]*/,
         evictionLabel: /*[[#{voucher.evictionLabel}]]*/,
         isHot: /*[[#{voucher.hotStatus}]]*/,
-        noVouchers: /*[[#{empty.voucher}]]*/
+        noVouchers: /*[[#{empty.voucher}]]*/,
+        navManager: /*[[#{nav.manager}]]*/,
+        navAdmin: /*[[#{nav.admin}]]*/
     };
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -166,7 +168,16 @@
                 'Accept': 'application/json'
             }
         })
-            .then(response => response.json())
+            .then(response => {
+                if (response.status === 403) { // Handle 403 Forbidden
+                    window.location.href = '/page/login'; // Redirect to login
+                    return Promise.reject(new Error('Unauthorized')); // Stop further processing
+                }
+                if (!response.ok) { // Handle other HTTP errors
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Parse JSON only if response is OK
+            })
             .then(data => {
                 if (data.succeeded) {
                     const user = data.results[0];
@@ -174,6 +185,26 @@
                     document.getElementById('balance').textContent = user.balance ?? '0.00';
                     document.getElementById('phoneNumber').textContent = user.phoneNumber || 'N/A';
                     document.getElementById('roles').textContent = user.roles ? user.roles.join(', ') : 'No roles assigned';
+
+                    const navigationBar = document.getElementById('navigation-bar');
+                    const userRoles = user.roles || []; // Виправлено: отримуємо ролі з user.roles
+
+
+                    if (userRoles.includes('MANAGER')) {
+                        const managerLink = document.createElement('a');
+                        managerLink.href = '/page/manager';
+                        managerLink.textContent = translations.navManager;
+                        navigationBar.appendChild(document.createTextNode(' ')); // Додаємо пробіл
+                        navigationBar.appendChild(managerLink);
+                    }
+
+                    if (userRoles.includes('ADMIN')) {
+                        const adminLink = document.createElement('a');
+                        adminLink.href = '/page/admin';
+                        adminLink.textContent = translations.navAdmin;
+                        navigationBar.appendChild(document.createTextNode(' ')); // Додаємо пробіл
+                        navigationBar.appendChild(adminLink);
+                    }
 
                     const userVouchersList = document.getElementById('user-vouchers-list');
                     if (user.vouchers && user.vouchers.length > 0) {
@@ -203,10 +234,14 @@
             .then(data => {
                 const vouchersList = document.getElementById('vouchers-list');
                 if (data.results && data.results.length > 0) {
+
+
                     data.results.forEach(voucher => {
                         const voucherElement = createVoucherElement(voucher);
                         vouchersList.appendChild(voucherElement);
-                    });
+                    }
+
+                    );
                 } else {
                     vouchersList.innerHTML = `<p>${translations.noVouchers}</p>`;
                 }

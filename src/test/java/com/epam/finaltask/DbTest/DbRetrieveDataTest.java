@@ -47,7 +47,7 @@ public class DbRetrieveDataTest {
     @Test
     public void testFindVoucherById() {
         String testVoucherName = "Amazing Tour";
-        List<Voucher> voucherList = voucherRepository.findAllByUserId("11111111-1111-1111-1111-111111111111");
+        List<Voucher> voucherList = voucherRepository.findAllByUserId("1");
 
         Voucher voucher = voucherList.get(0);
 

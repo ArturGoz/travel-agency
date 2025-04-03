@@ -53,7 +53,7 @@ public class JwtService {
                     .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
-            log.error("Invalid JWT", e);
+            log.error("Invalid JWT or your token is expired");
             return false;
         }
     }

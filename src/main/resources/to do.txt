@@ -1,0 +1,6 @@
+3.pagination
+4.Method-level security (@PreAuthorize, @PostAuthorize, @Secured annotations.)
+5.Custom security expressions (e.g., Checking ownership of an entity.)
+6.Allow password reset functionality (e.g., Email-based recovery.)
+7.Use HTTPS for secure communication.
+  • Limit failed login attempts (Prevent brute-force attacks.)
