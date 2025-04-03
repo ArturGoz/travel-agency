@@ -4,7 +4,10 @@ import com.epam.finaltask.model.Permission;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,7 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfiguration {
+
+public class SecurityConfiguration  {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -33,11 +37,18 @@ public class SecurityConfiguration {
                         .permitAll()
 
                         .requestMatchers("/user/**",
-                                "/users/data")
-                        .hasAuthority(Permission.USER_READ.name())
+                               "/users/data")
+                        .hasAnyAuthority(
+                                Permission.USER_READ.name(),
+                                Permission.MANAGER_UPDATE.name(),
+                                Permission.ADMIN_READ.name()
+                        )
 
                         .requestMatchers("/manager/**")
-                        .hasAuthority(Permission.MANAGER_UPDATE.name())
+                        .hasAnyAuthority(
+                                Permission.MANAGER_UPDATE.name(),
+                                Permission.ADMIN_UPDATE.name()
+                        )
 
                         .anyRequest().hasAnyAuthority(
                                 Permission.ADMIN_READ.name(),
@@ -54,4 +65,5 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
 }

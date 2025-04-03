@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title th:text="#{page.title}">Registration Page</title>
     <style>
@@ -12,30 +12,36 @@
             height: 100vh;
             margin: 0;
         }
+
         .language-switcher {
             position: absolute;
             top: 10px;
             right: 10px;
         }
+
         .language-switcher a {
             margin-left: 10px;
             text-decoration: none;
             color: #007bff;
         }
+
         .language-switcher a:hover {
             text-decoration: underline;
         }
+
         h1 {
             text-align: center;
             color: #333;
         }
+
         form {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 300px;
         }
+
         input[type="text"], input[type="password"], input[type="number"] {
             width: 100%;
             padding: 10px;
@@ -44,6 +50,7 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
+
         button {
             width: 100%;
             padding: 10px;
@@ -54,16 +61,20 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         .message {
             margin-top: 10px;
             text-align: center;
         }
+
         .message.success {
             color: #28a745;
         }
+
         .message.error {
             color: #dc3545;
         }
@@ -78,35 +89,35 @@
 </div>
 
 <h1 th:text="#{page.title}">Register</h1>
-<form id="registerForm" th:action="@{/users/register}" method="post">
+<form id="registerForm" method="post" th:action="@{/users/register}">
     <label for="username" th:text="#{label.username}">Username:</label>
-    <input type="text" id="username" name="username" required>
+    <input id="username" name="username" required type="text">
 
     <label for="password" th:text="#{label.password}">Password:</label>
-    <input type="password" id="password" name="password" required>
+    <input id="password" name="password" required type="password">
 
     <label for="phoneNumber" th:text="#{label.phoneNumber}">Phone Number:</label>
-    <input type="text" id="phoneNumber" name="phoneNumber" required>
+    <input id="phoneNumber" name="phoneNumber" required type="text">
 
     <label th:text="#{label.roles}">Roles:</label>
     <div>
-        <input type="checkbox" id="admin" name="roles" value="ADMIN">
+        <input id="admin" name="roles" type="checkbox" value="ADMIN">
         <label for="admin" th:text="#{role.admin}">ADMIN</label>
     </div>
     <div>
-        <input type="checkbox" id="manager" name="roles" value="MANAGER">
+        <input id="manager" name="roles" type="checkbox" value="MANAGER">
         <label for="manager" th:text="#{role.manager}">MANAGER</label>
     </div>
     <div>
-        <input type="checkbox" id="user" name="roles" value="USER">
+        <input id="user" name="roles" type="checkbox" value="USER">
         <label for="user" th:text="#{role.user}">USER</label>
     </div>
 
     <label for="balance" th:text="#{label.balance}">Balance:</label>
-    <input type="number" id="balance" name="balance" step="0.01">
+    <input id="balance" name="balance" step="0.01" type="number">
 
-    <button type="submit" th:text="#{button.register}">Register</button>
-    <div id="message" class="message"></div>
+    <button th:text="#{button.register}" type="submit">Register</button>
+    <div class="message" id="message"></div>
 </form>
 
 <script>

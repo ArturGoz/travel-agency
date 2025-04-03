@@ -10,8 +10,9 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+
 @Configuration
-public class ApplicationConfig {
+public class ApplicationConfig  {
     @Bean
     public UserDetailsServiceImpl userDetailsService() {
         return new UserDetailsServiceImpl();
@@ -34,4 +35,5 @@ public class ApplicationConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
 }

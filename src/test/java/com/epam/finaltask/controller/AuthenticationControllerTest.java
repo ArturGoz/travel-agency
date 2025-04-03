@@ -1,10 +1,8 @@
-
 package com.epam.finaltask.controller;
 
 import com.epam.finaltask.auth.AuthenticationRequest;
 import com.epam.finaltask.auth.AuthenticationResponse;
 import com.epam.finaltask.auth.AuthenticationService;
-//import com.epam.finaltask.config.JwtServiceTestConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

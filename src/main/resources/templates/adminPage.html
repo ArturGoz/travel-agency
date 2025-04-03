@@ -2,7 +2,7 @@
 <html lang="uk" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title th:text="#{page.title}">Створення ваучера</title>
     <style>
         body {
@@ -11,30 +11,36 @@
             padding: 20px;
             background-color: #f4f4f4;
         }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
         }
+
         .section {
             background-color: #ffffff;
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
         h2 {
             color: #333;
             margin-top: 0;
         }
+
         .field {
             margin-bottom: 15px;
         }
+
         .field label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #555;
         }
+
         .field input, .field select, .field textarea {
             width: 100%;
             padding: 8px;
@@ -42,10 +48,12 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
+
         .field textarea {
             resize: vertical;
             min-height: 80px;
         }
+
         button {
             padding: 10px 20px;
             background-color: #007bff;
@@ -55,25 +63,31 @@
             cursor: pointer;
             font-size: 16px;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         .language-switcher {
             text-align: right;
             margin-bottom: 20px;
         }
+
         .language-switcher a {
             margin-left: 10px;
             text-decoration: none;
             color: #007bff;
         }
+
         .language-switcher a:hover {
             text-decoration: underline;
         }
+
         .message.success {
             color: #28a745;
             margin-top: 10px;
         }
+
         .message.error {
             color: #dc3545;
             margin-top: 10px;
@@ -100,157 +114,157 @@
     </div>
 
     <!-- Authentication Message -->
-    <div id="authMessage" class="message"></div>
+    <div class="message" id="authMessage"></div>
 
     <!-- Create Voucher Section -->
     <div class="section">
         <h2 th:text="#{voucher.create.title}">Create Voucher</h2>
         <form id="voucherForm">
             <div class="field">
-                <label th:text="#{voucher.title}" for="title">Title:</label>
-                <input type="text" id="title" required>
+                <label for="title" th:text="#{voucher.title}">Title:</label>
+                <input id="title" required type="text">
             </div>
             <div class="field">
-                <label th:text="#{voucher.description}" for="description">Description:</label>
+                <label for="description" th:text="#{voucher.description}">Description:</label>
                 <textarea id="description" required></textarea>
             </div>
             <div class="field">
-                <label th:text="#{voucher.price}" for="price">Price:</label>
-                <input type="number" id="price" step="0.01" required>
+                <label for="price" th:text="#{voucher.price}">Price:</label>
+                <input id="price" required step="0.01" type="number">
             </div>
             <div class="field">
-                <label th:text="#{voucher.type}" for="tourType">Tour Type:</label>
+                <label for="tourType" th:text="#{voucher.type}">Tour Type:</label>
                 <select id="tourType" required>
                     <option th:each="type : ${tourTypes}"
-                            th:value="${type}"
-                            th:text="#{'tour.type.' + ${type}}"></option>
+                            th:text="#{'tour.type.' + ${type}}"
+                            th:value="${type}"></option>
                 </select>
             </div>
             <div class="field">
-                <label th:text="#{voucher.transfer}" for="transferType">Transfer Type:</label>
+                <label for="transferType" th:text="#{voucher.transfer}">Transfer Type:</label>
                 <select id="transferType" required>
                     <option th:each="transfer : ${transferTypes}"
-                            th:value="${transfer}"
-                            th:text="#{'transfer.type.' + ${transfer}}"></option>
+                            th:text="#{'transfer.type.' + ${transfer}}"
+                            th:value="${transfer}"></option>
                 </select>
             </div>
             <div class="field">
-                <label th:text="#{voucher.hotel}" for="hotelType">Hotel Type:</label>
+                <label for="hotelType" th:text="#{voucher.hotel}">Hotel Type:</label>
                 <select id="hotelType" required>
                     <option th:each="hotel : ${hotelTypes}"
-                            th:value="${hotel}"
-                            th:text="#{'hotel.type.' + ${hotel}}"></option>
+                            th:text="#{'hotel.type.' + ${hotel}}"
+                            th:value="${hotel}"></option>
                 </select>
             </div>
             <div class="field">
-                <label th:text="#{voucher.status}" for="Status">Status Type:</label>
+                <label for="Status" th:text="#{voucher.status}">Status Type:</label>
                 <select id="Status" required>
                     <option th:each="status : ${statusTypes}"
-                            th:value="${status}"
-                            th:text="#{'status.' + ${status}}"></option>
+                            th:text="#{'status.' + ${status}}"
+                            th:value="${status}"></option>
                 </select>
             </div>
             <div class="field">
-                <label th:text="#{voucher.arrival}" for="arrivalDate">Arrival Date:</label>
-                <input type="date" id="arrivalDate" required>
+                <label for="arrivalDate" th:text="#{voucher.arrival}">Arrival Date:</label>
+                <input id="arrivalDate" required type="date">
             </div>
             <div class="field">
-                <label th:text="#{voucher.eviction}" for="evictionDate">Eviction Date:</label>
-                <input type="date" id="evictionDate" required>
+                <label for="evictionDate" th:text="#{voucher.eviction}">Eviction Date:</label>
+                <input id="evictionDate" required type="date">
             </div>
             <div class="field">
-                <label th:text="#{voucher.hotStatus}" for="isHot">Hot Tour:</label>
+                <label for="isHot" th:text="#{voucher.hotStatus}">Hot Tour:</label>
                 <select id="isHot">
-                    <option value="true" th:text="#{boolean.true}">Yes</option>
-                    <option value="false" th:text="#{boolean.false}">No</option>
+                    <option th:text="#{boolean.true}" value="true">Yes</option>
+                    <option th:text="#{boolean.false}" value="false">No</option>
                 </select>
             </div>
-            <button type="submit" th:text="#{button.create}">Create</button>
+            <button th:text="#{button.create}" type="submit">Create</button>
         </form>
-        <div id="createMessage" class="message"></div>
+        <div class="message" id="createMessage"></div>
     </div>
 
     <!-- Delete Voucher Section -->
     <div class="section">
         <h2 th:text="#{voucher.delete.title}">Delete Voucher</h2>
         <div class="field">
-            <label th:text="#{voucher.id}" for="voucherId">Voucher ID:</label>
-            <input type="text" id="voucherId" th:placeholder="#{voucher.id.placeholder}">
+            <label for="voucherId" th:text="#{voucher.id}">Voucher ID:</label>
+            <input id="voucherId" th:placeholder="#{voucher.id.placeholder}" type="text">
         </div>
         <button onclick="deleteVoucher()" th:text="#{button.delete}">Delete</button>
-        <div id="deleteMessage" class="message"></div>
+        <div class="message" id="deleteMessage"></div>
     </div>
 
     <!-- Update Voucher Section -->
     <div class="section">
         <h2 th:text="#{voucher.update.title}">Update Voucher</h2>
         <div class="field">
-            <label th:text="#{voucher.id}" for="voucherUpdateId">Voucher ID:</label>
-            <input type="text" id="voucherUpdateId" required>
+            <label for="voucherUpdateId" th:text="#{voucher.id}">Voucher ID:</label>
+            <input id="voucherUpdateId" required type="text">
         </div>
         <form id="voucherForm2">
             <div class="field">
-                <label th:text="#{voucher.title}" for="title2">Title:</label>
-                <input type="text" id="title2" required>
+                <label for="title2" th:text="#{voucher.title}">Title:</label>
+                <input id="title2" required type="text">
             </div>
             <div class="field">
-                <label th:text="#{voucher.description}" for="description2">Description:</label>
+                <label for="description2" th:text="#{voucher.description}">Description:</label>
                 <textarea id="description2" required></textarea>
             </div>
             <div class="field">
-                <label th:text="#{voucher.price}" for="price2">Price:</label>
-                <input type="number" id="price2" step="0.01" required>
+                <label for="price2" th:text="#{voucher.price}">Price:</label>
+                <input id="price2" required step="0.01" type="number">
             </div>
             <div class="field">
-                <label th:text="#{voucher.type}" for="tourType2">Tour Type:</label>
+                <label for="tourType2" th:text="#{voucher.type}">Tour Type:</label>
                 <select id="tourType2" required>
                     <option th:each="type : ${tourTypes}"
-                            th:value="${type}"
-                            th:text="#{'tour.type.' + ${type}}"></option>
+                            th:text="#{'tour.type.' + ${type}}"
+                            th:value="${type}"></option>
                 </select>
             </div>
             <div class="field">
-                <label th:text="#{voucher.transfer}" for="transferType2">Transfer Type:</label>
+                <label for="transferType2" th:text="#{voucher.transfer}">Transfer Type:</label>
                 <select id="transferType2" required>
                     <option th:each="transfer : ${transferTypes}"
-                            th:value="${transfer}"
-                            th:text="#{'transfer.type.' + ${transfer}}"></option>
+                            th:text="#{'transfer.type.' + ${transfer}}"
+                            th:value="${transfer}"></option>
                 </select>
             </div>
             <div class="field">
-                <label th:text="#{voucher.hotel}" for="hotelType2">Hotel Type:</label>
+                <label for="hotelType2" th:text="#{voucher.hotel}">Hotel Type:</label>
                 <select id="hotelType2" required>
                     <option th:each="hotel : ${hotelTypes}"
-                            th:value="${hotel}"
-                            th:text="#{'hotel.type.' + ${hotel}}"></option>
+                            th:text="#{'hotel.type.' + ${hotel}}"
+                            th:value="${hotel}"></option>
                 </select>
             </div>
             <div class="field">
-                <label th:text="#{voucher.status}" for="Status2">Status Type:</label>
+                <label for="Status2" th:text="#{voucher.status}">Status Type:</label>
                 <select id="Status2" required>
                     <option th:each="status : ${statusTypes}"
-                            th:value="${status}"
-                            th:text="#{'status.' + ${status}}"></option>
+                            th:text="#{'status.' + ${status}}"
+                            th:value="${status}"></option>
                 </select>
             </div>
             <div class="field">
-                <label th:text="#{voucher.arrival}" for="arrivalDate2">Arrival Date:</label>
-                <input type="date" id="arrivalDate2" required>
+                <label for="arrivalDate2" th:text="#{voucher.arrival}">Arrival Date:</label>
+                <input id="arrivalDate2" required type="date">
             </div>
             <div class="field">
-                <label th:text="#{voucher.eviction}" for="evictionDate2">Eviction Date:</label>
-                <input type="date" id="evictionDate2" required>
+                <label for="evictionDate2" th:text="#{voucher.eviction}">Eviction Date:</label>
+                <input id="evictionDate2" required type="date">
             </div>
             <div class="field">
-                <label th:text="#{voucher.hotStatus}" for="isHot2">Hot Tour:</label>
+                <label for="isHot2" th:text="#{voucher.hotStatus}">Hot Tour:</label>
                 <select id="isHot2">
-                    <option value="true" th:text="#{boolean.true}">Yes</option>
-                    <option value="false" th:text="#{boolean.false}">No</option>
+                    <option th:text="#{boolean.true}" value="true">Yes</option>
+                    <option th:text="#{boolean.false}" value="false">No</option>
                 </select>
             </div>
-            <button type="button" onclick="updateVoucher()" th:text="#{button.update}">Update</button>
+            <button onclick="updateVoucher()" th:text="#{button.update}" type="button">Update</button>
         </form>
-        <div id="updateMessage" class="message"></div>
+        <div class="message" id="updateMessage"></div>
     </div>
 </div>
 
@@ -266,7 +280,7 @@
     };
 
     // Create Voucher Form Submission
-    document.getElementById("voucherForm").addEventListener("submit", async function(event) {
+    document.getElementById("voucherForm").addEventListener("submit", async function (event) {
         event.preventDefault();
 
         const accessToken = localStorage.getItem('accessToken');

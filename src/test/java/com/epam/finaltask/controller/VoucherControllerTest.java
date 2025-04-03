@@ -71,7 +71,8 @@ public class VoucherControllerTest {
         JsonNode rootNode = objectMapper.readTree(responseBody);
         JsonNode resultsNode = rootNode.path("results");
 
-        List<VoucherDTO> responseVoucherDTOList = objectMapper.convertValue(resultsNode, new TypeReference<List<VoucherDTO>>() {});
+        List<VoucherDTO> responseVoucherDTOList = objectMapper.convertValue(resultsNode, new TypeReference<List<VoucherDTO>>() {
+        });
 
         assertEquals(voucherDTOList, responseVoucherDTOList);
     }
@@ -165,7 +166,7 @@ public class VoucherControllerTest {
         String expectedStatusCode = StatusCodes.ENTITY_NOT_FOUND.name();
         String expectedMessage = String.format("Voucher with Id %s not found", voucherId);
 
-        doThrow(new EntityNotFoundException(expectedMessage,expectedStatusCode))
+        doThrow(new EntityNotFoundException(expectedMessage, expectedStatusCode))
                 .when(voucherService).delete(voucherId);
 
         mockMvc.perform(delete("/admin/vouchers/" + voucherId))

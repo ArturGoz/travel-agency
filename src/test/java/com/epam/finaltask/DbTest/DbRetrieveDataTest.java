@@ -23,12 +23,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 @Slf4j
 public class DbRetrieveDataTest {
+    @Value("${jwtSecret}")
+    String string;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private VoucherRepository voucherRepository;
-    @Value("${jwtSecret}")
-    String string;
 
     @Test
     public void testFindUserByName() {

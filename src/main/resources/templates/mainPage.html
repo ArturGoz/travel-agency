@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title th:text="#{page.title}">User Profile & Vouchers</title>
     <style>
         body {
@@ -12,69 +12,83 @@
             padding: 20px;
             background-color: #f4f4f4;
         }
+
         .profile-section, .vouchers-section, .user-vouchers-section, .order-section {
             background-color: #fff;
             border: 1px solid #ddd;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .field {
             margin-bottom: 15px;
         }
+
         .field label {
             font-weight: bold;
             margin-right: 10px;
         }
+
         .voucher {
             background-color: #f9f9f9;
             border: 1px solid #ccc;
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
+
         .voucher h3 {
             margin-top: 0;
             color: #333;
         }
+
         .language-switcher {
             text-align: right;
             margin-bottom: 20px;
         }
+
         .language-switcher a {
             margin-left: 10px;
             text-decoration: none;
             color: #007bff;
         }
+
         .language-switcher a:hover {
             text-decoration: underline;
         }
+
         input[type="text"], button {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             margin-right: 10px;
         }
+
         button {
             background-color: #007bff;
             color: white;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         .message {
             margin-top: 10px;
             padding: 10px;
             border-radius: 4px;
             display: none;
         }
+
         .message.success {
             background-color: #d4edda;
             color: #155724;
         }
+
         .message.error {
             background-color: #f8d7da;
             color: #721c24;
@@ -127,10 +141,10 @@
     <div id="vouchers-list"></div>
 </div>-->
 
-<input type="text" id="searchInput">
+<input id="searchInput" type="text">
 <select id="sortSelect">
-    <option value="asc" th:text="#{sort.price.desc}">Price: Low to High</option>
-    <option value="desc" th:text="#{sort.price.desc}">Price: High to Low</option>
+    <option th:text="#{sort.price.desc}" value="asc">Price: Low to High</option>
+    <option th:text="#{sort.price.desc}" value="desc">Price: High to Low</option>
 </select>
 
 <div class="vouchers-section">
@@ -147,9 +161,9 @@
 
 <div class="order-section">
     <h2 th:text="#{vouchers.order}">Order Voucher</h2>
-    <input type="text" id="voucherIdInput" th:placeholder="#{vouchers.enterId}">
+    <input id="voucherIdInput" th:placeholder="#{vouchers.enterId}" type="text">
     <button onclick="orderVoucher()" th:text="#{vouchers.register}">Register Voucher</button>
-    <div id="orderMessage" class="message"></div>
+    <div class="message" id="orderMessage"></div>
 </div>
 
 <script th:inline="javascript">
@@ -177,7 +191,7 @@
     let searchQuery = '';
     let sortDirection = 'asc';
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const accessToken = localStorage.getItem('accessToken');
 
         if (!accessToken) {
@@ -291,7 +305,7 @@
                 return response.json();
             })
             .then(data => {
-                if(data.succeeded) {
+                if (data.succeeded) {
                     const paginatedData = data.results[0];
                     renderVouchers(paginatedData.content);
 
@@ -310,7 +324,7 @@
         const vouchersList = document.getElementById('vouchers-list');
         vouchersList.innerHTML = '';
 
-        if(vouchers.length > 0) {
+        if (vouchers.length > 0) {
             vouchers.forEach(voucher => {
                 const voucherElement = createVoucherElement(voucher);
                 vouchersList.appendChild(voucherElement);
@@ -322,7 +336,7 @@
 
     function changePage(delta) {
         const newPage = currentPage + delta;
-        if(newPage >= 0 && newPage < totalPages) {
+        if (newPage >= 0 && newPage < totalPages) {
             currentPage = newPage;
             loadVouchers();
         }
@@ -404,6 +418,7 @@
             messageElement.style.display = 'none';
         }, 5000);
     }
+
     /*]]>*/
 </script>
 </body>

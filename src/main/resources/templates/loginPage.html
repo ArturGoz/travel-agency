@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title th:text="#{login.title}">Login</title>
@@ -13,30 +13,36 @@
             height: 100vh;
             margin: 0;
         }
+
         .language-switcher {
             position: absolute;
             top: 10px;
             right: 10px;
         }
+
         .language-switcher a {
             margin-left: 10px;
             text-decoration: none;
             color: #007bff;
         }
+
         .language-switcher a:hover {
             text-decoration: underline;
         }
+
         h1 {
             text-align: center;
             color: #333;
         }
+
         form {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 300px;
         }
+
         input[type="text"], input[type="password"] {
             width: 100%;
             padding: 10px;
@@ -45,6 +51,7 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
+
         button {
             width: 100%;
             padding: 10px;
@@ -55,9 +62,11 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         .error {
             color: red;
             margin-top: 10px;
@@ -73,15 +82,15 @@
 </div>
 
 <h1 th:text="#{login.title}">Login</h1>
-<form th:action="@{/auth/login}" method="post" id="loginForm">
+<form id="loginForm" method="post" th:action="@{/auth/login}">
     <label for="username" th:text="#{label.username}">Username:</label>
-    <input type="text" id="username" name="username" required>
+    <input id="username" name="username" required type="text">
 
     <label for="password" th:text="#{label.password}">Password:</label>
-    <input type="password" id="password" name="password" required>
+    <input id="password" name="password" required type="password">
 
-    <button type="submit" id="loginButton" th:text="#{button.login}">Login</button>
-    <div id="errorMessage" class="error"></div>
+    <button id="loginButton" th:text="#{button.login}" type="submit">Login</button>
+    <div class="error" id="errorMessage"></div>
 </form>
 
 <script>

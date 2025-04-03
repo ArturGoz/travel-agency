@@ -16,10 +16,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<RemoteResponse> handleEntityAlreadyExistsException(EntityAlreadyExistsException ex) {
         log.error(ex.getMessage());
         RemoteResponse remoteResponse =
-                RemoteResponse.create(false, ex.getErrorCode(), ex.getMessage(),null);
+                RemoteResponse.create(false, ex.getErrorCode(), ex.getMessage(), null);
         return new ResponseEntity<>(remoteResponse, HttpStatus.BAD_REQUEST);
     }
-
 
     @ExceptionHandler({EntityNotFoundException.class})
     public ResponseEntity<RemoteResponse> handleEntityNotFound(EntityNotFoundException ex) {
@@ -28,7 +27,6 @@ public class GlobalExceptionHandler {
                 RemoteResponse.create(false, ex.getErrorCode(), ex.getMessage(), null);
         return new ResponseEntity<>(remoteResponse, HttpStatus.NOT_FOUND);
     }
-
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<RemoteResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {

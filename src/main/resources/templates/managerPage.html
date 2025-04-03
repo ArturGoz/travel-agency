@@ -1,276 +1,287 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" th:lang="${#locale.language}">
+<html lang="en" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title th:text="#{page.title}">User Profile & Vouchers</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    .voucher {
-      border: 1px solid #ccc;
-      padding: 15px;
-      margin: 15px 0;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      transition: box-shadow 0.3s ease;
-    }
-    .voucher:hover {
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    .form-container {
-      background-color: #f9f9f9;
-      padding: 20px;
-      border-radius: 8px;
-      margin: 20px 0;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 15px;
-    }
-    input[type="text"], select {
-      padding: 8px;
-      margin: 5px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      width: 200px;
-    }
-    button {
-      padding: 10px 15px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    .language-switcher a {
-      margin-right: 10px;
-      text-decoration: none;
-      color: #007bff;
-    }
-    .language-switcher a:hover {
-      text-decoration: underline;
-    }
-    #messageContainer {
-      margin-top: 20px;
-      padding: 10px;
-      border-radius: 4px;
-    }
-    #messageContainer.error {
-      background-color: #f8d7da;
-      color: #721c24;
-    }
-    #messageContainer.success {
-      background-color: #d4edda;
-      color: #155724;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title th:text="#{page.title}">User Profile & Vouchers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .voucher {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .voucher:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"], select {
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .language-switcher a {
+            margin-right: 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+
+        #messageContainer {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        #messageContainer.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        #messageContainer.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+    </style>
 </head>
 <body>
 
 <section>
-  <a href="/page/main">
-    <button th:text="#{main.page}">Get back</button>
-  </a>
-  <div>
-    <br>
-  </div>
+    <a href="/page/main">
+        <button th:text="#{main.page}">Get back</button>
+    </a>
+    <div>
+        <br>
+    </div>
 </section>
 
 
 <div class="language-switcher">
-  <a th:href="@{/page/manager(lang='en')}">English</a>
-  <a th:href="@{/page/manager(lang='uk')}">Українська</a>
+    <a th:href="@{/page/manager(lang='en')}">English</a>
+    <a th:href="@{/page/manager(lang='uk')}">Українська</a>
 </div>
 
 <!--<h1 th:text="#{vouchers.available}">Available Vouchers</h1>
 <div id="voucherContainer"></div>-->
 
 
-
-<input type="text" id="searchInput">
+<input id="searchInput" type="text">
 <select id="sortSelect">
-  <option value="asc" th:text="#{sort.price.asc}">Price: Low to High</option>
-  <option value="desc" th:text="#{sort.price.desc}">Price: High to Low</option>
+    <option th:text="#{sort.price.asc}" value="asc">Price: Low to High</option>
+    <option th:text="#{sort.price.desc}" value="desc">Price: High to Low</option>
 </select>
 
 <!-- Додайте це після пагінації -->
 <div id="vouchers-list"></div>
 
 <div class="pagination">
-  <button id="prevPage" onclick="changePage(-1)">‹</button>
-  <span id="pageInfo">Page 1 of 1</span>
-  <button id="nextPage" onclick="changePage(1)">›</button>
+    <button id="prevPage" onclick="changePage(-1)">‹</button>
+    <span id="pageInfo">Page 1 of 1</span>
+    <button id="nextPage" onclick="changePage(1)">›</button>
 </div>
 
 
 <div class="form-container">
-  <h3 th:text="#{voucher.changeHotStatus}">Change Voucher Hot Status</h3>
-  <div class="form-group">
-    <label for="voucherId" th:text="#{voucher.id} + ':'">Voucher ID:</label>
-    <input type="text" id="voucherId" th:placeholder="#{vouchers.enterId}">
-  </div>
-  <div class="form-group">
-    <label for="hotStatus" th:text="#{voucher.hotStatus} + ':'">Hot Status:</label>
-    <select id="hotStatus">
-      <option value="true" th:text="#{boolean.true}">Yes</option>
-      <option value="false" th:text="#{boolean.false}">No</option>
-    </select><br>
-  </div>
-  <button onclick="changeHotStatus()" th:text="#{vouchers.register}">Submit</button>
+    <h3 th:text="#{voucher.changeHotStatus}">Change Voucher Hot Status</h3>
+    <div class="form-group">
+        <label for="voucherId" th:text="#{voucher.id} + ':'">Voucher ID:</label>
+        <input id="voucherId" th:placeholder="#{vouchers.enterId}" type="text">
+    </div>
+    <div class="form-group">
+        <label for="hotStatus" th:text="#{voucher.hotStatus} + ':'">Hot Status:</label>
+        <select id="hotStatus">
+            <option th:text="#{boolean.true}" value="true">Yes</option>
+            <option th:text="#{boolean.false}" value="false">No</option>
+        </select><br>
+    </div>
+    <button onclick="changeHotStatus()" th:text="#{vouchers.register}">Submit</button>
 </div>
 
 <div class="form-container">
-  <h3 th:text="#{voucher.changeStatus}">Change Voucher Status</h3>
-  <div class="form-group">
-    <label for="voucherId2" th:text="#{voucher.id} + ':'">Voucher ID:</label>
-    <input type="text" id="voucherId2" th:placeholder="#{vouchers.enterId}">
-  </div>
-  <div class="form-group">
-    <label th:text="#{voucher.status}" for="Status">Status Type:</label>
-    <select id="Status" required>
-      <option th:each="status : ${statusTypes}"
-              th:value="${status}"
-              th:text="#{'status.' + ${status}}"></option>
-    </select>
-  </div>
-  <button onclick="changeStatus()" th:text="#{vouchers.register}">Submit</button>
+    <h3 th:text="#{voucher.changeStatus}">Change Voucher Status</h3>
+    <div class="form-group">
+        <label for="voucherId2" th:text="#{voucher.id} + ':'">Voucher ID:</label>
+        <input id="voucherId2" th:placeholder="#{vouchers.enterId}" type="text">
+    </div>
+    <div class="form-group">
+        <label for="Status" th:text="#{voucher.status}">Status Type:</label>
+        <select id="Status" required>
+            <option th:each="status : ${statusTypes}"
+                    th:text="#{'status.' + ${status}}"
+                    th:value="${status}"></option>
+        </select>
+    </div>
+    <button onclick="changeStatus()" th:text="#{vouchers.register}">Submit</button>
 </div>
 
 <div id="messageContainer"></div>
 
 <script th:inline="javascript">
-  /*<![CDATA[*/
-  var translations = {
-    idLabel: /*[[#{voucher.id}]]*/,
-    descriptionLabel: /*[[#{voucher.description}]]*/,
-    priceLabel: /*[[#{voucher.priceLabel}]]*/,
-    tourTypeLabel: /*[[#{voucher.type}]]*/,
-    transferLabel: /*[[#{voucher.transferLabel}]]*/,
-    hotelLabel: /*[[#{voucher.hotelLabel}]]*/,
-    statusLabel: /*[[#{voucher.status}]]*/,
-    arrivalLabel: /*[[#{voucher.arrivalLabel}]]*/,
-    evictionLabel: /*[[#{voucher.evictionLabel}]]*/,
-    isHot: /*[[#{voucher.hotStatus}]]*/
-  };
+    /*<![CDATA[*/
+    var translations = {
+        idLabel: /*[[#{voucher.id}]]*/,
+        descriptionLabel: /*[[#{voucher.description}]]*/,
+        priceLabel: /*[[#{voucher.priceLabel}]]*/,
+        tourTypeLabel: /*[[#{voucher.type}]]*/,
+        transferLabel: /*[[#{voucher.transferLabel}]]*/,
+        hotelLabel: /*[[#{voucher.hotelLabel}]]*/,
+        statusLabel: /*[[#{voucher.status}]]*/,
+        arrivalLabel: /*[[#{voucher.arrivalLabel}]]*/,
+        evictionLabel: /*[[#{voucher.evictionLabel}]]*/,
+        isHot: /*[[#{voucher.hotStatus}]]*/
+    };
 
-  let currentPage = 0;
-  let totalPages = 1;
-  const pageSize = 3;
-  let searchQuery = '';
-  let sortDirection = 'asc';
+    let currentPage = 0;
+    let totalPages = 1;
+    const pageSize = 3;
+    let searchQuery = '';
+    let sortDirection = 'asc';
 
-  const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('accessToken');
 
-  if (!accessToken) {
-    window.location.href = '/page/login';
-  }
+    if (!accessToken) {
+        window.location.href = '/page/login';
+    }
 
-  document.addEventListener('DOMContentLoaded', function() {
-    let searchTimeout;
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      searchQuery = e.target.value;
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(() => {
-        currentPage = 0;
+    document.addEventListener('DOMContentLoaded', function () {
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentPage = 0;
+                loadVouchers();
+            }, 300);
+        });
+
+        // Додати обробник для сортування
+        document.getElementById('sortSelect').addEventListener('change', (e) => {
+            sortDirection = e.target.value;
+            currentPage = 0;
+            loadVouchers();
+        });
+
         loadVouchers();
-      }, 300);
     });
 
-    // Додати обробник для сортування
-    document.getElementById('sortSelect').addEventListener('change', (e) => {
-      sortDirection = e.target.value;
-      currentPage = 0;
-      loadVouchers();
-    });
-
-    loadVouchers();
-  });
-
-  function showMessage(message, isError) {
-    const messageContainer = document.getElementById('messageContainer');
-    messageContainer.innerText = message;
-    messageContainer.className = isError ? 'error' : 'success';
-  }
+    function showMessage(message, isError) {
+        const messageContainer = document.getElementById('messageContainer');
+        messageContainer.innerText = message;
+        messageContainer.className = isError ? 'error' : 'success';
+    }
 
 
-  function loadVouchers() {
-    const params = new URLSearchParams({
-      page: currentPage,
-      size: pageSize,
-      search: searchQuery,
-      sortBy: 'price',
-      sortDirection: sortDirection
-    });
+    function loadVouchers() {
+        const params = new URLSearchParams({
+            page: currentPage,
+            size: pageSize,
+            search: searchQuery,
+            sortBy: 'price',
+            sortDirection: sortDirection
+        });
 
-    fetch(`/user/vouchers?${params}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-        'Accept': 'application/json'
-      }
-    })
+        fetch(`/user/vouchers?${params}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+                'Accept': 'application/json'
+            }
+        })
             .then(response => {
-              if (!response.ok) throw new Error('Network response was not ok');
-              return response.json();
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
             })
             .then(data => {
-              if(data.succeeded) {
-                const paginatedData = data.results[0];
-                renderVouchers(paginatedData.content);
+                if (data.succeeded) {
+                    const paginatedData = data.results[0];
+                    renderVouchers(paginatedData.content);
 
-                // Оновлення пагінації
-                currentPage = paginatedData.currentPage;
-                totalPages = paginatedData.totalPages;
-                updatePaginationControls();
-              }
+                    // Оновлення пагінації
+                    currentPage = paginatedData.currentPage;
+                    totalPages = paginatedData.totalPages;
+                    updatePaginationControls();
+                }
             })
             .catch(error => {
-              showMessage('Error: ' + error.message, true);
+                showMessage('Error: ' + error.message, true);
             });
-  }
-
-  function renderVouchers(vouchers) {
-    const vouchersList = document.getElementById('vouchers-list');
-    vouchersList.innerHTML = '';
-
-    if(vouchers.length > 0) {
-      vouchers.forEach(voucher => {
-        const voucherElement = createVoucherElement(voucher);
-        vouchersList.appendChild(voucherElement);
-      });
-    } else {
-      vouchersList.innerHTML = `<p>${translations.noVouchers}</p>`;
     }
-  }
 
-  function changePage(delta) {
-    const newPage = currentPage + delta;
-    if(newPage >= 0 && newPage < totalPages) {
-      currentPage = newPage;
-      loadVouchers();
+    function renderVouchers(vouchers) {
+        const vouchersList = document.getElementById('vouchers-list');
+        vouchersList.innerHTML = '';
+
+        if (vouchers.length > 0) {
+            vouchers.forEach(voucher => {
+                const voucherElement = createVoucherElement(voucher);
+                vouchersList.appendChild(voucherElement);
+            });
+        } else {
+            vouchersList.innerHTML = `<p>${translations.noVouchers}</p>`;
+        }
     }
-  }
 
-  function updatePaginationControls() {
-    document.getElementById('pageInfo').textContent =
+    function changePage(delta) {
+        const newPage = currentPage + delta;
+        if (newPage >= 0 && newPage < totalPages) {
+            currentPage = newPage;
+            loadVouchers();
+        }
+    }
+
+    function updatePaginationControls() {
+        document.getElementById('pageInfo').textContent =
             `Page ${currentPage + 1} of ${totalPages}`;
 
-    document.getElementById('prevPage').disabled = currentPage === 0;
-    document.getElementById('nextPage').disabled = currentPage >= totalPages - 1;
-  }
+        document.getElementById('prevPage').disabled = currentPage === 0;
+        document.getElementById('nextPage').disabled = currentPage >= totalPages - 1;
+    }
 
 
-  function createVoucherElement(voucher) {
-    const voucherElement = document.createElement('div');
-    voucherElement.classList.add('voucher');
-    voucherElement.innerHTML = `
+    function createVoucherElement(voucher) {
+        const voucherElement = document.createElement('div');
+        voucherElement.classList.add('voucher');
+        voucherElement.innerHTML = `
             <h3>${voucher.title}</h3>
             <p><strong>${translations.idLabel}:</strong> ${voucher.id}</p>
             <p><strong>${translations.descriptionLabel}:</strong> ${voucher.description}</p>
@@ -283,73 +294,74 @@
             <p><strong>${translations.evictionLabel}:</strong> ${voucher.evictionDate}</p>
             <p><strong>${translations.isHot}:</strong> ${voucher.isHot}</p>
         `;
-    return voucherElement;
-  }
-
-  async function changeHotStatus() {
-    const voucherId = document.getElementById('voucherId').value;
-    const isHot = document.getElementById('hotStatus').value;
-    const accessToken = localStorage.getItem('accessToken');
-
-    if (!voucherId) {
-      showMessage(/*[[#{error.generic}]]*/ 'Please enter a voucher ID', true);
-      return;
+        return voucherElement;
     }
 
-    const requestBody = {
-      voucherId: voucherId,
-      additionalDetails: [isHot]
-    };
+    async function changeHotStatus() {
+        const voucherId = document.getElementById('voucherId').value;
+        const isHot = document.getElementById('hotStatus').value;
+        const accessToken = localStorage.getItem('accessToken');
 
-    const response = await fetch('/manager/vouchers/changeHotStatus', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestBody)
-    });
+        if (!voucherId) {
+            showMessage(/*[[#{error.generic}]]*/ 'Please enter a voucher ID', true);
+            return;
+        }
 
-    if (response.ok) {
-      showMessage(/*[[#{voucher.update.success}]]*/ 'Voucher hot status changed successfully!', false);
-      await loadVouchers(); // Оновлюємо список після зміни
-    } else {
-      showMessage(/*[[#{error.generic}]]*/ 'An error occurred', true);
+        const requestBody = {
+            voucherId: voucherId,
+            additionalDetails: [isHot]
+        };
+
+        const response = await fetch('/manager/vouchers/changeHotStatus', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (response.ok) {
+            showMessage(/*[[#{voucher.update.success}]]*/ 'Voucher hot status changed successfully!', false);
+            await loadVouchers(); // Оновлюємо список після зміни
+        } else {
+            showMessage(/*[[#{error.generic}]]*/ 'An error occurred', true);
+        }
     }
-  }
 
-  async function changeStatus() {
-    const voucherId = document.getElementById('voucherId2').value;
-    const status = document.getElementById('Status').value;
-    const accessToken = localStorage.getItem('accessToken');
+    async function changeStatus() {
+        const voucherId = document.getElementById('voucherId2').value;
+        const status = document.getElementById('Status').value;
+        const accessToken = localStorage.getItem('accessToken');
 
-    if (!voucherId) {
-      showMessage(/*[[#{error.generic}]]*/ 'Please enter a voucher ID', true);
-      return;
+        if (!voucherId) {
+            showMessage(/*[[#{error.generic}]]*/ 'Please enter a voucher ID', true);
+            return;
+        }
+
+        const requestBody = {
+            voucherId: voucherId,
+            additionalDetails: [status]
+        };
+
+        const response = await fetch('/manager/vouchers/changeStatus', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (response.ok) {
+            showMessage(/*[[#{voucher.update.success}]]*/ 'Voucher hot status changed successfully!', false);
+            await loadVouchers(); // Оновлюємо список після зміни
+        } else {
+            showMessage(/*[[#{error.generic}]]*/ 'An error occurred', true);
+        }
     }
 
-    const requestBody = {
-      voucherId: voucherId,
-      additionalDetails: [status]
-    };
-
-    const response = await fetch('/manager/vouchers/changeStatus', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestBody)
-    });
-
-    if (response.ok) {
-      showMessage(/*[[#{voucher.update.success}]]*/ 'Voucher hot status changed successfully!', false);
-      await loadVouchers(); // Оновлюємо список після зміни
-    } else {
-      showMessage(/*[[#{error.generic}]]*/ 'An error occurred', true);
-    }
-  }
-  /*]]>*/
+    /*]]>*/
 </script>
 </body>
 </html>

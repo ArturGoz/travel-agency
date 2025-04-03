@@ -30,7 +30,7 @@ public class AuthenticationService {
                         StatusCodes.WRONG_PASSWORD.name()));
 
         if (!passwordEncoder.matches(authenticationRequest.getPassword(), user.getPassword())) {
-            throw new EntityNotFoundException("Wrong password",StatusCodes.WRONG_PASSWORD.name());
+            throw new EntityNotFoundException("Wrong password", StatusCodes.WRONG_PASSWORD.name());
         }
 
         Authentication authentication = authenticationManager.authenticate(

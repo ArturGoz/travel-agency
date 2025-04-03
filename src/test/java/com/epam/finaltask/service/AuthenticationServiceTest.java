@@ -1,4 +1,3 @@
-
 package com.epam.finaltask.service;
 
 import com.epam.finaltask.auth.AuthenticationRequest;
@@ -21,7 +20,6 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

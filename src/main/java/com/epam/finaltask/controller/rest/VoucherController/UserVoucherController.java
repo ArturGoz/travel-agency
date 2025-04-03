@@ -35,20 +35,16 @@ public class UserVoucherController {
             @RequestParam(defaultValue = "asc") String sortDirection,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size,
-            @RequestParam(required = false) String status) {  // status став необов'язковим
+            @RequestParam(required = false) String status) {
 
-        // Сортування
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        // Специфікація
         Specification<Voucher> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Обов'язковий фільтр за статусом
-            if(status != null) predicates.add(cb.equal(root.get("status"), VoucherStatus.valueOf(status)));
+            if (status != null) predicates.add(cb.equal(root.get("status"), VoucherStatus.valueOf(status)));
 
-// Специфікація для пошуку
             if (search != null && !search.trim().isEmpty()) {
                 String searchTerm = "%" + search.trim().toLowerCase() + "%";
                 predicates.add(cb.like(
@@ -56,7 +52,6 @@ public class UserVoucherController {
                         searchTerm
                 ));
             }
-
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 

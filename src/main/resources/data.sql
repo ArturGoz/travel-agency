@@ -1,13 +1,16 @@
 -- Вставка тестового користувача
-INSERT IGNORE  INTO users (id, username, password, phone_number, balance, account_status)
+INSERT
+IGNORE  INTO users (id, username, password, phone_number, balance, account_status)
 VALUES ('1', 'testuser', '$10$Sw23wgv4jCwQkTKDY3ozXOAItL/C4d4MXwtN7D1XHDgtONIzE77u.', '1234567890', 100.0, TRUE);
 
 -- Призначення ролі користувачу
-INSERT IGNORE  INTO user_roles (user_id, roles)
+INSERT
+IGNORE  INTO user_roles (user_id, roles)
 VALUES ('1', 'USER');
 
 -- Вставка ваучера, який належить користувачу
-INSERT IGNORE  INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+INSERT
+IGNORE  INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
 VALUES (
            '2',
            'Amazing Tour',
@@ -24,7 +27,8 @@ VALUES (
        );
 
 -- Voucher 3: Safari Expedition
-INSERT IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+INSERT
+IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
 VALUES (
     '3',
     'Safari Expedition',
@@ -41,7 +45,8 @@ VALUES (
 );
 
 -- Voucher 4: Wine Tasting Tour
-INSERT IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+INSERT
+IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
 VALUES (
     '4',
     'Wine Tasting Tour',
@@ -58,7 +63,8 @@ VALUES (
 );
 
 -- Voucher 5: Cultural Heritage Walk
-INSERT IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+INSERT
+IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
 VALUES (
     '5',
     'Cultural Heritage Walk',
@@ -75,7 +81,8 @@ VALUES (
 );
 
 -- Voucher 6: Health & Wellness Retreat
-INSERT IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+INSERT
+IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
 VALUES (
     '6',
     'Health & Wellness Retreat',
@@ -92,7 +99,8 @@ VALUES (
 );
 
 -- Voucher 7: Sports Adventure
-INSERT IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+INSERT
+IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
 VALUES (
     '7',
     'Sports Adventure',
@@ -109,7 +117,8 @@ VALUES (
 );
 
 -- Voucher 8: Leisure Getaway
-INSERT IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+INSERT
+IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
 VALUES (
     '8',
     'Leisure Getaway',
@@ -126,7 +135,8 @@ VALUES (
 );
 
 
-INSERT IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+INSERT
+IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
 VALUES (
     '9',
     'Relaxing tour',
@@ -143,7 +153,8 @@ VALUES (
 );
 
 
-INSERT IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+INSERT
+IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
 VALUES (
     '10',
     'Adventure Awaits: Your Exclusive Travel Voucher',
@@ -159,7 +170,8 @@ VALUES (
     TRUE
 );
 
-INSERT IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+INSERT
+IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
 VALUES (
     '11',
     'Explore More: Special Travel Pass',
@@ -175,7 +187,8 @@ VALUES (
     TRUE
 );
 
-INSERT IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+INSERT
+IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
 VALUES (
     '12',
     'Wanderlust Approved: Your Ticket to New Destinations',
