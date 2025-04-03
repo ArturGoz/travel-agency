@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -46,6 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 @TestPropertySource(properties = "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect")
+@ActiveProfiles("test")
 public class VoucherControllerTest {
     @MockBean
     private VoucherService voucherService;
@@ -61,7 +63,7 @@ public class VoucherControllerTest {
     void findAll_Successfully() throws Exception {
         List<VoucherDTO> voucherDTOList = new ArrayList<>();
         when(voucherService.findAll()).thenReturn(voucherDTOList);
-        MvcResult result = mockMvc.perform(get("/vouchers/list"))
+        MvcResult result = mockMvc.perform(get("/manager/vouchers/list"))
                 .andExpect(status().isOk())
                 .andReturn();
         String responseBody = result.getResponse().getContentAsString();
@@ -96,7 +98,7 @@ public class VoucherControllerTest {
 
         when(voucherService.create(any(VoucherDTO.class))).thenReturn(voucherDTO);
 
-        mockMvc.perform(post("/vouchers/create")
+        mockMvc.perform(post("/admin/vouchers/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(voucherDTO)))
                 .andDo(print())
@@ -128,7 +130,7 @@ public class VoucherControllerTest {
 
         when(voucherService.update(eq(voucherId), any(VoucherDTO.class))).thenReturn(voucherDTO);
 
-        mockMvc.perform(patch("/vouchers/change/" + voucherId)
+        mockMvc.perform(patch("/admin/vouchers/change/" + voucherId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(voucherDTO)))
                 .andDo(print())
@@ -147,7 +149,7 @@ public class VoucherControllerTest {
 
         doNothing().when(voucherService).delete(voucherId);
 
-        mockMvc.perform(delete("/vouchers/" + voucherId))
+        mockMvc.perform(delete("/admin/vouchers/" + voucherId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.statusCode").value(expectedStatusCode))
@@ -166,7 +168,7 @@ public class VoucherControllerTest {
         doThrow(new EntityNotFoundException(expectedMessage,expectedStatusCode))
                 .when(voucherService).delete(voucherId);
 
-        mockMvc.perform(delete("/vouchers/" + voucherId))
+        mockMvc.perform(delete("/admin/vouchers/" + voucherId))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.statusCode").value(expectedStatusCode))

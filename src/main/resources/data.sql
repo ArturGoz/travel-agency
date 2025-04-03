@@ -33,7 +33,7 @@ VALUES (
     'SAFARI',      -- TourType
     'PLANE',       -- TransferType
     'FIVE_STARS',  -- HotelType
-    'PAID',        -- VoucherStatus
+    'UNREGISTERED',        -- VoucherStatus
     '2025-05-01',
     '2025-05-07',
     null,
@@ -50,7 +50,7 @@ VALUES (
     'WINE',        -- TourType
     'PRIVATE_CAR', -- TransferType
     'FOUR_STARS',  -- HotelType
-    'REGISTERED',  -- VoucherStatus
+    'UNREGISTERED',  -- VoucherStatus
     '2025-06-15',
     '2025-06-22',
     null,
@@ -84,7 +84,7 @@ VALUES (
     'HEALTH',         -- TourType
     'ELECTRICAL_CARS',-- TransferType
     'FIVE_STARS',     -- HotelType
-    'PAID',           -- VoucherStatus
+    'UNREGISTERED',           -- VoucherStatus
     '2025-08-01',
     '2025-08-08',
     null,
@@ -101,7 +101,7 @@ VALUES (
     'SPORTS',    -- TourType
     'TRAIN',     -- TransferType
     'TWO_STARS', -- HotelType
-    'CANCELED',  -- VoucherStatus
+    'UNREGISTERED',  -- VoucherStatus
     '2025-09-05',
     '2025-09-12',
     null,
@@ -118,7 +118,7 @@ VALUES (
     'LEISURE',   -- TourType
     'SHIP',      -- TransferType
     'FOUR_STARS',-- HotelType
-    'REGISTERED',-- VoucherStatus
+    'UNREGISTERED',-- VoucherStatus
     '2025-10-20',
     '2025-10-27',
     null,
@@ -132,6 +132,55 @@ VALUES (
     'Relaxing tour',
     'Relax and unwind on a peaceful vacation in a picturesque location.',
     279.99,
+    'LEISURE',   -- TourType
+    'SHIP',      -- TransferType
+    'FOUR_STARS',-- HotelType
+    'UNREGISTERED',-- VoucherStatus
+    '2025-10-20',
+    '2025-10-27',
+    null,
+    TRUE
+);
+
+
+INSERT IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+VALUES (
+    '10',
+    'Adventure Awaits: Your Exclusive Travel Voucher',
+    'Relax and unwind on a peaceful vacation in a picturesque location.',
+    244.99,
+    'LEISURE',   -- TourType
+    'SHIP',      -- TransferType
+    'FOUR_STARS',-- HotelType
+    'UNREGISTERED',-- VoucherStatus
+    '2025-10-20',
+    '2025-10-27',
+    null,
+    TRUE
+);
+
+INSERT IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+VALUES (
+    '11',
+    'Explore More: Special Travel Pass',
+    'Relax and unwind on a peaceful vacation in a picturesque location.',
+    254.99,
+    'LEISURE',   -- TourType
+    'SHIP',      -- TransferType
+    'FOUR_STARS',-- HotelType
+    'UNREGISTERED',-- VoucherStatus
+    '2025-10-20',
+    '2025-10-27',
+    null,
+    TRUE
+);
+
+INSERT IGNORE INTO voucher (id, title, description, price, tour_type, transfer_type, hotel_type, status, arrival_date, eviction_date, users, is_hot)
+VALUES (
+    '12',
+    'Wanderlust Approved: Your Ticket to New Destinations',
+    'Relax and unwind on a peaceful vacation in a picturesque location.',
+    264.99,
     'LEISURE',   -- TourType
     'SHIP',      -- TransferType
     'FOUR_STARS',-- HotelType

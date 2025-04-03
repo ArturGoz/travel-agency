@@ -1,6 +1,11 @@
 package com.epam.finaltask.service;
 
 import com.epam.finaltask.dto.VoucherDTO;
+import com.epam.finaltask.model.Voucher;
+import com.epam.finaltask.model.VoucherStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -32,4 +37,6 @@ public interface VoucherService {
     List<VoucherDTO> findAllByStatus(String status);
 
     VoucherDTO changeStatus(String id, String status);
+
+    Page<Voucher> findAll(Specification<Voucher> spec, Pageable pageable);
 }

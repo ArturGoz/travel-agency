@@ -122,9 +122,27 @@
     <div id="user-vouchers-list"></div>
 </div>
 
+<!--<div class="vouchers-section">
+    <h2 th:text="#{vouchers.available}">Available Vouchers</h2>
+    <div id="vouchers-list"></div>
+</div>-->
+
+<input type="text" id="searchInput">
+<select id="sortSelect">
+    <option value="asc" th:text="#{sort.price.desc}">Price: Low to High</option>
+    <option value="desc" th:text="#{sort.price.desc}">Price: High to Low</option>
+</select>
+
 <div class="vouchers-section">
     <h2 th:text="#{vouchers.available}">Available Vouchers</h2>
     <div id="vouchers-list"></div>
+
+    <!-- Пагінація -->
+    <div class="pagination">
+        <button id="prevPage" onclick="changePage(-1)">‹</button>
+        <span id="pageInfo">Page 1 of 1</span>
+        <button id="nextPage" onclick="changePage(1)">›</button>
+    </div>
 </div>
 
 <div class="order-section">
@@ -151,6 +169,13 @@
         navManager: /*[[#{nav.manager}]]*/,
         navAdmin: /*[[#{nav.admin}]]*/
     };
+
+
+    let currentPage = 0;
+    let totalPages = 1;
+    const pageSize = 3;
+    let searchQuery = '';
+    let sortDirection = 'asc';
 
     document.addEventListener('DOMContentLoaded', function() {
         const accessToken = localStorage.getItem('accessToken');
@@ -223,33 +248,94 @@
                 showMessage('Error: ' + error.message, true);
             });
 
-        fetch('/vouchers/status/UNREGISTERED', {
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentPage = 0;
+                loadVouchers();
+            }, 300);
+        });
+
+        // Додати обробник для сортування
+        document.getElementById('sortSelect').addEventListener('change', (e) => {
+            sortDirection = e.target.value;
+            currentPage = 0;
+            loadVouchers();
+        });
+
+        loadVouchers();
+    });
+
+
+    function loadVouchers() {
+        const params = new URLSearchParams({
+            page: currentPage,
+            size: pageSize,
+            search: searchQuery,
+            sortBy: 'price',
+            sortDirection: sortDirection,
+            status: 'UNREGISTERED'
+        });
+
+        fetch(`/user/vouchers?${params}`, {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + accessToken,
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
                 'Accept': 'application/json'
             }
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
             .then(data => {
-                const vouchersList = document.getElementById('vouchers-list');
-                if (data.results && data.results.length > 0) {
+                if(data.succeeded) {
+                    const paginatedData = data.results[0];
+                    renderVouchers(paginatedData.content);
 
-
-                    data.results.forEach(voucher => {
-                        const voucherElement = createVoucherElement(voucher);
-                        vouchersList.appendChild(voucherElement);
-                    }
-
-                    );
-                } else {
-                    vouchersList.innerHTML = `<p>${translations.noVouchers}</p>`;
+                    // Оновлення пагінації
+                    currentPage = paginatedData.currentPage;
+                    totalPages = paginatedData.totalPages;
+                    updatePaginationControls();
                 }
             })
             .catch(error => {
                 showMessage('Error: ' + error.message, true);
             });
-    });
+    }
+
+    function renderVouchers(vouchers) {
+        const vouchersList = document.getElementById('vouchers-list');
+        vouchersList.innerHTML = '';
+
+        if(vouchers.length > 0) {
+            vouchers.forEach(voucher => {
+                const voucherElement = createVoucherElement(voucher);
+                vouchersList.appendChild(voucherElement);
+            });
+        } else {
+            vouchersList.innerHTML = `<p>${translations.noVouchers}</p>`;
+        }
+    }
+
+    function changePage(delta) {
+        const newPage = currentPage + delta;
+        if(newPage >= 0 && newPage < totalPages) {
+            currentPage = newPage;
+            loadVouchers();
+        }
+    }
+
+    function updatePaginationControls() {
+        document.getElementById('pageInfo').textContent =
+            `Page ${currentPage + 1} of ${totalPages}`;
+
+        document.getElementById('prevPage').disabled = currentPage === 0;
+        document.getElementById('nextPage').disabled = currentPage >= totalPages - 1;
+    }
+
 
     function createVoucherElement(voucher) {
         const voucherElement = document.createElement('div');
@@ -270,6 +356,7 @@
         return voucherElement;
     }
 
+
     function orderVoucher() {
         const accessToken = localStorage.getItem('accessToken');
         const voucherId = document.getElementById('voucherIdInput').value.trim();
@@ -284,7 +371,7 @@
             additionalDetails: null
         };
 
-        fetch('/vouchers/order', {
+        fetch('/user/vouchers/order', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + accessToken,

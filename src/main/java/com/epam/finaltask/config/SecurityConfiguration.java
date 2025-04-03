@@ -32,14 +32,11 @@ public class SecurityConfiguration {
                                 "/page/**")
                         .permitAll()
 
-                        .requestMatchers("/vouchers/status/UNREGISTERED",
-                                "/vouchers/order",
+                        .requestMatchers("/user/**",
                                 "/users/data")
                         .hasAuthority(Permission.USER_READ.name())
 
-                        .requestMatchers("/vouchers/list",
-                                "/vouchers/changeStatus",
-                                "/vouchers/changeHotStatus")
+                        .requestMatchers("/manager/**")
                         .hasAuthority(Permission.MANAGER_UPDATE.name())
 
                         .anyRequest().hasAnyAuthority(

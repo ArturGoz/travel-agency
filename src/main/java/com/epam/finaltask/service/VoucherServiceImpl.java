@@ -9,6 +9,10 @@ import com.epam.finaltask.repository.UserRepository;
 import com.epam.finaltask.repository.VoucherRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -76,7 +80,7 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public void delete(String voucherId) {
         Voucher voucher = findVoucherById(voucherId);
-        voucherRepository.deleteById(String.valueOf(UUID.fromString(voucherId)));
+        voucherRepository.deleteById(voucherId);
     }
 
     @Override
@@ -89,7 +93,7 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public List<VoucherDTO> findAllByUserId(String userId) {
-        return voucherRepository.findAllByUserId(String.valueOf(UUID.fromString(userId))).stream()
+        return voucherRepository.findAllByUserId(userId).stream()
                 .map(voucherMapper::toVoucherDTO).collect(Collectors.toList());
     }
 
@@ -135,12 +139,17 @@ public class VoucherServiceImpl implements VoucherService {
         return voucherMapper.toVoucherDTO(savedVoucher);
     }
 
+    @Override
+    public Page<Voucher> findAll(Specification<Voucher> spec, Pageable pageable) {
+        return voucherRepository.findAll(spec, pageable);
+    }
 
     @Override
     public List<VoucherDTO> findAllByUsername(String username) {
         return voucherRepository.findAllByUserUsername(username).stream()
                 .map(voucherMapper::toVoucherDTO).collect(Collectors.toList());
     }
+
 
     private List<VoucherDTO> processAndSortVouchers(List<Voucher> vouchers) {
         return vouchers.stream()
@@ -153,7 +162,7 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     private Voucher findVoucherById(String id) {
-        return voucherRepository.findById(String.valueOf(UUID.fromString(id)))
+        return voucherRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Voucher with Id %s not found", id),
                         StatusCodes.ENTITY_NOT_FOUND.name()));
     }

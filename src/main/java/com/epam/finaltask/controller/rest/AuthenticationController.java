@@ -20,7 +20,6 @@ import java.util.List;
 
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-
     @PostMapping("/login")
     public ResponseEntity<RemoteResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
         RemoteResponse remoteResponse = RemoteResponse.create(
