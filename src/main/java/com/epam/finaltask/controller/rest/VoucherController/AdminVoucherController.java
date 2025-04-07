@@ -17,19 +17,6 @@ import java.util.List;
 public class AdminVoucherController {
     private final VoucherService voucherService;
 
-
-    @GetMapping("/userList")
-    public ResponseEntity<RemoteResponse> getAllVouchersByJwtForUser(
-            @RequestHeader(value = "X-User-Name", required = false) String username) {
-        List<VoucherDTO> voucherList = voucherService.findAllByUsername(username);
-
-        RemoteResponse remoteResponse = RemoteResponse.create(
-                true, StatusCodes.OK.name(), "voucherList is successfully obtained",
-                voucherList
-        );
-        return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
-    }
-
     @PostMapping("/create")
     public ResponseEntity<RemoteResponse> createVoucher(@RequestBody VoucherDTO vDto) {
         VoucherDTO createdVDto = voucherService.create(vDto);
@@ -77,17 +64,4 @@ public class AdminVoucherController {
         );
         return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
     }
-
-
-    @GetMapping("/{usernameId}")
-    public ResponseEntity<RemoteResponse> getAllVouchers(@PathVariable String usernameId) {
-        List<VoucherDTO> voucherList = voucherService.findAllByUserId(usernameId);
-
-        RemoteResponse remoteResponse = RemoteResponse.create(
-                true, StatusCodes.OK.name(), "voucherList is successfully obtained",
-                voucherList
-        );
-        return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
-    }
-
 }

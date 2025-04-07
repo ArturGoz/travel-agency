@@ -1,12 +1,11 @@
 package com.epam.finaltask.controller;
 
 import com.epam.finaltask.dto.VoucherDTO;
+import com.epam.finaltask.dto.VoucherRequest;
 import com.epam.finaltask.exception.EntityNotFoundException;
 import com.epam.finaltask.exception.StatusCodes;
-import com.epam.finaltask.model.HotelType;
-import com.epam.finaltask.model.TourType;
-import com.epam.finaltask.model.TransferType;
-import com.epam.finaltask.model.VoucherStatus;
+import com.epam.finaltask.model.*;
+import com.epam.finaltask.service.UserService;
 import com.epam.finaltask.service.VoucherService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -20,6 +19,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -176,6 +180,64 @@ public class VoucherControllerTest {
                 .andExpect(jsonPath("$.statusMessage").value(expectedMessage));
 
         verify(voucherService, times(1)).delete(voucherId);
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER_UPDATE")
+    void orderVoucher_ValidRequest_Success() throws Exception {
+        String username = "user123";
+        String voucherId = UUID.randomUUID().toString();
+        VoucherRequest request = new VoucherRequest(voucherId, null);
+
+        VoucherDTO orderedVoucher = new VoucherDTO();
+        when(voucherService.order(voucherId, username)).thenReturn(orderedVoucher);
+
+        mockMvc.perform(post("/user/vouchers/order")
+                        .header("X-User-Name", username)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusMessage").value("voucher was successfully ordered"));
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER_UPDATE")
+    void orderVoucher_InvalidVoucherId_NotFound() throws Exception {
+        String username = "user123";
+        String voucherId = "invalid";
+        VoucherRequest request = new VoucherRequest(voucherId, null);
+        when(voucherService.order(voucherId, username)).thenThrow(new EntityNotFoundException("Voucher not found", StatusCodes.ENTITY_NOT_FOUND.name()));
+
+        mockMvc.perform(post("/user/vouchers/order")
+                        .header("X-User-Name", username)
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER_READ")
+    void getVouchers_WithPagination_Success() throws Exception {
+        Page<Voucher> mockPage = new PageImpl<>(List.of(new Voucher()), PageRequest.of(0, 3), 1);
+        when(voucherService.findAll(any(Specification.class), any(Pageable.class))).thenReturn(mockPage);
+
+        mockMvc.perform(get("/user/vouchers")
+                        .param("page", "0")
+                        .param("size", "3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.results[0].totalItems").value(1));
+    }
+
+    @Test
+    @WithMockUser(authorities = "ADMIN_READ")
+    void getAllVouchersByStatus_ValidStatus_Success() throws Exception {
+        String status = "PAID";
+        List<VoucherDTO> vouchers = List.of(new VoucherDTO());
+        when(voucherService.findAllByStatus(status)).thenReturn(vouchers);
+
+        mockMvc.perform(get("/admin/vouchers/status/" + status))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(StatusCodes.OK.name()));
     }
 
 }

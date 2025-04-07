@@ -40,6 +40,7 @@ public class SecurityConfiguration  {
                                "/users/data")
                         .hasAnyAuthority(
                                 Permission.USER_READ.name(),
+                                Permission.USER_UPDATE.name(),
                                 Permission.MANAGER_UPDATE.name(),
                                 Permission.ADMIN_READ.name()
                         )
